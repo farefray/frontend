@@ -2,11 +2,11 @@
   <div class="app-container">
     <el-card class="box-card">
       <div slot="header">
-        <span style="line-height: 36px;">偏好设置</span>
-        <a class='link-type link-title' target="_blank" href='https://segmentfault.com/a/1190000009762198#articleHeader2'>动态换肤的教程</a>
+        <span style="line-height: 36px;">Preferences</span>
+        <a class='link-type link-title' target="_blank" href='https://segmentfault.com/a/1190000009762198#articleHeader2'>Skin change tutorial</a>
       </div>
       <div class="box-item">
-        <span class="field-label">换肤:</span>
+        <span class="field-label">Skin:</span>
         <el-switch v-model="theme" on-text="" off-text="">
         </el-switch>
       </div>
@@ -15,10 +15,10 @@
     <div class="block">
       <span class="demonstration">Button: </span>
       <span class="wrapper">
-        <el-button type="success">成功按钮</el-button>
-        <el-button type="warning">警告按钮</el-button>
-        <el-button type="danger">危险按钮</el-button>
-        <el-button type="info">信息按钮</el-button>
+        <el-button type="success">Success</el-button>
+        <el-button type="warning">Warning</el-button>
+        <el-button type="danger">Danger</el-button>
+        <el-button type="info">Info</el-button>
        </span>
     </div>
 
@@ -29,13 +29,13 @@
     </div>
 
     <div class="block">
-      <el-alert class='alert-item' title="成功提示的文案" type="success">
+      <el-alert class='alert-item' title="Success" type="success">
       </el-alert>
-      <el-alert class='alert-item' title="消息提示的文案" type="info">
+      <el-alert class='alert-item' title="Info" type="info">
       </el-alert>
-      <el-alert class='alert-item' title="警告提示的文案" type="warning">
+      <el-alert class='alert-item' title="Warning" type="warning">
       </el-alert>
-      <el-alert class='alert-item' title="错误提示的文案" type="error">
+      <el-alert class='alert-item' title="Error" type="error">
       </el-alert>
     </div>
 
@@ -52,12 +52,12 @@ export default {
     return {
       theme: false,
       tags: [
-        { name: '标签一', type: '' },
-        { name: '标签二', type: 'gray' },
-        { name: '标签三', type: 'primary' },
-        { name: '标签四', type: 'success' },
-        { name: '标签五', type: 'warning' },
-        { name: '标签六', type: 'danger' }
+        { name: '1', type: '' },
+        { name: '2', type: 'gray' },
+        { name: '3', type: 'primary' },
+        { name: '4', type: 'success' },
+        { name: '5', type: 'warning' },
+        { name: '6', type: 'danger' }
       ]
     }
   },

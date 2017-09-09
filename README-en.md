@@ -53,7 +53,6 @@ Join the group on QQ 591724180.
 - Collapsing sidebar (support nested routes)
 - Mock data
 - cache tabs example
-- screenfull
 - markdown2html
 - views-tab
 

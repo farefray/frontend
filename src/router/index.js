@@ -21,12 +21,11 @@ export const constantRouterMap = [
     { path: '/404', component: _import('errorPage/404'), hidden: true },
     { path: '/401', component: _import('errorPage/401'), hidden: true },
   {
-    path: '/',
+    path: '',
     component: Layout,
-    redirect: '/dashboard',
-    name: '首页',
-    hidden: true,
-    children: [{ path: 'dashboard', component: _import('dashboard/index') }]
+    redirect: 'dashboard',
+    noDropdown: true,
+    children: [{ path: 'dashboard', component: _import('dashboard/index'), name: 'Dashboard' }]
   },
   {
     path: '/introduction',
@@ -34,7 +33,7 @@ export const constantRouterMap = [
     redirect: '/introduction/index',
     icon: 'xinrenzhinan',
     noDropdown: true,
-    children: [{ path: 'index', component: _import('introduction/index'), name: '简述' }]
+    children: [{ path: 'index', component: _import('introduction/index'), name: 'About us' }]
   }
 ]
 

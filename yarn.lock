@@ -84,6 +84,10 @@ amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
+andlog@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/andlog/-/andlog-1.0.0.tgz#25b39047ac9c1e5f6b2c8e4cdb5e7bf9e65e534b"
+
 ansi-escapes@^1.1.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/ansi-escapes/-/ansi-escapes-1.4.0.tgz#d3a8a83b319aa67793662b13e761c7911422306e"
@@ -927,6 +931,12 @@ boom@2.x.x:
   resolved "https://registry.yarnpkg.com/boom/-/boom-2.10.1.tgz#39c8918ceff5799f83f9492a848f625add0c766f"
   dependencies:
     hoek "2.x.x"
+
+bows@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/bows/-/bows-1.7.0.tgz#a3598ed9cef61a7a0cab1a7240f291654865ec76"
+  dependencies:
+    andlog "^1.0.0"
 
 brace-expansion@^1.1.7:
   version "1.1.8"
@@ -4912,10 +4922,6 @@ schema-utils@^0.3.0:
   resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-0.3.0.tgz#f5877222ce3e931edae039f17eb3716e7137f8cf"
   dependencies:
     ajv "^5.0.0"
-
-screenfull@3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/screenfull/-/screenfull-3.2.2.tgz#ddd0c2c66a799640a566d95672d79abac4d627aa"
 
 script-loader@0.7.0:
   version "0.7.0"

@@ -1,9 +1,7 @@
 <template>
   <div class="login-container">
     <el-form class="card-box login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
-      <div class="title">Logo</div>
-      <h3 class="title">BettingStats</h3>
-
+      <div class="title"><img :src="logo" alt="Logo" width="225px"></div>
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
           <icon-svg icon-class="yonghuming" />
@@ -20,18 +18,24 @@
         <span class='show-pwd' @click='showPwd'><icon-svg icon-class="yanjing" /></span>
       </el-form-item>
 
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button type="success" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">Login</el-button>
 
-      <div class='tips'><br/></div>
-      <br/>
-
-      <el-button class='thirdparty-button' type="primary" @click='showDialog=true' disabled>Thirdparty login</el-button>
+      <el-row>
+        <el-col :span="12">
+        <router-link to="/">
+          <el-button type="primary">Return</el-button>
+        </router-link>
+        </el-col>
+        <!--el-col :span="12">
+        <el-button type="primary" @click='showDialog=true' disabled>Thirdparty login</el-button>
+        </el-col-->
+      </el-row>
     </el-form>
 
-    <el-dialog title="Third party auth" :visible.sync="showDialog">
+    <!--el-dialog title="Third party auth" :visible.sync="showDialog">
       Disabled for a while
       <social-sign />
-    </el-dialog>
+    </el-dialog-->
 
   </div>
 </template>
@@ -39,6 +43,7 @@
 <script>
 import { isvalidUsername } from '@/utils/validate'
 import socialSign from './socialsignin'
+import logo from '@/assets/logo.svg'
 
 export default {
   components: { socialSign },
@@ -69,7 +74,8 @@ export default {
       },
       pwdType: 'password',
       loading: false,
-      showDialog: false
+      showDialog: false,
+      logo
     }
   },
   methods: {
@@ -154,7 +160,7 @@ export default {
       font-size: 26px;
       font-weight: 400;
       color: $light_gray;
-      margin: 0px auto 40px auto;
+      margin: 0px auto 10px auto;
       text-align: center;
       font-weight: bold;
     }
@@ -164,7 +170,7 @@ export default {
       right: 0;
       width: 400px;
       padding: 35px 35px 15px 35px;
-      margin: 80px auto 120px auto;
+      margin: 45px auto 120px auto;
     }
     .el-form-item {
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -179,11 +185,6 @@ export default {
       font-size: 16px;
       color: $dark_gray;
       cursor: pointer;
-    }
-    .thirdparty-button{
-      position: absolute;
-      right: 35px;
-      bottom: 28px;
     }
   }
 </style>

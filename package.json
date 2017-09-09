@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "axios": "0.16.2",
+    "bows": "^1.7.0",
     "codemirror": "5.26.0",
     "dropzone": "5.1.0",
     "echarts": "3.6.2",
@@ -24,7 +25,6 @@
     "mockjs": "1.0.1-beta3",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
-    "screenfull": "3.2.2",
     "showdown": "1.7.1",
     "simplemde": "1.11.2",
     "sortablejs": "1.5.1",
