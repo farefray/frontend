@@ -18,19 +18,32 @@
         <span class='show-pwd' @click='showPwd'><icon-svg icon-class="yanjing" /></span>
       </el-form-item>
 
-      <el-button type="success" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">Login</el-button>
-
-      <el-row>
-        <el-col :span="12">
-        <router-link to="/">
-          <el-button type="primary">Return</el-button>
-        </router-link>
+      <el-row :gutter="10">
+        <el-col :span="14" :offset="5">
+          <el-button-group>
+            <el-button type="primary" style="width:90px" :loading="loading" @click.native.prevent="handleLogin">Login</el-button>
+            <el-button type="primary" style="width:90px" :loading="loading" @click='showRegistrationForm=true'>Register</el-button>
+          </el-button-group>
         </el-col>
+      </el-row>
+      <br/>
+      <el-row :gutter="25">
+        <el-col :span="6" :offset="18">
+          <router-link to="/" style="color:lightgray;">
+            Return
+          </router-link>
+        </el-col>
+      </el-row>
+      <el-row>
         <!--el-col :span="12">
         <el-button type="primary" @click='showDialog=true' disabled>Thirdparty login</el-button>
         </el-col-->
       </el-row>
     </el-form>
+
+    <el-dialog title="Registration" :visible.sync="showRegistrationForm">
+      <register></register>
+    </el-dialog>
 
     <!--el-dialog title="Third party auth" :visible.sync="showDialog">
       Disabled for a while
@@ -43,10 +56,16 @@
 <script>
 import { isvalidUsername } from '@/utils/validate'
 import socialSign from './socialsignin'
+import register from './register'
 import logo from '@/assets/logo.svg'
+import ElCol from 'element-ui/packages/col/src/col'
+import ElButtonGroup from "../../../node_modules/element-ui/packages/button/src/button-group.vue";
 
 export default {
-  components: { socialSign },
+  components: {
+    ElButtonGroup,
+    ElCol,
+    register, socialSign },
   name: 'login',
   data() {
     const validateUsername = (rule, value, callback) => {
@@ -65,8 +84,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '1111111'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -75,7 +94,8 @@ export default {
       pwdType: 'password',
       loading: false,
       showDialog: false,
-      logo
+      showRegistrationForm: false,
+      logo: logo
     }
   },
   methods: {
@@ -115,7 +135,7 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
   @import "src/styles/mixin.scss";
-  $bg:#2d3a4b;
+  $bg:#223756;
   $dark_gray:#889aa4;
   $light_gray:#eee;
 

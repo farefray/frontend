@@ -1,8 +1,8 @@
 {
-  "name": "juicy",
+  "name": "BettingStats",
   "version": "2.0.0",
-  "description": "A Vue.js admin",
-  "author": "Pan <panfree23@gmail.com>",
+  "description": "",
+  "author": "Max <maksym.fedan@gmail.com>",
   "license": "MIT",
   "private": true,
   "scripts": {
