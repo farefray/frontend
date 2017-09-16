@@ -42,7 +42,7 @@
     </el-form>
 
     <el-dialog title="Registration" :visible.sync="showRegistrationForm">
-      <register></register>
+      <register @registered="registered"></register>
     </el-dialog>
 
     <!--el-dialog title="Third party auth" :visible.sync="showDialog">
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
+import { validateUsername, validatePassword } from '@/utils/validate'
 import socialSign from './socialsignin'
 import register from './register'
 import logo from '@/assets/logo.svg'
@@ -68,20 +68,6 @@ export default {
     register, socialSign },
   name: 'login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
-        callback(new Error('Please enter the correct username'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
-      } else {
-        callback()
-      }
-    }
     return {
       loginForm: {
         username: '',
@@ -99,6 +85,16 @@ export default {
     }
   },
   methods: {
+    registered(username) {
+      this.showRegistrationForm = false;
+      this.$alert('You have successfully registered on BettingsStats. Now you can login', 'Welcome', {
+        confirmButtonText: 'OK',
+        callback: action => {
+          this.loginForm.username = username
+          this.loginForm.password = ''
+        }
+      });
+    },
     showPwd() {
       if (this.pwdType === 'password') {
         this.pwdType = ''
@@ -206,5 +202,13 @@ export default {
       color: $dark_gray;
       cursor: pointer;
     }
+  }
+
+  .el-dialog {
+    background: #223756;
+  }
+
+  .el-dialog__title {
+    color: rgb(249, 144, 8);
   }
 </style>

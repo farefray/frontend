@@ -1,5 +1,5 @@
 <template>
-  <div class="signup-container">
+  <div class="login-container" style="height: auto;">
     <el-form class="card-box" autoComplete="on" :model="registerForm" :rules="registerRules" ref="registerForm" label-position="left">
       <el-form-item prop="username">
         <span class="svg-container svg-container_register">
@@ -8,85 +8,90 @@
         <el-input name="username" type="text" v-model="registerForm.username" autoComplete="on" placeholder="Username" />
       </el-form-item>
 
+      <el-form-item prop="email">
+        <span class="svg-container svg-container_register">
+          <icon-svg icon-class="yonghuming" />
+        </span>
+        <el-input name="email" type="text" v-model="registerForm.email" autoComplete="on" placeholder="Email" />
+      </el-form-item>
+
       <el-form-item prop="password">
         <span class="svg-container">
           <icon-svg icon-class="mima" />
         </span>
-        <el-input name="password" type="password" v-model="registerForm.password" autoComplete="on"
+        <el-input name="password" type="password" v-model="registerForm.password" autoComplete="off"
                   placeholder="Password" />
       </el-form-item>
 
-      <el-button type="success" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleRegister">Register</el-button>
+      <el-form-item prop="passwordRepeat">
+        <span class="svg-container">
+          <icon-svg icon-class="mima" />
+        </span>
+        <el-input name="passwordRepeat" type="password" v-model="registerForm.passwordRepeat" autoComplete="off"
+                  placeholder="Repeat password" />
+      </el-form-item>
+
+      <el-row :gutter="10">
+        <el-col :span="10" :offset="7">
+          <el-button type="success" style="width:100%;" :loading="loading" @click.native.prevent="handleRegister">Register</el-button>
+        </el-col>
+      </el-row>
     </el-form>
   </div>
 </template>
 
 <script>
-import openWindow from '@/utils/openWindow'
-import { isvalidUsername, isvalidPassword } from '@/utils/validate'
+import { validateUsername, validatePassword, validateEmail } from '@/utils/validate'
 
 export default {
   name: 'register',
   props: [],
   data() {
+    const passwordRepeated = (rule, value, callback) => {
+      if (this.registerForm.password.length && this.registerForm.password === this.registerForm.passwordRepeat) {
+        callback()
+      } else {
+        callback(new Error('Please repeat your password'))
+      }
+    }
+
     return {
       loading: false,
       registerForm: {
         username: '',
-        password: ''
+        email: '',
+        password: '',
+        passwordRepeat: ''
       },
       registerRules: {
-        username: [{ required: true, trigger: 'blur', validator: isvalidUsername }],
-        password: [{ required: true, trigger: 'blur', validator: isvalidPassword }]
+        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        email: [{ required: true, trigger: 'blur', validator: validateEmail }],
+        passwordRepeat: [{ required: true, trigger: 'blur', validator: passwordRepeated }]
       }
     }
   },
   methods: {
     handleRegister() {
-      this.loading = true
-      console.log('reg me')
-    },
-    tencentHandleClick(thirdpart) {
-      this.$store.commit('SET_AUTH_TYPE', thirdpart)
-      const client_id = 'xxxxx'
-      const redirect_uri = encodeURIComponent('xxx/redirect?redirect=' + window.location.origin + '/authredirect')
-      const url = 'https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=' + client_id + '&redirect_uri=' + redirect_uri
-      openWindow(url, thirdpart, 540, 540)
+      this.$refs.registerForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+
+          const username = this.registerForm.username
+          this.$store.dispatch('RegisterUser', this.registerForm).then(() => {
+            this.loading = false
+            this.$emit('registered', username);
+          }).catch(() => {
+            this.loading = false
+          })
+        }
+
+        return false
+      })
     }
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-	.signup-container {
-	  margin: 20px 0;
-	  .sign-btn {
-	    display: inline-block;
-	    cursor: pointer;
-	  }
-	  .icon {
-	    color: #fff;
-	    font-size: 30px;
-	    margin-top: 6px;
-	  }
-	  .wx-svg-container,
-	  .qq-svg-container {
-	    display: inline-block;
-	    width: 40px;
-	    height: 40px;
-	    line-height: 40px;
-	    text-align: center;
-	    padding-top: 1px;
-	    border-radius: 4px;
-	    margin-bottom: 20px;
-	    margin-right: 5px;
-	  }
-	  .wx-svg-container {
-	    background-color: #8dc349;
-	  }
-	  .qq-svg-container {
-	    background-color: #6BA2D6;
-	    margin-left: 50px;
-	  }
-	}
-</style>
+ </style>

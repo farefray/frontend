@@ -12,6 +12,14 @@ export function loginByUsername(username, password) {
   })
 }
 
+export function registerUser(userInfo) {
+  return fetch({
+    url: '/account/signup',
+    method: 'post',
+    userInfo
+  })
+}
+
 export function logout() {
   return fetch({
     url: '/login/logout',
