@@ -60,6 +60,7 @@ import register from './register'
 import logo from '@/assets/logo.svg'
 import ElCol from 'element-ui/packages/col/src/col'
 import ElButtonGroup from "../../../node_modules/element-ui/packages/button/src/button-group.vue";
+import { Message } from 'element-ui'
 
 export default {
   components: {
@@ -87,13 +88,14 @@ export default {
   methods: {
     registered(username) {
       this.showRegistrationForm = false;
-      this.$alert('You have successfully registered on BettingsStats. Now you can login', 'Welcome', {
-        confirmButtonText: 'OK',
-        callback: action => {
-          this.loginForm.username = username
-          this.loginForm.password = ''
-        }
-      });
+      Message({
+        message: 'You have successfully registered on BettingsStats. Now you can login.',
+        type: 'success',
+        duration: 5 * 1000
+      })
+
+      this.loginForm.username = username
+      this.loginForm.password = ''
     },
     showPwd() {
       if (this.pwdType === 'password') {
