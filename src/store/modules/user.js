@@ -47,6 +47,11 @@ const user = {
     RegisterUser({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         registerUser(userInfo).then(response => {
+          if (response === false) {
+            // incase error proc on request
+            return reject()
+          }
+
           return resolve()
         }).catch(error => {
           return reject(error)
@@ -58,6 +63,11 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
+          if (response === false) {
+            // incase error proc on request
+            return reject()
+          }
+
           const data = response.data
           setToken(response.data.token)
           commit('SET_TOKEN', data.token)

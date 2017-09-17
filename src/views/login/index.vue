@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     registered(username) {
-      this.showRegistrationForm = false;
+      this.showRegistrationForm = false
       Message({
         message: 'You have successfully registered on BettingsStats. Now you can login.',
         type: 'success',
@@ -105,10 +105,12 @@ export default {
       }
     },
     handleLogin() {
+      this.showRegistrationForm = false
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+          this.$store.dispatch('LoginByUsername', this.loginForm).then((response) => {
+            console.log(response);
             this.loading = false
             this.$router.push({ path: '/' })
                 // this.showDialog = true

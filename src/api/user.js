@@ -6,21 +6,32 @@ const service = axios.create({
   timeout: 5000                  // 请求超时时间
 })
 
-export function loginByUsername(username, password) {
-  const data = {
-    username,
-    password
-  }
-  return fetch({
-    url: '/login/login',
-    method: 'post',
-    data
+export function loginByUsername(uname, pass) {
+  return service.post('/auth/local', {
+    username: uname,
+    password: pass
   })
+    .then(response => {
+      console.log(response)
+      return response
+    })
+    .catch(error => {
+      // validation rules failed response.data.data.name == ValidationError
+      // let errorMessage = error;
+      Message({
+        message: error.response.data.error.message,
+        type: 'error',
+        duration: 5 * 1000
+      })
+
+      return false
+    })
 }
 
 export function registerUser(userInfo) {
   return service.post('/signup', userInfo)
     .then(response => {
+      console.log(response)
       return response
     })
     .catch(error => {
@@ -49,6 +60,8 @@ export function registerUser(userInfo) {
         type: 'error',
         duration: 5 * 1000
       })
+
+      return false
     })
 }
 
