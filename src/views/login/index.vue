@@ -22,7 +22,7 @@
         <el-col :span="14" :offset="5">
           <el-button-group>
             <el-button type="primary" style="width:90px" :loading="loading" @click.native.prevent="handleLogin">Login</el-button>
-            <el-button type="primary" style="width:90px" :loading="loading" @click='showRegistrationForm=true'>Register</el-button>
+            <el-button type="primary" style="width:90px" @click='showRegistrationForm=true'>Register</el-button>
           </el-button-group>
         </el-col>
       </el-row>
