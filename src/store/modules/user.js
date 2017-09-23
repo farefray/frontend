@@ -19,6 +19,9 @@ const user = {
   },
 
   mutations: {
+    SET_USER: (state, id) => {
+      state.user = id
+    },
     SET_USERNAME: (state, username) => {
       state.username = username
     },
