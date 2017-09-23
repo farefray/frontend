@@ -109,13 +109,18 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('LoginByUsername', this.loginForm).then((response) => {
-            console.log(response);
-            this.loading = false
-            this.$router.push({ path: '/' })
-                // this.showDialog = true
+          const _this = this
+          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+            console.log('back from login store to views login')
+            _this.loading = false;
+            Message({
+              message: 'Welcome!',
+              type: 'success',
+              duration: 5 * 1000
+            })
+            _this.$router.push('/')
           }).catch(() => {
-            this.loading = false
+            _this.loading = false
           })
         } else {
           console.log('error submit!!')

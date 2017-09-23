@@ -116,12 +116,12 @@
 }
 
 .el-radio__input.is-focus .el-radio__inner{
-    border-color: #2CAC01;
+    border-color: #476B3B;
 }
 
 .el-radio__input.is-checked .el-radio__inner{
-    border-color: #2CAC01;
-    background: #2CAC01
+    border-color: #476B3B;
+    background: #476B3B
 }
 
 .el-radio__input.is-checked .el-radio__inner::after{
@@ -171,7 +171,7 @@
 }
 
 .el-radio__inner:hover{
-    border-color: #2CAC01;
+    border-color: #476B3B;
 }
 
 .el-radio__inner::after{

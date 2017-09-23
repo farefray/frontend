@@ -207,7 +207,7 @@
 }
 
 .el-menu--horizontal > .el-menu-item:hover, .el-menu--horizontal > .el-submenu:hover .el-submenu__title, .el-menu--horizontal > .el-submenu.is-active .el-submenu__title{
-  border-bottom: 5px solid #2CAC01;
+  border-bottom: 5px solid #476B3B;
 }
 
 .el-menu--horizontal.el-menu--dark{}
@@ -225,7 +225,7 @@
 }
 
 .el-menu--horizontal.el-menu--dark .el-submenu .el-menu-item.is-active{
-  color: #2CAC01;
+  color: #476B3B;
 }
 
 .el-menu--collapse{
@@ -290,7 +290,7 @@
 }
 
 .el-menu-item.is-active{
-  color: #2CAC01;
+  color: #476B3B;
 }
 
 .el-submenu [class^="el-icon-"]{
@@ -320,7 +320,7 @@
 }
 
 .el-submenu.is-active .el-submenu__title{
-  border-bottom-color: #2CAC01;
+  border-bottom-color: #476B3B;
 }
 
 .el-submenu__title{

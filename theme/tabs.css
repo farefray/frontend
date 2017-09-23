@@ -104,7 +104,7 @@
   bottom: 0;
   left: 0;
   height: 3px;
-  background-color: #2CAC01;
+  background-color: #476B3B;
   z-index: 1;
   transition: transform .3s cubic-bezier(.645,.045,.355,1);
   list-style: none;
@@ -130,7 +130,7 @@
 }
 
 .el-tabs__new-tab:hover{
-  color: #2CAC01;
+  color: #476B3B;
 }
 
 .el-tabs__nav-wrap{
@@ -210,7 +210,7 @@
 }
 
 .el-tabs__item.is-active{
-  color: #2CAC01;
+  color: #476B3B;
 }
 
 .el-tabs__content{

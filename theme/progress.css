@@ -109,11 +109,11 @@
 }
 
 .el-progress.is-success .el-progress-bar__inner{
-  background-color:#13ce66;
+  background-color:#558047;
 }
 
 .el-progress.is-success .el-progress__text{
-  color:#13ce66;
+  color:#558047;
 }
 
 .el-progress__text{
@@ -188,7 +188,7 @@
   top: 0;
   height: 100%;
   border-radius: 2px 0 0 2px;
-  background-color:#2CAC01;
+  background-color:#476B3B;
   text-align: right;
   border-radius: 100px;
   line-height: 1;

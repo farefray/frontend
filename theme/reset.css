@@ -571,16 +571,16 @@ body {
 }
 
 a {
-  color: #2CAC01;
+  color: #476B3B;
   text-decoration: none
 }
 
 a:hover, a:focus {
-  color: rgb(86, 189, 52);
+  color: rgb(108, 137, 98);
 }
 
 a:active {
-  color: rgb(40, 155, 1);
+  color: rgb(64, 96, 53);
 }
 
 h1, h2, h3, h4, h5, h6 {

@@ -109,16 +109,16 @@
 }
 
 .el-switch.is-disabled .el-switch__core span{
-    background-color: rgb(251, 253, 250) !important
+    background-color: rgb(251, 252, 251) !important
 }
 
 .el-switch.is-disabled .el-switch__core ~ .el-switch__label *{
-    color: rgb(251, 253, 250) !important
+    color: rgb(251, 252, 251) !important
 }
 
 .el-switch.is-checked .el-switch__core{
-    border-color: #2CAC01;
-    background-color: #2CAC01;
+    border-color: #476B3B;
+    background-color: #476B3B;
 }
 
 .el-switch.is-disabled{}

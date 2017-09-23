@@ -133,7 +133,7 @@
 }
 
 .el-radio-button__inner:hover{
-    color: #2CAC01
+    color: #476B3B
 }
 
 .el-radio-button__inner [class*="el-icon-"]{
@@ -156,9 +156,9 @@
 
 .el-radio-button__orig-radio:checked + .el-radio-button__inner{
     color: #fff;
-    background-color: #2CAC01;
-    border-color: #2CAC01;
-    box-shadow: -1px 0 0 0 #2CAC01
+    background-color: #476B3B;
+    border-color: #476B3B;
+    box-shadow: -1px 0 0 0 #476B3B
 }
 
 .el-radio-button__orig-radio:disabled{}

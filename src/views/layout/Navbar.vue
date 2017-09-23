@@ -4,7 +4,7 @@
 		<levelbar></levelbar>
 		<tabs-view></tabs-view>
 		<error-log v-if="log.length>0" class="errLog-container" :logsList="log"></error-log>
-		<el-dropdown class="avatar-container" trigger="click" v-if="name !== ''">
+		<el-dropdown class="avatar-container" trigger="click" v-if="username !== ''">
 			<div class="avatar-wrapper">
 				<img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
 				<i class="el-icon-caret-bottom"></i>
@@ -47,7 +47,7 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'name',
+      'username',
       'avatar'
     ])
   },

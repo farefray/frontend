@@ -4,6 +4,8 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 const user = {
   state: {
     user: '',
+    username: '',
+    email: '',
     status: '',
     code: '',
     token: getToken(),
@@ -17,11 +19,17 @@ const user = {
   },
 
   mutations: {
+    SET_USERNAME: (state, username) => {
+      state.username = username
+    },
     SET_CODE: (state, code) => {
       state.code = code
     },
     SET_TOKEN: (state, token) => {
       state.token = token
+    },
+    SET_EMAIL: (state, email) => {
+      state.email = email
     },
     SET_INTRODUCTION: (state, introduction) => {
       state.introduction = introduction
@@ -68,9 +76,15 @@ const user = {
             return reject()
           }
 
+          console.log('im in store login');
+          console.log(response)
+
           const data = response.data
           setToken(response.data.token)
           commit('SET_TOKEN', data.token)
+          commit('SET_EMAIL', data.email)
+          commit('SET_USER', data.id)
+          commit('SET_USERNAME', username)
           resolve()
         }).catch(error => {
           reject(error)

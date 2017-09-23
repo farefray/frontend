@@ -19,6 +19,10 @@ const whiteList = ['/login', '/authredirect', '/introduction/index', '/dashboard
 router.beforeEach((to, from, next) => {
   log(to.path)
   NProgress.start()
+  if (whiteList.indexOf(to.path) !== -1) {
+    return next()
+  }
+
   if (getToken()) {
     if (to.path === '/login') {
       next({ path: '/' })
@@ -44,12 +48,8 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    if (whiteList.indexOf(to.path) !== -1) {
-      next()
-    } else {
-      next('/login')
-      NProgress.done()
-    }
+    next('/login')
+    NProgress.done()
   }
 })
 

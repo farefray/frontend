@@ -123,7 +123,7 @@
 
 .el-collapse-item__wrap{
     will-change: height;
-    background-color: rgb(251, 253, 250);
+    background-color: rgb(251, 252, 251);
     overflow: hidden;
     box-sizing: border-box;
     border-bottom: 1px solid rgb(225, 236, 223);

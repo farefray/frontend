@@ -499,7 +499,7 @@
 }
 .el-picker-panel__shortcut.active {
   background-color: #e6f1fe;
-  color: #2CAC01;
+  color: #476B3B;
 }
 .el-picker-panel__btn {
   border: 1px solid #dcdcdc;
@@ -526,11 +526,11 @@
   margin-top: 3px;
 }
 .el-picker-panel__icon-btn:hover {
-  color: #2CAC01;
+  color: #476B3B;
 }
 .el-picker-panel__link-btn {
   cursor: pointer;
-  color: #2CAC01;
+  color: #476B3B;
   text-decoration: none;
   padding: 15px;
   font-size: 12px;
@@ -543,7 +543,7 @@
   border-right: 1px solid #e4e4e4;
   box-sizing: border-box;
   padding-top: 6px;
-  background-color: rgb(251, 253, 250);
+  background-color: rgb(251, 252, 251);
   overflow: auto;
 }
 .el-picker-panel *[slot=sidebar] + .el-picker-panel__body, .el-picker-panel__sidebar + .el-picker-panel__body {
@@ -594,10 +594,10 @@
   cursor: pointer;
 }
 .el-date-picker__header-label:hover {
-  color: #2CAC01;
+  color: #476B3B;
 }
 .el-date-picker__header-label.active {
-  color: #2CAC01;
+  color: #476B3B;
 }
 .el-date-picker__prev-btn {
   float: left;
@@ -865,12 +865,12 @@
 }
 
 .time-select-item.selected:not(.disabled) {
-  background-color: #2CAC01;
+  background-color: #476B3B;
   color: #fff
 }
 
 .time-select-item.selected:not(.disabled):hover {
-  background-color: #2CAC01;
+  background-color: #476B3B;
 }
 
 .time-select-item.disabled {

@@ -113,7 +113,7 @@
 }
 .el-input.is-active .el-input__inner{
     outline: none;
-    border-color: #2CAC01;
+    border-color: #476B3B;
 }
 .el-input__inner{
     -webkit-appearance: none;
@@ -148,7 +148,7 @@
 }
 .el-input__inner:focus{
     outline: none;
-    border-color: #2CAC01;
+    border-color: #476B3B;
 }
 .el-input__icon{
     position: absolute;
@@ -207,7 +207,7 @@
     display: table-cell;
 }
 .el-input-group__append, .el-input-group__prepend{
-    background-color: rgb(251, 253, 250);
+    background-color: rgb(251, 252, 251);
     color: rgb(155, 190, 151);
     vertical-align: middle;
     display: table-cell;
@@ -299,7 +299,7 @@
 }
 .el-textarea__inner:focus{
     outline: none;
-    border-color: #2CAC01;
+    border-color: #476B3B;
 }
 :root{
     /* Transition
@@ -563,12 +563,12 @@
 }
 
 .el-autocomplete-suggestion li.highlighted{
-    background-color: #2CAC01;
+    background-color: #476B3B;
     color: #fff;
 }
 
 .el-autocomplete-suggestion li:active{
-    background-color: rgb(35, 137, 1);
+    background-color: rgb(57, 86, 47);
 }
 
 .el-autocomplete-suggestion li.divider{
