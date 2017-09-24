@@ -21,3 +21,9 @@ export default {
   }
 }
 </script>
+
+<style rel="stylesheet/scss" lang="scss">
+  .el-menu-item.is-active {
+    color: #9c9c9c;
+  }
+</style>

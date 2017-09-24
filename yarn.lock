@@ -5667,6 +5667,10 @@ voc@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/voc/-/voc-1.0.0.tgz#5465c0ce11d0881f7d8e36d8ca587043f33a25ae"
 
+vue-awesome@^2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/vue-awesome/-/vue-awesome-2.3.3.tgz#e83f976fe5c7f86d207c24ca33731bdc6e9906a9"
+
 vue-count-to@1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/vue-count-to/-/vue-count-to-1.0.5.tgz#6a4bad2e0c260ea8a3cdeb71bff75838d70c703a"

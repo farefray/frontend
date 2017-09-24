@@ -181,8 +181,8 @@
 }
 
 .el-menu--horizontal .el-submenu .el-submenu__title{
-  height: 60px;
-  line-height: 60px;
+  height: 50px;
+  line-height: 50px;
   border-bottom: 5px solid transparent;
 }
 

@@ -4,20 +4,21 @@
 		<levelbar></levelbar>
 		<tabs-view></tabs-view>
 		<error-log v-if="log.length>0" class="errLog-container" :logsList="log"></error-log>
-		<el-dropdown class="avatar-container" trigger="click" v-if="username !== ''">
-			<div class="avatar-wrapper">
-				<img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
-				<i class="el-icon-caret-bottom"></i>
-			</div>
-			<el-dropdown-menu class="user-dropdown" slot="dropdown">
-				<router-link class='inlineBlock' to="/">
-					<el-dropdown-item>
-						HOME
-					</el-dropdown-item>
-				</router-link>
-				<el-dropdown-item divided><span @click="logout" style="display:block;">Log out</span></el-dropdown-item>
-			</el-dropdown-menu>
-		</el-dropdown>
+    <template  v-if="username !== ''">
+      <el-dropdown trigger="click" class="username-container">
+        <el-submenu index="1">
+          <template slot="title">{{username}}</template>
+          <el-menu-item index="1-1">Settings</el-menu-item>
+          <el-menu-item index="1-2"><span @click="logout" style="display:block;">Log out</span></el-menu-item>
+        </el-submenu>
+      </el-dropdown>
+      <div class="avatar-container">
+      <div class="avatar-wrapper">
+        <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'" v-if="avatar">
+        <icon class="user-avatar" name="user" v-else></icon>
+      </div>
+    </div>
+    </template>
     <router-link to="/login" v-else>
       <el-button type="primary" size="small" class="login-button">Login / Register</el-button>
     </router-link>
@@ -41,7 +42,8 @@ export default {
   },
   data() {
     return {
-      log: errLogStore.state.errLog
+      log: errLogStore.state.errLog,
+      defaultAvatar: ''
     }
   },
   computed: {
@@ -64,6 +66,35 @@ export default {
 }
 </script>
 
+<style rel="stylesheet/scss" lang="scss">
+  .el-menu--horizontal .el-submenu .el-submenu__title{
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .el-menu--horizontal .el-submenu > .el-menu {
+    top: 50px;
+    background-color: #eef6ee;
+    padding: 0;
+  }
+
+  .el-submenu .el-menu-item {
+    min-width: 96px !important;
+    text-align: center;
+  }
+
+  .el-menu--horizontal .el-submenu .el-menu-item {
+    background-color: #eef6ee;
+  }
+
+  .el-menu--horizontal .el-submenu .el-menu-item:hover {
+    background-color: #dce8db;
+  }
+
+  .el-menu--horizontal .el-submenu .el-menu-item:active {
+    background-color: #86a583;
+  }
+</style>
 <style rel="stylesheet/scss" lang="scss" scoped>
 	.navbar {
 			height: 50px;
@@ -80,6 +111,12 @@ export default {
 					position: absolute;
 					right: 150px;
 			}
+      .username-container {
+        height: 50px;
+        display: inline-block;
+        position: absolute;
+        right: 59px;
+      }
 			.avatar-container {
 					height: 50px;
 					display: inline-block;
