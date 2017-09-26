@@ -7,17 +7,19 @@
     <template  v-if="username !== ''">
       <el-dropdown trigger="click" class="username-container">
         <el-submenu index="1">
-          <template slot="title">{{username}}</template>
+          <template slot="title">
+            {{username}}
+            <div class="avatar-container">
+              <div class="avatar-wrapper">
+                <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'" v-if="avatar">
+                <icon class="user-avatar" name="user" v-else></icon>
+              </div>
+            </div>
+          </template>
           <el-menu-item index="1-1">Settings</el-menu-item>
           <el-menu-item index="1-2"><span @click="logout" style="display:block;">Log out</span></el-menu-item>
         </el-submenu>
       </el-dropdown>
-      <div class="avatar-container">
-      <div class="avatar-wrapper">
-        <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'" v-if="avatar">
-        <icon class="user-avatar" name="user" v-else></icon>
-      </div>
-    </div>
     </template>
     <router-link to="/login" v-else>
       <el-button type="primary" size="small" class="login-button">Login / Register</el-button>
@@ -67,6 +69,10 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
+  .hideSidebar .el-menu-item .el-submenu__icon-arrow, .hideSidebar .el-submenu .el-submenu__title .el-submenu__icon-arrow {
+    display: block;
+  }
+
   .el-menu--horizontal .el-submenu .el-submenu__title{
     height: 50px;
     line-height: 50px;
@@ -115,13 +121,14 @@ export default {
         height: 50px;
         display: inline-block;
         position: absolute;
-        right: 59px;
+        right: 22px;
       }
 			.avatar-container {
 					height: 50px;
 					display: inline-block;
 					position: absolute;
-					right: 35px;
+          right: 75px;
+          top: -4px;
 					.avatar-wrapper {
 							cursor: pointer;
 							margin-top: 5px;

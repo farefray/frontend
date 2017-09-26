@@ -8,6 +8,5 @@ export default {
     } else {
       return Promise.reject('error')
     }
-  },
-  logout: () => 'success'
+  }
 }

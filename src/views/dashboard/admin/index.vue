@@ -34,7 +34,6 @@
 					<div class="info-item">
 						<count-to class="info-item-num" :startVal='0' :endVal='statisticsData.article_count' :duration='3400'></count-to>
 						<span class="info-item-text">文章</span>
-						<icon-svg icon-class="a" class="dashboard-editor-icon"></icon-svg>
 					</div>
 					<div class="info-item">
 						<count-to class="info-item-num" :startVal='0' :endVal='statisticsData.pageviews_count' :duration='3600'></count-to>

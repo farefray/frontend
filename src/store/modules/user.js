@@ -1,26 +1,28 @@
-import { registerUser, loginByUsername, logout, getUserInfo } from '@/api/user'
+import { registerUser, loginByUsername, getUserInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
+const defaultUserState = {
+  id: '',
+  username: '',
+  email: '',
+  status: '',
+  code: '',
+  token: getToken(),
+  name: '',
+  avatar: '',
+  introduction: '',
+  roles: [],
+  setting: {
+    articlePlatform: []
+  }
+};
+
 const user = {
-  state: {
-    user: '',
-    username: '',
-    email: '',
-    status: '',
-    code: '',
-    token: getToken(),
-    name: '',
-    avatar: '',
-    introduction: '',
-    roles: [],
-    setting: {
-      articlePlatform: []
-    }
-  },
+  state: Object.assign({}, defaultUserState),
 
   mutations: {
-    SET_USER: (state, id) => {
-      state.user = id
+    SET_ID: (state, id) => {
+      state.id = id
     },
     SET_USERNAME: (state, username) => {
       state.username = username
@@ -51,6 +53,11 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    RESET_USER: (state) => {
+      console.log(state);
+      state = Object.assign(state, defaultUserState);
+      console.log(state);
     }
   },
 
@@ -86,7 +93,7 @@ const user = {
           setToken(response.data.token)
           commit('SET_TOKEN', data.token)
           commit('SET_EMAIL', data.email)
-          commit('SET_USER', data.id)
+          commit('SET_ID', data.id)
           commit('SET_USERNAME', username)
           resolve()
         }).catch(error => {
@@ -128,14 +135,9 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
-          removeToken()
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
+        removeToken()
+        commit('RESET_USER')
+        resolve()
       })
     },
 
