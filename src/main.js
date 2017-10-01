@@ -30,7 +30,16 @@ new Vue({
   store,
   template: '<App/>',
   beforeCreate() {
-    this.$store.dispatch('VerifyToken');
+    this.$store.dispatch('VerifyToken').then(() => {
+      console.log('Login token verified!')
+
+      console.log('Building routes')
+      const roles = this.$store.getters.roles
+      console.log(this.$store.getters.roles)
+      this.$store.dispatch('GenerateRoutes', { roles }).then(() => {
+        router.addRoutes(this.$store.getters.addRouters)
+      })
+    })
   },
   components: { App }
 })

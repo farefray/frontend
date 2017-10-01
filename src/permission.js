@@ -27,24 +27,12 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
-      if (store.getters.roles.length === 0) {
-        store.dispatch('GetUserInfo').then(res => {
-          const roles = res.data.role
-          store.dispatch('GenerateRoutes', { roles }).then(() => {
-            router.addRoutes(store.getters.addRouters)
-            next({ ...to })
-          })
-        }).catch(() => {
-          store.dispatch('FedLogOut').then(() => {
-            next({ path: '/login' })
-          })
-        })
+      console.log(store)
+      console.log(store.getters.roles)
+      if (hasPermission(store.getters.roles, to.meta.role)) {
+        next()
       } else {
-        if (hasPermission(store.getters.roles, to.meta.role)) {
-          next()
-        } else {
-          next({ path: '/401', query: { noGoBack: true }})
-        }
+        next({ path: '/401', query: { noGoBack: true }})
       }
     }
   } else {

@@ -88,12 +88,3 @@ export function registerUser(userInfo) {
       return false
     })
 }
-
-export function getUserInfo(token) {
-  return fetch({
-    url: '/user/info',
-    method: 'get',
-    params: { token }
-  })
-}
-

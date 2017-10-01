@@ -1,4 +1,4 @@
-import { registerUser, loginByUsername, getUserInfo, verifyToken } from '@/api/apiuser'
+import { registerUser, loginByUsername, verifyToken } from '@/api/apiuser'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 const log = require('bows')('Store User')
 
@@ -80,26 +80,21 @@ const user = {
   actions: {
     VerifyToken({ commit, state }) {
       return new Promise((resolve, reject) => {
-        log(state);
-        log(getToken());
         const cookieToken = getToken();
         if (cookieToken !== state.token || state.token === '' || state.token === undefined) {
           commit('RESET_USER');
-          return false
+          return reject()
         }
 
-        log(cookieToken);
-        log(state.token);
         // token exist, confirm it by backend
-        return new Promise((resolve, reject) => {
+        return new Promise((rresolve, rreject) => {
           verifyToken(cookieToken, state.id, state.email).then(response => {
-            log('verify login: ' + response)
             if (response === true) {
-              return true
+              return resolve()
             }
 
             commit('RESET_USER');
-            return false
+            return reject()
           })
         })
       })
@@ -128,8 +123,7 @@ const user = {
             return reject()
           }
 
-          console.log('im in store login');
-          console.log(response)
+          log(response)
 
           const data = response.data
           setToken(response.data.token)
@@ -145,23 +139,12 @@ const user = {
       })
     },
 
-    // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(response => {
-          const data = response.data
-          commit('SET_ROLES', data.role)
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
-          resolve(response)
-        }).catch(error => {
-          reject(error)
-        })
+        resolve(state)
       })
     },
 
-    // 第三方验证登录
     // LoginByThirdparty({ commit, state }, code) {
     //   return new Promise((resolve, reject) => {
     //     commit('SET_CODE', code)
@@ -175,7 +158,6 @@ const user = {
     //   })
     // },
 
-    // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
         commit('RESET_USER');
@@ -184,27 +166,11 @@ const user = {
       })
     },
 
-    // 前端 登出
-    FedLogOut({ commit }) {
-      return new Promise(resolve => {
-        commit('RESET_USER');
-        resolve()
-      })
-    },
-
-    // 动态修改权限
     ChangeRole({ commit }, role) {
       return new Promise(resolve => {
         commit('SET_TOKEN', role)
         setToken(role)
-        getUserInfo(role).then(response => {
-          const data = response.data
-          commit('SET_ROLES', data.role)
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
-          resolve()
-        })
+        resolve()
       })
     }
   }

@@ -27,18 +27,11 @@ export const constantRouterMap = [
     icon: 'dashboard',
     noDropdown: true,
     children: [{ path: 'dashboard', component: _import('dashboard/index'), name: 'Dashboard' }]
-  },
-  {
-    path: '/introduction',
-    component: Layout,
-    redirect: '/introduction/index',
-    noDropdown: true,
-    children: [{ path: 'index', component: _import('introduction/index'), name: 'About us' }]
   }
 ]
 
 export default new Router({
-  // mode: 'history', //后端支持可开
+  mode: 'history', // hash mode by default if any issues with webserver https://router.vuejs.org/ru/essentials/history-mode.html
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
@@ -57,6 +50,7 @@ export const asyncRouterMap = [
     path: '/icon',
     component: Layout,
     noDropdown: true,
+    meta: { role: ['admin'] },
     children: [{ path: 'index', component: _import('svg-icons/index'), name: 'icons' }]
   },
   {
@@ -64,6 +58,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/components/index',
     name: 'components',
+    meta: { role: ['admin'] },
     children: [
       { path: 'index', component: _import('components/index'), name: '介绍 ' },
       { path: 'tinymce', component: _import('components/tinymce'), name: '富文本编辑器' },
@@ -84,6 +79,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/charts/index',
     name: 'charts',
+    meta: { role: ['admin'] },
     children: [
       { path: 'index', component: _import('charts/index'), name: '介绍' },
       { path: 'keyboard', component: _import('charts/keyboard'), name: '键盘图表' },
@@ -93,32 +89,33 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/example',
+    path: '/predictions',
     component: Layout,
     redirect: 'noredirect',
-    name: 'example',
+    name: 'Predictions',
     children: [
       {
-        path: '/example/table',
-        component: _import('example/table/index'),
-        redirect: '/example/table/table',
+        path: '/predictions/table',
+        component: _import('predictions/table/index'),
+        redirect: '/predictions/table/table',
         name: 'Table',
         children: [
-          { path: 'dynamictable', component: _import('example/table/dynamictable/index'), name: '动态table' },
-          { path: 'dragtable', component: _import('example/table/dragTable'), name: '拖拽table' },
-          { path: 'inline_edit_table', component: _import('example/table/inlineEditTable'), name: 'table内编辑' },
-          { path: 'table', component: _import('example/table/table'), name: '综合table' }
+          { path: 'dynamictable', component: _import('predictions/table/dynamictable/index'), name: 'dynamic table' },
+          { path: 'dragtable', component: _import('predictions/table/dragTable'), name: 'drag table' },
+          { path: 'inline_edit_table', component: _import('predictions/table/inlineEditTable'), name: 'inline edit' },
+          { path: 'table', component: _import('predictions/table/table'), name: 'composite table' }
         ]
       },
-      { path: 'form/edit', component: _import('example/form'), name: '编辑Form', meta: { isEdit: true }},
-      { path: 'form/create', component: _import('example/form'), name: '创建Form' },
-      { path: 'tab/index', component: _import('example/tab/index'), name: 'Tab' }
+      { path: 'form/edit', meta: { role: ['admin'], isEdit: true }, component: _import('predictions/form'), name: '编辑Form' },
+      { path: 'form/create', meta: { role: ['admin'] }, component: _import('predictions/form'), name: '创建Form' },
+      { path: 'tab/index', meta: { role: ['admin'] }, component: _import('predictions/tab/index'), name: 'Tab' }
     ]
   },
   {
     path: '/error',
     component: Layout,
     redirect: 'noredirect',
+    meta: { role: ['admin'] },
     name: 'error',
     children: [
       { path: '401', component: _import('errorPage/401'), name: '401' },
@@ -131,6 +128,7 @@ export const asyncRouterMap = [
     redirect: 'noredirect',
     name: 'errlog',
     noDropdown: true,
+    meta: { role: ['admin'] },
     children: [{ path: 'log', component: _import('errlog/index'), name: '错误日志' }]
   },
   {
@@ -138,6 +136,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/excel/download',
     name: 'excel',
+    meta: { role: ['admin'] },
     children: [
       { path: 'download', component: _import('excel/index'), name: '导出excel' },
       { path: 'download2', component: _import('excel/selectExcel'), name: '导出已选择项' }
@@ -149,7 +148,15 @@ export const asyncRouterMap = [
     redirect: 'noredirect',
     name: 'theme',
     noDropdown: true,
+    meta: { role: ['admin'] },
     children: [{ path: 'index', component: _import('theme/index'), name: '换肤' }]
+  },
+  {
+    path: '/introduction',
+    component: Layout,
+    redirect: '/introduction/index',
+    noDropdown: true,
+    children: [{ path: 'index', component: _import('introduction/index'), name: 'About us' }]
   },
   { path: '*', redirect: '/404', hidden: true }
 ]
