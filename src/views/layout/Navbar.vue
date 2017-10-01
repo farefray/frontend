@@ -12,7 +12,7 @@
             <div class="avatar-container">
               <div class="avatar-wrapper">
                 <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'" v-if="avatar">
-                <icon class="user-avatar" name="user" v-else></icon>
+                <icon style="border:  2px ridge #b2b8b2;" class="user-avatar" name="user" v-else></icon>
               </div>
             </div>
           </template>
@@ -60,9 +60,7 @@ export default {
       this.$store.dispatch('ToggleSideBar')
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload()
-      })
+      this.$store.dispatch('LogOut')
     }
   }
 }

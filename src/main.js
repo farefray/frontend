@@ -29,5 +29,8 @@ new Vue({
   router,
   store,
   template: '<App/>',
+  beforeCreate() {
+    this.$store.dispatch('VerifyToken');
+  },
   components: { App }
 })

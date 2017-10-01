@@ -6,7 +6,10 @@
 
 <script>
   export default{
-    name: 'APP'
+    name: 'APP',
+    beforeCreate() {
+      console.log('app before created')
+    }
   }
 </script>
 

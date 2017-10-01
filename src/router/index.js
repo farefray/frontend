@@ -32,7 +32,6 @@ export const constantRouterMap = [
     path: '/introduction',
     component: Layout,
     redirect: '/introduction/index',
-    icon: 'comment',
     noDropdown: true,
     children: [{ path: 'index', component: _import('introduction/index'), name: 'About us' }]
   }
@@ -85,7 +84,6 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/charts/index',
     name: 'charts',
-    icon: 'comment',
     children: [
       { path: 'index', component: _import('charts/index'), name: '介绍' },
       { path: 'keyboard', component: _import('charts/keyboard'), name: '键盘图表' },
@@ -99,14 +97,12 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: 'example',
-    icon: 'cog',
     children: [
       {
         path: '/example/table',
         component: _import('example/table/index'),
         redirect: '/example/table/table',
         name: 'Table',
-        icon: 'table',
         children: [
           { path: 'dynamictable', component: _import('example/table/dynamictable/index'), name: '动态table' },
           { path: 'dragtable', component: _import('example/table/dragTable'), name: '拖拽table' },
@@ -114,9 +110,9 @@ export const asyncRouterMap = [
           { path: 'table', component: _import('example/table/table'), name: '综合table' }
         ]
       },
-      { path: 'form/edit', icon: 'shouce', component: _import('example/form'), name: '编辑Form', meta: { isEdit: true }},
-      { path: 'form/create', icon: 'from', component: _import('example/form'), name: '创建Form' },
-      { path: 'tab/index', icon: 'tab', component: _import('example/tab/index'), name: 'Tab' }
+      { path: 'form/edit', component: _import('example/form'), name: '编辑Form', meta: { isEdit: true }},
+      { path: 'form/create', component: _import('example/form'), name: '创建Form' },
+      { path: 'tab/index', component: _import('example/tab/index'), name: 'Tab' }
     ]
   },
   {
@@ -124,7 +120,6 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: 'error',
-    icon: 'minus-square',
     children: [
       { path: '401', component: _import('errorPage/401'), name: '401' },
       { path: '404', component: _import('errorPage/404'), name: '404' }
@@ -135,7 +130,6 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: 'errlog',
-    icon: 'bug',
     noDropdown: true,
     children: [{ path: 'log', component: _import('errlog/index'), name: '错误日志' }]
   },
@@ -144,7 +138,6 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/excel/download',
     name: 'excel',
-    icon: 'table',
     children: [
       { path: 'download', component: _import('excel/index'), name: '导出excel' },
       { path: 'download2', component: _import('excel/selectExcel'), name: '导出已选择项' }
@@ -155,7 +148,6 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: 'theme',
-    icon: 'theme',
     noDropdown: true,
     children: [{ path: 'index', component: _import('theme/index'), name: '换肤' }]
   },

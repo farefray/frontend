@@ -3,19 +3,13 @@
     <el-form class="card-box login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
       <div class="title"><img :src="logo" alt="Logo" width="225px"></div>
       <el-form-item prop="username">
-        <span class="svg-container svg-container_login">
-          <icon-svg icon-class="yonghuming" />
-        </span>
         <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="Username" />
       </el-form-item>
 
       <el-form-item prop="password">
-        <span class="svg-container">
-          <icon-svg icon-class="mima" />
-        </span>
         <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
           placeholder="Password" />
-        <span class='show-pwd' @click='showPwd'><icon-svg icon-class="yanjing" /></span>
+        <span class='show-pwd' @click='showPwd'><icon name="eye-slash"></icon></span>
       </el-form-item>
 
       <el-row :gutter="10">
