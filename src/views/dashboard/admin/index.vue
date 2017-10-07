@@ -12,7 +12,7 @@
 				<router-link class="pan-btn pink-btn" to="/excel/download">Excel</router-link>
 			</el-col>
 			<el-col :span="4" class='text-center'>
-				<router-link class="pan-btn green-btn" to="/predictions/table/table">Predictions</router-link>
+				<router-link class="pan-btn green-btn" to="/predictions/events">Predictions</router-link>
 			</el-col>
 			<el-col :span="4" class='text-center'>
 				<router-link class="pan-btn tiffany-btn" to="/example/form/edit">Form</router-link>

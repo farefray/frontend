@@ -95,16 +95,15 @@ export const asyncRouterMap = [
     name: 'Predictions',
     children: [
       {
-        path: '/predictions/table',
-        component: _import('predictions/table/index'),
-        redirect: '/predictions/table/table',
-        name: 'Table',
-        children: [
+        path: 'events',
+        component: _import('predictions/events'),
+        name: 'Events'
+        /* children: [
+          { path: 'table', component: _import('predictions/events'), name: 'composite table' },
           { path: 'dynamictable', component: _import('predictions/table/dynamictable/index'), name: 'dynamic table' },
           { path: 'dragtable', component: _import('predictions/table/dragTable'), name: 'drag table' },
           { path: 'inline_edit_table', component: _import('predictions/table/inlineEditTable'), name: 'inline edit' },
-          { path: 'table', component: _import('predictions/table/table'), name: 'composite table' }
-        ]
+        ] */
       },
       { path: 'form/edit', meta: { role: ['admin'], isEdit: true }, component: _import('predictions/form'), name: '编辑Form' },
       { path: 'form/create', meta: { role: ['admin'] }, component: _import('predictions/form'), name: '创建Form' },
