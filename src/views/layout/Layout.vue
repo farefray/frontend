@@ -43,7 +43,7 @@ export default {
 			}
 		}
 		.sidebar-container {
-			transition: width 0.28s ease-out;
+			transition: width 0.48s ease-out;
 			width: 180px;
 			height: 100%;
 			position: fixed;
@@ -56,7 +56,7 @@ export default {
 		}
 		.main-container {
 			min-height: 100%;
-			transition: margin-left 0.28s ease-out;
+			transition: margin-left 0.48s ease-out;
 			margin-left: 180px;
 		}
 	}

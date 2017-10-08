@@ -76,12 +76,6 @@ export default {
     line-height: 50px;
   }
 
-  .el-menu--horizontal .el-submenu > .el-menu {
-    top: 50px;
-    background-color: #eef6ee;
-    padding: 0;
-  }
-
   .el-submenu .el-menu-item {
     min-width: 96px !important;
     text-align: center;

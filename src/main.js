@@ -1,14 +1,15 @@
 import Vue from 'vue'
-import '../theme/index.css'
 import ElementUI from 'element-ui'
-import App from './App'
+import elementLocale from 'element-ui/lib/locale/lang/en'
+import App from './App.vue'
 import router from './router'
 import store from './store'
 import * as filters from './filters'
+import './styles/index.scss'
 // only import the icons you use to reduce bundle size
 // import 'vue-awesome/icons/flag'
 // or import all icons if you don't care about bundle size
-import 'vue-awesome/icons'
+import 'vue-awesome/icons' // maybe not needed?
 
 import './errorLog'
 import './permission'
@@ -16,7 +17,7 @@ import './mock'
 import Icon from 'vue-awesome/components/Icon'
 
 Vue.component('icon', Icon)
-Vue.use(ElementUI)
+Vue.use(ElementUI, { locale: elementLocale })
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

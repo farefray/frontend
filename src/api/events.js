@@ -1,27 +1,73 @@
-import Mock from 'mockjs'
-import { param2Obj } from '@/utils'
+import service from './service'
 
-const List = []
-const count = 100
+export function fetchEventsList(params) {
+  console.log(params)
+  return service.get('/api/v1/events', {
 
-for (let i = 0; i < count; i++) {
-  List.push(Mock.mock({
-    id: '@increment',
-    timestamp: +Mock.Random.date('T'),
-    author: '@cname',
-    auditor: '@cname',
-    title: '@ctitle(10, 20)',
-    forecast: '@float(0, 100, 2, 2)',
-    importance: '@integer(1, 3)',
-    'type|1': ['CN', 'US', 'JP', 'EU'],
-    'status|1': ['published', 'draft', 'deleted'],
-    display_time: '@datetime',
-    pageviews: '@integer(300, 5000)'
-  }))
+  }).then(response => {
+    console.log(response);
+    if (!response || !response.data) {
+      return false
+    }
+
+    let eventList = response.data;
+    let List = [];
+    for (let i = 0; i < params.limit; i++) {
+      List.push({
+        id: 123,
+        timestamp: 12321312312321,
+        author: '@cname',
+        auditor: '@cname',
+        title: '@ctitle',
+        forecast: 2.22,
+        importance: 1,
+        type: 'EU',
+        status: 'draft',
+        display_time: 132141241241,
+        pageviews: 2323
+      })
+    }
+
+    console.log(eventList);
+    const pageList = List.filter((item, index) => index < params.limit * params.page && index >= params.limit * (params.page - 1))
+    console.log(pageList);
+    return {
+      total: List.length,
+      items: List
+    }
+  })
 }
 
-export default {
-  getList: config => {
+// TODO \/
+export function fetchList(params) {
+  console.log(params)
+  return service.get('/api/v1/events', {
+
+  }).then(response => {
+    return response
+  })
+}
+
+export function fetchPv(params) {
+  console.log(params)
+  return service.get('/api/v1/events', {
+
+  }).then(response => {
+    return response
+  })
+}
+
+export function fetchArticle(params) {
+  console.log(params)
+
+  return service.get('/api/v1/events', {
+  }).then(response => {
+    return response
+  })
+}
+
+/*
+ getList: config => {
     const { importance, type, title, page = 1, limit = 20, sort } = param2Obj(config.url)
 
     let mockList = List.filter(item => {
@@ -45,7 +91,8 @@ export default {
   getPv: () => ({
     pvData: [{ key: 'PC网站', pv: 1024 }, { key: 'mobile网站', pv: 1024 }, { key: 'ios', pv: 1024 }, { key: 'android', pv: 1024 }]
   }),
-  getArticle: () => ({
+
+ getArticle: () => ({
     id: 120000000001,
     author: { key: 'mockPan' },
     source_name: '原创作者',
@@ -61,4 +108,4 @@ export default {
     tags: [],
     title: ''
   })
-}
+ */

@@ -170,12 +170,12 @@
 
 .el-menu--horizontal .el-submenu > .el-menu{
   position: absolute;
-  top: 65px;
+  z-index: 100;
+  top: 50px;
   left: 0;
   border: 1px solid rgb(212, 229, 209);
-  padding: 5px 0;
-  background-color: #fff;
-  z-index: 100;
+  padding: 0;
+  background-color: #eef6ee;
   min-width: 100%;
   box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.12), 0px 0px 6px 0px rgba(0,0,0,0.04);
 }
