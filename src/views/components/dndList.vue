@@ -9,7 +9,7 @@
 
 <script>
 import DndList from '@/components/twoDndList'
-import { fetchList } from '@/api/article'
+import { fetchList } from '@/api/events'
 
 export default {
   components: { DndList },

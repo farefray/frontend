@@ -35,7 +35,7 @@
 
       <el-table-column width="180px" align="center" label="Time">
         <template scope="scope">
-          <span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          <span>{{scope.row.date | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
         </template>
       </el-table-column>
 
@@ -91,7 +91,7 @@
 
     <div v-show="!listLoading" class="pagination-container">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-        :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        :page-sizes="[10,20,30,50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next" :total="total">
       </el-pagination>
     </div>
 
@@ -150,7 +150,7 @@
 </template>
 
 <script>
-import { fetchList, fetchPv } from '@/api/article'
+import { fetchEventsList, fetchPv } from '@/api/events'
 import waves from '@/directive/waves.js'// water ripples
 import { parseTime } from '@/utils'
 
@@ -229,9 +229,9 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+      fetchEventsList(this.listQuery).then(response => {
+        this.list = response.items
+        this.total = response.total
         this.listLoading = false
       })
     },
@@ -350,3 +350,7 @@ export default {
   }
 }
 </script>
+
+<style>
+
+</style>

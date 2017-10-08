@@ -1,13 +1,5 @@
-import axios from 'axios'
 import { Message } from 'element-ui'
-
-const service = axios.create({
-  baseURL: process.env.BASE_API,
-  timeout: 5000,
-  validateStatus: function(status) {
-    return status >= 200 && status < 500; // default
-  }
-})
+import service from './service'
 
 export function loginByUsername(uname, pass) {
   return service.post('/auth/local', {

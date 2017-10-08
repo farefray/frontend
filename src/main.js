@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import ElementUI from 'element-ui'
+import elementLocale from 'element-ui/lib/locale/lang/en'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -16,7 +17,7 @@ import './mock'
 import Icon from 'vue-awesome/components/Icon'
 
 Vue.component('icon', Icon)
-Vue.use(ElementUI)
+Vue.use(ElementUI, { locale: elementLocale })
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
