@@ -6,14 +6,11 @@ import { asyncRouterMap, constantRouterMap } from '@/router'
  * @param route
  */
 function hasPermission(roles, route) {
-  console.log('has permission')
-  console.log(route.meta)
   if (route.meta && route.meta.role) {
     return roles.some(role => route.meta.role.indexOf(role) >= 0)
-  } else {
-    console.log('true')
-    return true
   }
+
+  return true
 }
 
 function filterAsyncRouter(asyncRouterMap, roles) {
