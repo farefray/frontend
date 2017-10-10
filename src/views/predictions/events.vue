@@ -21,64 +21,59 @@
 
       <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">Search</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="edit">Add</el-button>
-      <el-button class="filter-item" type="primary" icon="document" @click="handleDownload">Export</el-button>
-      <el-checkbox class="filter-item" @change='tableKey=tableKey+1' v-model="showAuditor">Show auditor</el-checkbox>
+      <el-checkbox class="filter-item" @change='tableKey=tableKey+1' v-model="showOdds">Show odds</el-checkbox>
     </div>
 
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="Loading..." border fit highlight-current-row style="width: 100%">
 
-      <el-table-column align="center" label="Serial" width="65">
-        <template scope="scope">
-          <span>{{scope.row.id}}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="180px" align="center" label="Time">
+      <el-table-column width="130px" align="center" label="DATE (UTC)">
         <template scope="scope">
           <span>{{scope.row.date | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="300px" label="Title">
+      <el-table-column min-width="80px" label="Event">
         <template scope="scope">
-          <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.title}}</span>
-          <el-tag>{{scope.row.type | typeFilter}}</el-tag>
+          <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
+          <el-tag>{{scope.row.game}}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column width="110px" align="center" label="Author">
+      <el-table-column width="210px" align="center" label="Participant">
         <template scope="scope">
-          <span>{{scope.row.author}}</span>
+          <span>{{scope.row.team_A.flag}}</span>
+          <span>{{scope.row.team_A.name}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="110px" v-if='showAuditor' align="center" label="Show Auditor">
+      <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
         <template scope="scope">
-          <span style='color:red;'>{{scope.row.auditor}}</span>
+          <span style='color:red;'>{{scope.row.odds_1}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="80px" label="Importance">
+      <el-table-column width="210px" align="center" label="Participant">
         <template scope="scope">
-          <icon v-for="n in +scope.row.importance" name="trophy" class="meta-item__icon" :key="n"></icon>
+          <span>{{scope.row.team_B.flag}}</span>
+          <span>{{scope.row.team_B.name}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Reads" width="95">
+      <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
         <template scope="scope">
-          <span class="link-type" @click='handleFetchPv(scope.row.pageviews)'>{{scope.row.pageviews}}</span>
+          <span style='color:red;'>{{scope.row.odds_2}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="State" width="90">
+      <el-table-column class-name="status-col" label="State" width="100">
         <template scope="scope">
           <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Operation" width="150">
+      <el-table-column align="center" label="Operation">
         <template scope="scope">
-          <el-button v-if="scope.row.status!='published'" size="small" type="success" @click="handleModifyStatus(scope.row,'published')">发布
+          <el-button v-if="scope.row.status!='planned'" size="small" type="success" @click="handleModifyStatus(scope.row,'published')">发布
           </el-button>
           <el-button v-if="scope.row.status!='draft'" size="small" @click="handleModifyStatus(scope.row,'draft')">草稿
           </el-button>
@@ -206,7 +201,7 @@ export default {
       },
       dialogPvVisible: false,
       pvData: [],
-      showAuditor: false,
+      showOdds: true,
       tableKey: 0
     }
   },
@@ -218,6 +213,9 @@ export default {
         deleted: 'danger'
       }
       return statusMap[status]
+    },
+    parseTime(str) {
+      return parseTime(str)
     },
     typeFilter(type) {
       return calendarTypeKeyValue[type]
@@ -328,24 +326,6 @@ export default {
         this.pvData = response.data.pvData
         this.dialogPvVisible = true
       })
-    },
-    handleDownload() {
-      require.ensure([], () => {
-        const { export_json_to_excel } = require('vendor/Export2Excel')
-        const tHeader = ['Time', 'province', 'type', 'title', 'importance']
-        const filterVal = ['timestamp', 'province', 'type', 'title', 'importance']
-        const data = this.formatJson(filterVal, this.list)
-        export_json_to_excel(tHeader, data, 'events')
-      })
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'timestamp') {
-          return parseTime(v[j])
-        } else {
-          return v[j]
-        }
-      }))
     }
   }
 }

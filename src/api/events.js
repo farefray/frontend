@@ -15,25 +15,25 @@ export function fetchEventsList(params) {
     for (let i = 0; i < params.limit; i++) {
       List.push({
         id: 123,
-        timestamp: 12321312312321,
-        author: '@cname',
-        auditor: '@cname',
-        title: '@ctitle',
-        forecast: 2.22,
-        importance: 1,
+        date: 12321312312321,
+        team_A: '@cname',
+        team_B: '@cname',
+        odds_1: 1.5,
+        odds_2: 2.22,
+        odds_draw: 1,
+        game_league: 'ESL',
+        game: "Counter-Strike",
         type: 'EU',
-        status: 'draft',
-        display_time: 132141241241,
-        pageviews: 2323
+        status: 'planned'
       })
     }
 
     console.log(eventList);
-    const pageList = List.filter((item, index) => index < params.limit * params.page && index >= params.limit * (params.page - 1))
+    const pageList = eventList.filter((item, index) => index < params.limit * params.page && index >= params.limit * (params.page - 1))
     console.log(pageList);
     return {
-      total: List.length,
-      items: List
+      total: eventList.length,
+      items: pageList
     }
   })
 }
