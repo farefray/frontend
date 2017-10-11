@@ -2,31 +2,19 @@
   <div class="login-container" style="height: auto;">
     <el-form class="card-box" autoComplete="on" :model="registerForm" :rules="registerRules" ref="registerForm" label-position="left">
       <el-form-item prop="username">
-        <span class="svg-container svg-container_register">
-          <icon-svg icon-class="yonghuming" />
-        </span>
         <el-input name="username" type="text" v-model="registerForm.username" autoComplete="on" placeholder="Username" />
       </el-form-item>
 
       <el-form-item prop="email">
-        <span class="svg-container svg-container_register">
-          <icon-svg icon-class="yonghuming" />
-        </span>
         <el-input name="email" type="text" v-model="registerForm.email" autoComplete="on" placeholder="Email" />
       </el-form-item>
 
       <el-form-item prop="password">
-        <span class="svg-container">
-          <icon-svg icon-class="mima" />
-        </span>
         <el-input name="password" type="password" v-model="registerForm.password" autoComplete="off"
                   placeholder="Password" />
       </el-form-item>
 
       <el-form-item prop="passwordRepeat">
-        <span class="svg-container">
-          <icon-svg icon-class="mima" />
-        </span>
         <el-input name="passwordRepeat" type="password" v-model="registerForm.passwordRepeat" autoComplete="off"
                   placeholder="Repeat password" />
       </el-form-item>
