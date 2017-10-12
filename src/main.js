@@ -31,16 +31,23 @@ new Vue({
   store,
   template: '<App/>',
   beforeCreate() {
-    this.$store.dispatch('VerifyToken').then(() => {
+    const self = this;
+    self.$store.dispatch('VerifyToken').catch(function(e) {
+        // Функция не перевыбросила исключение 'e'
+        // в результате произойдёт resolve(undefined)
+        // для Promise, возвращённого функцией catch
+        console.log(e);
+    }).then((response) => {
       console.log('Login token verified!')
-
+      console.log(response);
       console.log('Building routes')
-      const roles = this.$store.getters.roles
-      console.log(this.$store.getters.roles)
-      this.$store.dispatch('GenerateRoutes', { roles }).then(() => {
-        router.addRoutes(this.$store.getters.addRouters)
+      const roles = self.$store.getters.roles
+      console.log(self.$store.getters.roles)
+      self.$store.dispatch('GenerateRoutes', { roles }).then((routers) => {
+        console.log(routers);
+        router.addRoutes(self.$store.getters.addRouters)
       })
-    })
+    });
   },
   components: { App }
 })

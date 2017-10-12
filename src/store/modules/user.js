@@ -83,7 +83,7 @@ const user = {
         const cookieToken = getToken();
         if (cookieToken !== state.token || state.token === '' || state.token === undefined) {
           commit('RESET_USER');
-          return reject()
+          return reject();
         }
 
         // token exist, confirm it by backend
@@ -94,8 +94,8 @@ const user = {
             }
 
             commit('RESET_USER');
-            return reject()
-          })
+            return reject();
+          });
         })
       })
     },
@@ -117,7 +117,8 @@ const user = {
     LoginByUsername({ commit }, userInfo) {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
-        loginByUsername(username, userInfo.password).then(response => {
+        loginByUsername(username, userInfo.password).then((response) => {
+          console.log('response loginByUsername ' + response)
           if (response === false) {
             // incase error proc on request
             return reject()
@@ -132,9 +133,9 @@ const user = {
           commit('SET_ID', data.id)
           commit('SET_USERNAME', data.username)
           commit('SET_ROLES', data.roles)
-          resolve()
+          return resolve()
         }).catch(error => {
-          reject(error)
+          return reject(error)
         })
       })
     },

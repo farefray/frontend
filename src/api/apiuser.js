@@ -1,26 +1,38 @@
-import { Message } from 'element-ui'
 import service from './service'
 
 export function loginByUsername(uname, pass) {
+  const self = this;
   return service.post('/auth/local', {
     username: uname,
     password: pass
-  })
-    .then(response => {
-      console.log(response)
-      return response
-    })
-    .catch(error => {
+  }).then((response) => {
+      console.log(response);
+      if (response.status !== 200) {
+          if (response.data && response.data.message) {
+              self.$message({
+                  message: response.data.message,
+                  type: 'error',
+                  duration: 5 * 1000
+              })
+          }
+
+          return Promise.reject(false);
+      }
+
+      console.log(response);
+      return Promise.resolve(true);
+  }).catch((error) => {
+      console.log(error)
       // validation rules failed response.data.data.name == ValidationError
       // let errorMessage = error;
-      Message({
-        message: error.response.data.error.message,
-        type: 'error',
-        duration: 5 * 1000
+      self.$message({
+          message: error.response.data.error.message,
+          type: 'error',
+          duration: 5 * 1000
       })
 
-      return false
-    })
+      return Promise.reject(false);
+  })
 }
 
 export function verifyToken(token, id, email) {
@@ -45,6 +57,7 @@ export function verifyToken(token, id, email) {
 }
 
 export function registerUser(userInfo) {
+  const self = this
   return service.post('/signup', userInfo)
     .then(response => {
       console.log(response);
@@ -71,7 +84,7 @@ export function registerUser(userInfo) {
       }
 
       console.log(errorMessage);
-      Message({
+      self.$message({
         message: errorMessage,
         type: 'error',
         duration: 5 * 1000

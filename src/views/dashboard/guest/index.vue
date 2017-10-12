@@ -1,21 +1,39 @@
 <template>
   <div class="dashboard-guest-container">
-    <div class=" clearfix">
-      <div class="info-container">
-        <span style='font-size:20px;padding-top:20px;display:inline-block;'>dashboard</span>
-      </div>
-    </div>
+    <el-row>
+      <el-col :span="6">
+        <el-card class="box-card">
+          <div class="info-item">
+            <count-to class="info-item-num" :startVal='0' :endVal='statisticsData.article_count' :duration='3400'></count-to>
+            <span class="info-item-text">esss</span>
+          </div>
+          <div class="info-item">
+            <count-to class="info-item-num" :startVal='0' :endVal='statisticsData.pageviews_count' :duration='3600'></count-to>
+            <span class="info-item-text">asdsadas</span>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
     <div>
     </div>
   </div>
 </template>
 
 <script>
+
+import countTo from 'vue-count-to'
+
 export default {
   name: 'dashboard-editor',
-  components: {},
+  components: {
+      countTo
+  },
   data() {
     return {
+        statisticsData: {
+            article_count: 1024,
+            pageviews_count: 1024
+        }
     }
   },
   computed: {

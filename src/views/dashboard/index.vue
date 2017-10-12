@@ -24,10 +24,12 @@ export default {
     ])
   },
   created() {
-    if (this.roles.indexOf('admin') >= 0) {
-      this.currentRole = 'adminDashboard'
-    } else if (this.roles.indexOf('editor') >= 0) {
-      this.currentRole = 'editorDashboard'
+    if (this.roles) {
+        if (this.roles.indexOf('admin') >= 0) {
+            this.currentRole = 'adminDashboard'
+        } else if (this.roles.indexOf('editor') >= 0) {
+            this.currentRole = 'editorDashboard'
+        }
     }
   }
 }

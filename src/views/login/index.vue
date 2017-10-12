@@ -7,9 +7,8 @@
       </el-form-item>
 
       <el-form-item prop="password">
-        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
+        <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
           placeholder="Password" />
-        <span class='show-pwd' @click='showPwd'><icon name="eye-slash"></icon></span>
       </el-form-item>
 
       <el-row :gutter="10">
@@ -35,7 +34,7 @@
       </el-row>
     </el-form>
 
-    <el-dialog title="Registration" :visible.sync="showRegistrationForm">
+    <el-dialog width="30%" title="Registration" :visible.sync="showRegistrationForm">
       <register @registered="registered"></register>
     </el-dialog>
 
@@ -72,7 +71,6 @@ export default {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
-      pwdType: 'password',
       loading: false,
       showDialog: false,
       showRegistrationForm: false,
@@ -91,20 +89,16 @@ export default {
       this.loginForm.username = username
       this.loginForm.password = ''
     },
-    showPwd() {
-      if (this.pwdType === 'password') {
-        this.pwdType = ''
-      } else {
-        this.pwdType = 'password'
-      }
-    },
     handleLogin() {
       this.showRegistrationForm = false
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
           const _this = this
-          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+          this.$store.dispatch('LoginByUsername', this.loginForm).catch(() => {
+              _this.loading = false
+          }).then((response) => {
+            console.log(response);
             console.log('back from login store to views login')
             _this.loading = false;
             Message({
@@ -113,9 +107,7 @@ export default {
               duration: 5 * 1000
             })
             _this.$router.push('/')
-          }).catch(() => {
-            _this.loading = false
-          })
+          });
         } else {
           console.log('error submit!!')
           return false
@@ -143,8 +135,8 @@ export default {
     height: 100vh;
     background-color: $bg;
     input:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
-      -webkit-text-fill-color: #fff !important;
+      -webkit-box-shadow: inset 0 0 0 50px #1e314d;
+      -webkit-text-fill-color: #476b3b;
     }
     input {
       background: transparent;
@@ -158,7 +150,7 @@ export default {
     .el-input {
       display: inline-block;
       height: 47px;
-      width: 85%;
+      width: 100%;
     }
     .tips {
       font-size: 14px;
@@ -197,14 +189,6 @@ export default {
       border-radius: 5px;
       color: #454545;
     }
-    .show-pwd {
-      position: absolute;
-      right: 10px;
-      top: 7px;
-      font-size: 16px;
-      color: $dark_gray;
-      cursor: pointer;
-    }
   }
 
   .el-dialog {
@@ -212,6 +196,6 @@ export default {
   }
 
   .el-dialog__title {
-    color: rgb(249, 144, 8);
+    color: #f99008 !important;
   }
 </style>
