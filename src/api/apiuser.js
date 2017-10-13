@@ -1,21 +1,12 @@
 import service from './service'
 
 export function loginByUsername(uname, pass) {
-  const self = this;
   return service.post('/auth/local', {
     username: uname,
     password: pass
   }).then((response) => {
       console.log(response);
       if (response.status !== 200) {
-          if (response.data && response.data.message) {
-              self.$message({
-                  message: response.data.message,
-                  type: 'error',
-                  duration: 5 * 1000
-              })
-          }
-
           return Promise.reject(false);
       }
 
@@ -25,11 +16,6 @@ export function loginByUsername(uname, pass) {
       console.log(error)
       // validation rules failed response.data.data.name == ValidationError
       // let errorMessage = error;
-      self.$message({
-          message: error.response.data.error.message,
-          type: 'error',
-          duration: 5 * 1000
-      })
 
       return Promise.reject(false);
   })

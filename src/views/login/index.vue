@@ -53,7 +53,6 @@ import register from './register'
 import logo from '@/assets/logo.svg'
 import ElCol from 'element-ui/packages/col/src/col'
 import ElButtonGroup from "../../../node_modules/element-ui/packages/button/src/button-group.vue";
-import { Message } from 'element-ui'
 
 export default {
   components: {
@@ -80,7 +79,7 @@ export default {
   methods: {
     registered(username) {
       this.showRegistrationForm = false
-      Message({
+      this.$message({
         message: 'You have successfully registered on BettingsStats. Now you can login.',
         type: 'success',
         duration: 5 * 1000
@@ -95,18 +94,25 @@ export default {
         if (valid) {
           this.loading = true
           const _this = this
-          this.$store.dispatch('LoginByUsername', this.loginForm).catch(() => {
-              _this.loading = false
-          }).then((response) => {
+          this.$store.dispatch('LoginByUsername', this.loginForm).then((response) => {
             console.log(response);
             console.log('back from login store to views login')
             _this.loading = false;
-            Message({
+            _this.$message({
               message: 'Welcome!',
               type: 'success',
               duration: 5 * 1000
-            })
+            });
+
             _this.$router.push('/')
+          }).catch((err) => {
+              console.log(err);
+              _this.loading = false;
+              _this.$message({
+                  message: 'Error! Check your username or password once again.',
+                  type: 'error',
+                  duration: 25 * 1000
+              })
           });
         } else {
           console.log('error submit!!')

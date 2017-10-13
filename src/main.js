@@ -5,7 +5,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import * as filters from './filters'
-import './styles/index.scss'
+// import './styles/index.scss'
+// import 'element-theme-chalk';
 // only import the icons you use to reduce bundle size
 // import 'vue-awesome/icons/flag'
 // or import all icons if you don't care about bundle size

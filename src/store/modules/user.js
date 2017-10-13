@@ -115,13 +115,12 @@ const user = {
     },
 
     LoginByUsername({ commit }, userInfo) {
-      const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
-        loginByUsername(username, userInfo.password).then((response) => {
+        loginByUsername(userInfo.username.trim(), userInfo.password).then((response) => {
           console.log('response loginByUsername ' + response)
           if (response === false) {
             // incase error proc on request
-            return reject()
+            return reject(false)
           }
 
           log(response)
@@ -133,9 +132,10 @@ const user = {
           commit('SET_ID', data.id)
           commit('SET_USERNAME', data.username)
           commit('SET_ROLES', data.roles)
-          return resolve()
-        }).catch(error => {
-          return reject(error)
+          return resolve(true)
+        }).catch((error) => {
+          console.log(error);
+          return reject(false)
         })
       })
     },
