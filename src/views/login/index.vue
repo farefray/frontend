@@ -201,6 +201,14 @@ export default {
     background: #223756;
   }
 
+  .el-dialog__body {
+    background: #223756;
+  }
+
+  .el-dialog__header {
+    background: #223756;
+  }
+
   .el-dialog__title {
     color: #f99008 !important;
   }
