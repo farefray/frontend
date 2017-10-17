@@ -7,17 +7,17 @@ export function loginByUsername(uname, pass) {
   }).then((response) => {
       console.log(response);
       if (response.status !== 200) {
-          return Promise.reject(false);
+          return Promise.reject(response);
       }
 
       console.log(response);
-      return Promise.resolve(true);
+      return Promise.resolve(response);
   }).catch((error) => {
       console.log(error)
       // validation rules failed response.data.data.name == ValidationError
       // let errorMessage = error;
 
-      return Promise.reject(false);
+      return Promise.reject(error);
   })
 }
 

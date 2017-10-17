@@ -31,10 +31,10 @@ gulp.task('compile_css', function() {
     .pipe(gulp.dest('./static/theme'));
 });
 
-  gulp.task('copyfont', function() {
-  return gulp.src('./theme/fonts/**')
+gulp.task('copyfont', function() {
+  return gulp.src('./static/theme/fonts/**')
     .pipe(cssmin())
-    .pipe(gulp.dest('./static/theme/fonts'));
+    .pipe(gulp.dest('./static/theme'));
 });
 
 gulp.task('build', ['compile', 'copyfont']);

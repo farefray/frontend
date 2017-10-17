@@ -17,6 +17,7 @@ import './mock'
 import Icon from 'vue-awesome/components/Icon'
 
 Vue.component('icon', Icon)
+Vue.use(require('vue-moment'))
 Vue.use(ElementUI, { locale: elementLocale })
 // register global utility filters.
 Object.keys(filters).forEach(key => {

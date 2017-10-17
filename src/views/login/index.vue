@@ -14,8 +14,8 @@
       <el-row :gutter="10">
         <el-col :span="14" :offset="5">
           <el-button-group>
-            <el-button type="primary" style="width:90px" :loading="loading" @click.native.prevent="handleLogin">Login</el-button>
-            <el-button type="primary" style="width:90px" @click='showRegistrationForm=true'>Register</el-button>
+            <el-button type="success" style="width:90px" :loading="loading" @click.native.prevent="handleLogin">Login</el-button>
+            <el-button type="success" style="width:90px" @click='showRegistrationForm=true'>Register</el-button>
           </el-button-group>
         </el-col>
       </el-row>
@@ -50,7 +50,7 @@
 import { validateUsername, validatePassword } from '@/utils/validate'
 import socialSign from './socialsignin'
 import register from './register'
-import logo from '@/assets/logo.svg'
+import logo from '@/assets/logo_gradient.svg'
 import ElCol from 'element-ui/packages/col/src/col'
 import ElButtonGroup from "../../../node_modules/element-ui/packages/button/src/button-group.vue";
 

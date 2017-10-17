@@ -4,38 +4,31 @@
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="Title" v-model="listQuery.title">
       </el-input>
 
-      <el-select clearable style="width: 90px" class="filter-item" v-model="listQuery.importance" placeholder="Importance">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item">
-        </el-option>
-      </el-select>
-
-      <el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.type" placeholder="Type">
-        <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key">
-        </el-option>
-      </el-select>
-
-      <el-select @change='handleFilter' style="width: 120px" class="filter-item" v-model="listQuery.sort" placeholder="Sorting">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
-        </el-option>
-      </el-select>
-
       <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">Search</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="edit">Add</el-button>
-      <el-checkbox class="filter-item" @change='tableKey=tableKey+1' v-model="showOdds">Show odds</el-checkbox>
     </div>
 
-    <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="Loading..." border fit highlight-current-row style="width: 100%">
+    <el-table :data="list" @sort-change="onSortChange" @filter-change="onFilterChange" v-loading="listLoading" element-loading-text="Loading..." border fit style="width: 100%">
 
-      <el-table-column width="130px" align="center" label="DATE (UTC)">
+      <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date" sortable>
         <template scope="scope">
-          <span>{{scope.row.date | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          <span><strong>{{(scope.row.date * 1000) | moment("DD.MM kk:mm")}}</strong></span><br/>
+          <span>({{(scope.row.date * 1000) | moment("from")}})</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="80px" label="Event">
+      <el-table-column min-width="80px" max-width="150px" label="Event" prop="game" column-key="game"
+                       :filters="[
+                          { text: 'Dota 2', value: 'Dota 2' },
+                          { text: 'LoL', value: 'LoL' },
+                          { text: 'Overwatch', value: 'Overwatch' },
+                          { text: 'Counter-Strike', value: 'Counter-Strike' }
+                       ]"
+                       :filter-method="filterGameType"
+                       filter-placement="bottom-end">
         <template scope="scope">
           <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
-          <el-tag>{{scope.row.game}}</el-tag>
+          <el-tag close-transition>{{scope.row.game}}</el-tag>
         </template>
       </el-table-column>
 
@@ -48,7 +41,7 @@
 
       <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
         <template scope="scope">
-          <span style='color:red;'>{{scope.row.odds_1}}</span>
+          <span style='color:red;'>{{scope.row.odds_1 | oddsToChance}}</span>
         </template>
       </el-table-column>
 
@@ -85,20 +78,13 @@
     </el-table>
 
     <div v-show="!listLoading" class="pagination-container">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-        :page-sizes="[10,20,30,50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next" :total="total">
+      <el-pagination @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
+        :page-size="50" layout="total, prev, pager, next" :total="total">
       </el-pagination>
     </div>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form class="small-space" :model="temp" label-position="left" label-width="70px" style='width: 400px; margin-left:50px;'>
-        <el-form-item label="Type">
-          <el-select class="filter-item" v-model="temp.type" placeholder="Please select">
-            <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key">
-            </el-option>
-          </el-select>
-        </el-form-item>
-
         <el-form-item label="State">
           <el-select class="filter-item" v-model="temp.status" placeholder="Please select">
             <el-option v-for="item in  statusOptions" :key="item" :label="item" :value="item">
@@ -114,15 +100,6 @@
         <el-form-item label="Title">
           <el-input v-model="temp.title"></el-input>
         </el-form-item>
-
-        <el-form-item label="Importance">
-          <el-rate style="margin-top:8px;" v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']"></el-rate>
-        </el-form-item>
-
-        <el-form-item label="Review">
-          <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="Please enter" v-model="temp.remark">
-          </el-input>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">Take away</el-button>
@@ -130,37 +107,12 @@
         <el-button v-else type="primary" @click="update">Determine</el-button>
       </div>
     </el-dialog>
-
-    <el-dialog title="Read the number of stats" :visible.sync="dialogPvVisible" size="small">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="渠道"> </el-table-column>
-        <el-table-column prop="pv" label="pv"> </el-table-column>
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
-
   </div>
 </template>
 
 <script>
-import { fetchEventsList, fetchPv } from '@/api/events'
+import { fetchEventsList } from '@/api/events'
 import waves from '@/directive/waves.js'// water ripples
-import { parseTime } from '@/utils'
-
-const calendarTypeOptions = [
-      { key: 'CN', display_name: 'CN' },
-      { key: 'US', display_name: 'US' },
-      { key: 'JP', display_name: 'JP' },
-      { key: 'EU', display_name: 'EU' }
-]
-
-// arr to obj
-const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
 
 export default {
   name: 'events_table',
@@ -174,24 +126,14 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id'
+        limit: 50,
+        title: undefined
       },
       temp: {
         id: undefined,
-        importance: 0,
-        remark: '',
         timestamp: 0,
-        title: '',
-        type: '',
-        status: 'published'
+        title: ''
       },
-      importanceOptions: [1, 2, 3],
-      calendarTypeOptions,
-      sortOptions: [{ label: '+ID', key: '+id' }, { label: '-ID', key: '-id' }],
       statusOptions: ['published', 'draft', 'deleted'],
       dialogFormVisible: false,
       dialogStatus: '',
@@ -199,13 +141,13 @@ export default {
         update: 'Edit',
         create: 'Create'
       },
-      dialogPvVisible: false,
-      pvData: [],
-      showOdds: true,
-      tableKey: 0
+      showOdds: true
     }
   },
   filters: {
+    oddsToChance(odds) {
+      return odds;
+    },
     statusFilter(status) {
       const statusMap = {
         published: 'success',
@@ -213,18 +155,23 @@ export default {
         deleted: 'danger'
       }
       return statusMap[status]
-    },
-    parseTime(str) {
-      return parseTime(str)
-    },
-    typeFilter(type) {
-      return calendarTypeKeyValue[type]
     }
   },
   created() {
     this.getList()
   },
   methods: {
+    onSortChange(sort) {
+      console.log(sort)
+      // Apply that sort to query and re-ask backend
+    },
+    onFilterChange(filters) {
+      console.log(filters)
+      // Apply filter to query and re-ask backend
+    },
+    filterGameType(value, row) {
+      return row.game === value;
+    },
     getList() {
       this.listLoading = true
       fetchEventsList(this.listQuery).then(response => {
@@ -234,10 +181,6 @@ export default {
       })
     },
     handleFilter() {
-      this.getList()
-    },
-    handleSizeChange(val) {
-      this.listQuery.limit = val
       this.getList()
     },
     handleCurrentChange(val) {
@@ -313,19 +256,9 @@ export default {
     resetTemp() {
       this.temp = {
         id: undefined,
-        importance: 0,
-        remark: '',
         timestamp: 0,
-        title: '',
-        status: 'published',
-        type: ''
+        title: ''
       }
-    },
-    handleFetchPv(pv) {
-      fetchPv(pv).then(response => {
-        this.pvData = response.data.pvData
-        this.dialogPvVisible = true
-      })
     }
   }
 }
