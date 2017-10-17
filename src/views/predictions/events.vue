@@ -95,44 +95,52 @@
         </div>
 
         <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-            <el-form class="small-space" :model="temp" label-position="left" label-width="120px"
-                     style='width: 400px; margin-left:50px;'>
+            <el-form class="small-space" :model="temp" label-position="top" label-width="120px"
+                     style='width: 95%; margin: 0 40px;'>
+
+                <el-form-item label="Event details">
+                    <el-row :gutter="20">
+                        <el-col :span="8">
+                            <el-input placeholder="Event type" v-model="temp.game"></el-input>
+                        </el-col>
+                        <el-col :span="14">
+                            <el-input placeholder="Event league" v-model="temp.game_league"></el-input>
+                        </el-col>
+                    </el-row>
+                </el-form-item>
 
                 <el-form-item label="Date">
                     <el-date-picker v-model="temp.date" type="datetime" placeholder="Select date">
                     </el-date-picker>
                 </el-form-item>
 
-                <el-form-item label="Event type">
-                    <el-input placeholder="Event type" v-model="temp.game"></el-input>
+                <el-form-item label="Odds">
+                    <el-row justify="center">
+                        <el-col :span="8">
+                            <el-input-number v-model="temp.odds_1" :min="1" :max="10" :step="0.1"></el-input-number>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-input-number v-model="temp.odds_draw" :min="1" :max="10" :step="0.1"></el-input-number>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-input-number v-model="temp.odds_2" :min="1" :max="10" :step="0.1"></el-input-number>
+                        </el-col>
+                    </el-row>
                 </el-form-item>
 
-                <el-form-item label="Event league">
-                    <el-input placeholder="Event league" v-model="temp.game_league"></el-input>
-                </el-form-item>
-
-                <el-form-item label="Odds 1">
-                    <el-input-number v-model="temp.odds_1" :min="1" :max="10" :step="0.1"></el-input-number>
-                </el-form-item>
-
-                <el-form-item label="Odds 2">
-                    <el-input-number v-model="temp.odds_2" :min="1" :max="10" :step="0.1"></el-input-number>
-                </el-form-item>
-
-                <el-form-item label="Odds draw">
-                    <el-input-number v-model="temp.odds_draw" :min="1" :max="10" :step="0.1"></el-input-number>
-                </el-form-item>
-
-                <el-form-item label="Participant A">
-                    <el-input placeholder="Participant A" v-model="temp.team_A.name"></el-input>
-                </el-form-item>
-
-                <el-form-item label="Participant B">
-                    <el-input placeholder="Participant B" v-model="temp.team_B.name"></el-input>
+                <el-form-item label="Participants">
+                    <el-row :gutter="20">
+                        <el-col :span="11">
+                            <el-input placeholder="Participant A" v-model="temp.team_A.name"></el-input>
+                        </el-col>
+                        <el-col :span="11">
+                            <el-input placeholder="Participant B" v-model="temp.team_B.name"></el-input>
+                        </el-col>
+                    </el-row>
                 </el-form-item>
 
                 <el-form-item label="Verified">
-                    <el-switch v-model="temp.verified">
+                    <el-switch v-model="temp.verified" disabled>
                     </el-switch>
                 </el-form-item>
 
@@ -340,7 +348,7 @@
                 }
 
                 if (bet !== undefined) {
-                    this.temp.date = bet.date;
+                    this.temp.date = bet.date * 1000;
                     this.temp.game = bet.game;
                     this.temp.game_league = bet.game_league;
                     this.temp.odds_1 = bet.odds_1;
@@ -357,6 +365,10 @@
     }
 </script>
 
-<style>
-
+<style rel="stylesheet/scss" lang="scss">
+    el-dialog {
+        .el-input {
+            width: auto;
+        }
+    }
 </style>
