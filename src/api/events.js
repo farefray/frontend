@@ -11,26 +11,11 @@ export function fetchEventsList(params) {
     }
 
     let eventList = response.data;
-    let List = [];
-    for (let i = 0; i < params.limit; i++) {
-      List.push({
-        id: 123,
-        date: 12321312312321,
-        team_A: '@cname',
-        team_B: '@cname',
-        odds_1: 1.5,
-        odds_2: 2.22,
-        odds_draw: 1,
-        game_league: 'ESL',
-        game: "Counter-Strike",
-        type: 'EU',
-        status: 'planned'
-      })
+    for (let i = 0; i < eventList.length; i++) {
+      eventList[i].date = eventList[i].date * 1000;
     }
 
-    console.log(eventList);
     const pageList = eventList.filter((item, index) => index < params.limit * params.page && index >= params.limit * (params.page - 1))
-    console.log(pageList);
     return {
       total: eventList.length,
       items: pageList

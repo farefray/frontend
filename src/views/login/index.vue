@@ -111,7 +111,7 @@ export default {
               _this.$message({
                   message: 'Error! Check your username or password once again.',
                   type: 'error',
-                  duration: 25 * 1000
+                  duration: 5 * 1000
               })
           });
         } else {

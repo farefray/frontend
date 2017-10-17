@@ -12,13 +12,13 @@
         </div>
 
         <el-table :data="list" @sort-change="onSortChange" @filter-change="onFilterChange"
-                  @row-click="openPredictionDialog" v-loading="listLoading" element-loading-text="Loading..." border fit
+                  v-loading="listLoading" element-loading-text="Loading..." border fit
                   style="width: 100%">
 
             <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date" sortable>
                 <template scope="scope">
-                    <span><strong>{{(scope.row.date * 1000) | moment("DD.MM kk:mm")}}</strong></span><br/>
-                    <span>({{(scope.row.date * 1000) | moment("from")}})</span>
+                    <span><strong>{{(scope.row.date) | moment("DD.MM kk:mm")}}</strong></span><br/>
+                    <span>({{(scope.row.date) | moment("from")}})</span>
                 </template>
             </el-table-column>
 
@@ -33,7 +33,7 @@
                              filter-placement="bottom-end">
                 <template scope="scope">
                     <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
-                    <el-tag close-transition>{{scope.row.game}}</el-tag>
+                    <img :src="logos[scope.row.game]" width="32px" close-transition>
                 </template>
             </el-table-column>
 
@@ -71,12 +71,12 @@
 
             <el-table-column align="center" label="Operation">
                 <template scope="scope">
-                    <el-button v-if="scope.row.status!='planned'" size="small" type="success"
-                               @click="handleModifyStatus(scope.row,'published')">发布
+                    <el-button v-if="!isBefore(scope.row.date)" size="small" type="success"
+                               @click="openPredictionDialog(scope.row)">Predict
 
                     </el-button>
-                    <el-button v-if="scope.row.status!='draft'" size="small"
-                               @click="handleModifyStatus(scope.row,'draft')">草稿
+                    <el-button v-if="!isAfter(scope.row.date)" size="small"
+                               @click="openPredictionDialog(scope.row)">Store Bet
 
                     </el-button>
                     <el-button v-if="scope.row.status!='deleted'" size="small" type="danger"
@@ -158,6 +158,11 @@
 <script>
     import { fetchEventsList } from '@/api/events'
     import waves from '@/directive/waves.js'// water ripples
+    const moment = require('moment')
+
+    import dota2_logo from '@/assets/icons/dota2.svg'
+    import lol_logo from '@/assets/icons/lol.svg'
+    import cs_go from '@/assets/icons/csgo.svg'
 
     export default {
         name: 'events_table',
@@ -166,6 +171,11 @@
         },
         data() {
             return {
+                logos: {
+                  'LoL': lol_logo,
+                  'Dota 2': dota2_logo,
+                  'Counter-Strike': cs_go
+                },
                 list: null,
                 total: null,
                 listLoading: true,
@@ -223,6 +233,12 @@
             this.getList()
         },
         methods: {
+          isAfter(str) {
+            return moment(str).isAfter()
+          },
+          isBefore(str) {
+            return moment(str).isBefore()
+          },
             openPredictionDialog(row) {
                 this.resetTemp(row)
                 this.dialogStatus = 'predict'
@@ -348,7 +364,7 @@
                 }
 
                 if (bet !== undefined) {
-                    this.temp.date = bet.date * 1000;
+                    this.temp.date = bet.date;
                     this.temp.game = bet.game;
                     this.temp.game_league = bet.game_league;
                     this.temp.odds_1 = bet.odds_1;
