@@ -39,7 +39,7 @@
 
             <el-table-column width="210px" align="center" label="Participant">
                 <template scope="scope">
-                    <span>{{scope.row.team_A.flag}}</span>
+                    <span><img :src="getFlagUrl(scope.row.team_A.flag)" width="32px"></span>
                     <span>{{scope.row.team_A.name}}</span>
                 </template>
             </el-table-column>
@@ -52,7 +52,7 @@
 
             <el-table-column width="210px" align="center" label="Participant">
                 <template scope="scope">
-                    <span>{{scope.row.team_B.flag}}</span>
+                    <span> <img :src="getFlagUrl(scope.row.team_B.flag)" width="32px"></span>
                     <span>{{scope.row.team_B.name}}</span>
                 </template>
             </el-table-column>
@@ -233,6 +233,9 @@
             this.getList()
         },
         methods: {
+          getFlagUrl(link) {
+            return '/static/flags/' + link + '.svg';
+          },
           isAfter(str) {
             return moment(str).isAfter()
           },
