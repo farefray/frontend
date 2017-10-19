@@ -1,15 +1,21 @@
 <template>
   <div class="app-container calendar-list-container">
-    <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="Title"
-                v-model="listQuery.title">
-      </el-input>
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <div class="filter-container">
+          <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="Title"
+                    v-model="listQuery.title">
+          </el-input>
 
-      <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">Search</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="edit">
-        Add
-      </el-button>
-    </div>
+          <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">Search</el-button>
+          <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="edit">
+            Add
+          </el-button>
+        </div>
+      </el-col>
+      <el-col :span="4" :offset="8"><betslip :betslipData="betslip_data"></betslip>
+      </el-col>
+    </el-row>
 
     <el-table :data="list" @sort-change="onSortChange" @filter-change="onFilterChange"
               v-loading="listLoading" element-loading-text="Loading..." border fit
@@ -109,7 +115,7 @@
           </el-row>
         </el-form-item>
 
-        <el-form-item label="Date">
+        <el-form-item label="Bet amount">
           <el-date-picker v-model="temp.date" type="datetime" placeholder="Select date">
           </el-date-picker>
         </el-form-item>
@@ -135,6 +141,10 @@
               </el-tooltip>
             </el-col>
           </el-row>
+        </el-form-item>
+
+        <el-form-item label="Date" v-if="temp_opts.selected !== undefined">
+          <el-input-number v-model="temp.bet_amount" :min="0" :step="50"></el-input-number>
         </el-form-item>
 
         <el-form-item label="Participants">
@@ -165,8 +175,9 @@
 </template>
 
 <script>
-  import {fetchEventsList} from '@/api/events'
+  import { fetchEventsList } from '@/api/events'
   import waves from '@/directive/waves.js'// water ripples
+  import betslip from './betslip.vue'
   const moment = require('moment')
 
   import dota2_logo from '@/assets/icons/dota2.svg'
@@ -175,11 +186,13 @@
 
   export default {
     name: 'events_table',
+    components: { betslip },
     directives: {
       waves
     },
     data() {
       return {
+        betslip_data: [],
         logos: {
           'LoL': lol_logo,
           'Dota 2': dota2_logo,
@@ -215,7 +228,8 @@
             ex: ''
           },
           user_id: 0,
-          verified: false
+          verified: false,
+          bet_amount: 0
         },
         statusOptions: ['published', 'draft', 'deleted'],
         dialogFormVisible: false,
@@ -346,6 +360,15 @@
       predict() {
         // Store prediction
         console.log(this.temp)
+        this.betslip_data.push(this.temp)
+        this.dialogFormVisible = false
+        this.resetTemp()
+        this.$message({
+          title: 'Bet was successfully added to bet slip!',
+          message: 'Bet added',
+          type: 'success',
+          duration: 2000
+        })
       },
       update() {
         this.temp.timestamp = +this.temp.timestamp
@@ -384,7 +407,8 @@
             ex: ''
           },
           user_id: 0,
-          verified: false
+          verified: false,
+          bet_amount: 0
         }
 
         if (bet !== undefined) {
@@ -399,6 +423,7 @@
           this.temp.team_B = bet.team_B;
           this.temp.user_id = bet.user_id;
           this.temp.verified = bet.verified;
+          this.temp.bet_amount = bet.bet_amount;
         }
       }
     }
