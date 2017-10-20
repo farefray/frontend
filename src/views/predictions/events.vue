@@ -115,7 +115,7 @@
           </el-row>
         </el-form-item>
 
-        <el-form-item label="Bet amount">
+        <el-form-item label="Date">
           <el-date-picker v-model="temp.date" type="datetime" placeholder="Select date">
           </el-date-picker>
         </el-form-item>
@@ -125,35 +125,31 @@
             <el-col :span="8">
               <el-tooltip placement="top">
                 <div slot="content">Click to select</div>
-                <el-input-number v-bind:class="{ selected: temp_opts.selected=='odds_1' }" v-model="temp.odds_1" :min="1" :max="10" :step="0.05" @focus="temp_opts.selected='odds_1'"></el-input-number>
+                <el-input-number v-bind:class="{ selected: selected=='odds_1' }" v-model="temp.odds_1" :min="1" :max="10" :step="0.05" @focus="selected='odds_1'"></el-input-number>
               </el-tooltip>
             </el-col>
             <el-col :span="8">
               <el-tooltip placement="top">
                 <div slot="content">Click to select</div>
-                <el-input-number v-bind:class="{ selected: temp_opts.selected=='odds_draw' }" v-model="temp.odds_draw" :min="1" :max="10" :step="0.05" @focus="temp_opts.selected='odds_draw'"></el-input-number>
+                <el-input-number v-bind:class="{ selected: selected=='odds_draw' }" v-model="temp.odds_draw" :min="1" :max="10" :step="0.05" @focus="selected='odds_draw'"></el-input-number>
               </el-tooltip>
             </el-col>
             <el-col :span="8">
               <el-tooltip placement="top">
                 <div slot="content">Click to select</div>
-                <el-input-number v-bind:class="{ selected: temp_opts.selected=='odds_2' }" v-model="temp.odds_2" :min="1" :max="10" :step="0.05" @focus="temp_opts.selected='odds_2'"></el-input-number>
+                <el-input-number v-bind:class="{ selected: selected=='odds_2' }" v-model="temp.odds_2" :min="1" :max="10" :step="0.05" @focus="selected='odds_2'"></el-input-number>
               </el-tooltip>
             </el-col>
           </el-row>
         </el-form-item>
 
-        <el-form-item label="Date" v-if="temp_opts.selected !== undefined">
-          <el-input-number v-model="temp.bet_amount" :min="0" :step="50"></el-input-number>
-        </el-form-item>
-
         <el-form-item label="Participants">
           <el-row :gutter="20">
             <el-col :span="11">
-              <el-input v-bind:class="{ selected: temp_opts.selected=='odds_1' }" placeholder="Participant A" v-model="temp.team_A.name" @focus="temp_opts.selected='odds_1'"></el-input>
+              <el-input v-bind:class="{ selected: selected=='odds_1' }" placeholder="Participant A" v-model="temp.team_A.name" @focus="selected='odds_1'"></el-input>
             </el-col>
             <el-col :span="11">
-              <el-input v-bind:class="{ selected: temp_opts.selected=='odds_2' }" placeholder="Participant B" v-model="temp.team_B.name" @focus="temp_opts.selected='odds_2'"></el-input>
+              <el-input v-bind:class="{ selected: selected=='odds_2' }" placeholder="Participant B" v-model="temp.team_B.name" @focus="selected='odds_2'"></el-input>
             </el-col>
           </el-row>
         </el-form-item>
@@ -206,9 +202,8 @@
           limit: 50,
           title: undefined
         },
-        temp_opts: {
-          selected: undefined
-        },
+        selected_odds: 0,
+        selected: undefined,
         temp: {
           date: undefined,
           game: "",
@@ -229,7 +224,8 @@
           },
           user_id: 0,
           verified: false,
-          bet_amount: 0
+          selected_odds: 0,
+          selected_event: undefined
         },
         statusOptions: ['published', 'draft', 'deleted'],
         dialogFormVisible: false,
@@ -244,11 +240,8 @@
       }
     },
     watch: {
-      temp_opts: {
-        handler(val) {
-          console.log(val)
-        },
-        deep: true
+      selected(value) {
+        this.selected_odds = this.temp[value]
       }
     },
     filters: {
@@ -360,6 +353,7 @@
       predict() {
         // Store prediction
         console.log(this.temp)
+        this.temp.selected_odds = this.selected_odds
         this.betslip_data.push(this.temp)
         this.dialogFormVisible = false
         this.resetTemp()
@@ -388,6 +382,8 @@
         })
       },
       resetTemp(bet) {
+        this.selected = undefined
+        this.selected_odds = 0
         this.temp = {
           date: undefined,
           game: "",
@@ -408,7 +404,7 @@
           },
           user_id: 0,
           verified: false,
-          bet_amount: 0
+          selected_odds: 0
         }
 
         if (bet !== undefined) {
@@ -423,7 +419,7 @@
           this.temp.team_B = bet.team_B;
           this.temp.user_id = bet.user_id;
           this.temp.verified = bet.verified;
-          this.temp.bet_amount = bet.bet_amount;
+          this.temp.selected_odds = bet.selected_odds;
         }
       }
     }

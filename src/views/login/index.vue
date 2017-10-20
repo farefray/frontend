@@ -130,7 +130,7 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss">
+<style rel="stylesheet/scss" lang="scss" scoped>
   @import "src/styles/mixin.scss";
   $bg:#223756;
   $dark_gray:#889aa4;
