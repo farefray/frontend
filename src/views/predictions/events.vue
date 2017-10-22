@@ -52,7 +52,7 @@
 
       <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
         <template scope="scope">
-          <span style='color:red;'>{{scope.row.odds_1 | oddsToChance}}</span>
+          <el-tag :type="scope.row.odds_1 | oddsFilter">{{scope.row.percent_odds_1}}</el-tag>
         </template>
       </el-table-column>
 
@@ -65,28 +65,18 @@
 
       <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
         <template scope="scope">
-          <span style='color:red;'>{{scope.row.odds_2}}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column class-name="status-col" label="State" width="100">
-        <template scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>
+          <el-tag :type="scope.row.odds_2 | oddsFilter">{{scope.row.percent_odds_2}}</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Operation">
         <template scope="scope">
-          <el-button v-if="!isBefore(scope.row.date)" size="small" type="success"
+          <el-button v-if="isAfter(scope.row.date)" type="success"
                      @click="openPredictionDialog(scope.row, 'predict')">Predict
 
           </el-button>
-          <el-button v-if="!isAfter(scope.row.date)" size="small"
+          <el-button v-if="isBefore(scope.row.date)"
                      @click="openPredictionDialog(scope.row, 'store')">Store Bet
-
-          </el-button>
-          <el-button v-if="scope.row.status!='deleted'" size="small" type="danger"
-                     @click="handleModifyStatus(scope.row,'deleted')">删除
 
           </el-button>
         </template>
@@ -174,6 +164,7 @@
   import { fetchEventsList } from '@/api/events'
   import waves from '@/directive/waves.js'// water ripples
   import betslip from './betslip.vue'
+  import Event from './model/event.js'
   const moment = require('moment')
 
   import dota2_logo from '@/assets/icons/dota2.svg'
@@ -194,7 +185,7 @@
           'Dota 2': dota2_logo,
           'Counter-Strike': cs_go
         },
-        list: null,
+        list: [],
         total: null,
         listLoading: true,
         listQuery: {
@@ -202,31 +193,10 @@
           limit: 50,
           title: undefined
         },
-        selected_odds: 0,
         selected: undefined,
-        temp: {
-          date: undefined,
-          game: "",
-          game_league: "",
-          odds_1: 1,
-          odds_2: 1,
-          odds_draw: 1,
-          source: [''],
-          team_A: {
-            name: '',
-            flag: '',
-            ex: ''
-          },
-          team_B: {
-            name: '',
-            flag: '',
-            ex: ''
-          },
-          user_id: 0,
-          verified: false,
-          selected_odds: 0,
-          selected_event: undefined
-        },
+        selected_odds: 0,
+        selected_event: undefined,
+        temp: new Event(),
         statusOptions: ['published', 'draft', 'deleted'],
         dialogFormVisible: false,
         dialogStatus: '',
@@ -242,19 +212,18 @@
     watch: {
       selected(value) {
         this.selected_odds = this.temp[value]
+        this.selected_event = value;
       }
     },
     filters: {
-      oddsToChance(odds) {
-        return odds;
-      },
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger'
+      oddsFilter(odds) {
+        if (odds < 1.5) {
+          return 'success'
+        } else if (odds > 2.2) {
+          return 'red'
         }
-        return statusMap[status]
+
+        return 'gray'
       }
     },
     created() {
@@ -288,8 +257,12 @@
       },
       getList() {
         this.listLoading = true
+        let self = this
         fetchEventsList(this.listQuery).then(response => {
-          this.list = response.items
+          response.items.forEach(function(item) {
+            self.list.push(new Event(item))
+          });
+
           this.total = response.total
           this.listLoading = false
         })
@@ -309,13 +282,6 @@
         }
         this.listQuery.start = parseInt(+time[0] / 1000)
         this.listQuery.end = parseInt((+time[1] + 3600 * 1000 * 24) / 1000)
-      },
-      handleModifyStatus(row, status) {
-        this.$message({
-          message: 'Success!',
-          type: 'success'
-        })
-        row.status = status
       },
       handleCreate() {
         this.resetTemp()
@@ -352,8 +318,10 @@
       },
       predict() {
         // Store prediction
+        // Todo check if time is still okay for prediction!
         console.log(this.temp)
         this.temp.selected_odds = this.selected_odds
+        this.temp.selected_event = this.selected_event
         this.betslip_data.push(this.temp)
         this.dialogFormVisible = false
         this.resetTemp()
@@ -382,45 +350,10 @@
         })
       },
       resetTemp(bet) {
+        this.selected_event = undefined
         this.selected = undefined
         this.selected_odds = 0
-        this.temp = {
-          date: undefined,
-          game: "",
-          game_league: "",
-          odds_1: 1,
-          odds_2: 1,
-          odds_draw: 1,
-          source: [''],
-          team_A: {
-            name: '',
-            flag: '',
-            ex: ''
-          },
-          team_B: {
-            name: '',
-            flag: '',
-            ex: ''
-          },
-          user_id: 0,
-          verified: false,
-          selected_odds: 0
-        }
-
-        if (bet !== undefined) {
-          this.temp.date = bet.date;
-          this.temp.game = bet.game;
-          this.temp.game_league = bet.game_league;
-          this.temp.odds_1 = bet.odds_1;
-          this.temp.odds_2 = bet.odds_2;
-          this.temp.odds_draw = bet.odds_draw;
-          this.temp.source = bet.source;
-          this.temp.team_A = bet.team_A;
-          this.temp.team_B = bet.team_B;
-          this.temp.user_id = bet.user_id;
-          this.temp.verified = bet.verified;
-          this.temp.selected_odds = bet.selected_odds;
-        }
+        this.temp = new Event(bet);
       }
     }
   }

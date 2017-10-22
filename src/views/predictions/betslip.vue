@@ -59,13 +59,14 @@
       odds() {
         let odds = 1;
         this.betslipData.forEach(function(bet) {
+          console.log(bet)
           odds *= bet.selected_odds
         });
 
         return odds
       },
       profit() {
-        return this.odds * this.bet_amount - this.bet_amount;
+        return (this.odds * this.bet_amount - this.bet_amount).toFixed(2);
       }
     },
     methods: {
