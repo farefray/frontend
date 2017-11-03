@@ -75,18 +75,13 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/charts',
+    path: '/stats',
     component: Layout,
-    redirect: '/charts/index',
-    name: 'charts',
-    meta: { role: ['admin'] },
-    children: [
-      { path: 'index', component: _import('charts/index'), name: '介绍' },
-      { path: 'keyboard', component: _import('charts/keyboard'), name: '键盘图表' },
-      { path: 'keyboard2', component: _import('charts/keyboard2'), name: '键盘图表2' },
-      { path: 'line', component: _import('charts/line'), name: '折线图' },
-      { path: 'mixchart', component: _import('charts/mixChart'), name: '混合图表' }
-    ]
+    redirect: '/stats/index',
+    name: 'My stats',
+    meta: {},
+    noDropdown: true,
+    children: [{ path: 'stats/index', component: _import('stats/index'), name: 'My stats' }]
   },
   {
     path: '/predictions',
