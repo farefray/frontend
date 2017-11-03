@@ -28,14 +28,16 @@
           <el-input-number v-model="bet_amount" :min="0" :step="50"></el-input-number>
       </el-col>
     </el-row>
+    <br />
     <el-row :gutter="10">
-      <el-col :span="4">
+      <el-col :span="10">
         Final odds: {{this.odds}}
       </el-col>
-      <el-col :span="4">
+      <el-col :span="10">
         Profit: {{this.profit}}
       </el-col>
     </el-row>
+    <br />
     <el-row :gutter="10">
       <el-col>
         <el-button type="primary" @click="store">Store</el-button>
@@ -47,6 +49,8 @@
 </template>
 
 <script>
+  import { storePrediction } from '@/api/apipredictions'
+
   export default {
     name: 'betslip',
     props: ['betslipData'],
@@ -71,8 +75,28 @@
     },
     methods: {
       store() {
-        console.log(this.betslipData)
+        let data = {
+          date: Date.now(),
+          final_odds: this.odds,
+          selected_events: this.betslipData,
+          user_id: 0 // TODO
+        }
         console.log('store bets')
+        console.log(data)
+        storePrediction(data).then(response => {
+          console.log(response)
+          console.log('stored')
+          this.$notify({
+            title: 'Success!',
+            message: 'You have successfully stored your betslip',
+            type: 'success',
+            duration: 2000
+          })
+          this.betslipData = []
+        }).catch(error => {
+          console.log('error')
+          console.log(error)
+        })
       }
     },
     watch: {
