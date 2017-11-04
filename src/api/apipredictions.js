@@ -1,8 +1,9 @@
 import service from './service'
 
-export function storePrediction(predictions) {
+export function storePrediction(prediction) {
   // const self = this
-  return service.post('/predictions/store', predictions)
+  // Todo rework into api/v1
+  return service.post('/api/v1/predictions', prediction)
     .then(response => {
       console.log(response);
       if (response && response.status === 200) {
@@ -11,5 +12,14 @@ export function storePrediction(predictions) {
 
       console.log(response.data);
       return false
+    })
+}
+
+export function getPredictions() {
+  // todo user validation
+  return service.get('/api/v1/predictions')
+    .then(response => {
+      console.log(response);
+      return response;
     })
 }

@@ -1,9 +1,10 @@
 <template>
   <div>
   <el-popover
-    ref="popover4"
+    ref="popover1"
     placement="right"
     width="500"
+    v-model="active"
     trigger="click">
     <el-table :data="betslipData">
         <el-table-column width="100" label="Date" prop="date" column-key="date">
@@ -44,7 +45,7 @@
       </el-col>
     </el-row>
   </el-popover>
-  <el-button v-popover:popover4 :disabled="betslipData.length === 0">Show betslip</el-button>
+  <el-button v-popover:popover1 :disabled="betslipData.length === 0">Show betslip</el-button>
   </div>
 </template>
 
@@ -56,7 +57,8 @@
     props: ['betslipData'],
     data() {
       return {
-        bet_amount: 0
+        bet_amount: 0,
+        active: false
       };
     },
     computed: {
@@ -79,6 +81,8 @@
           date: Date.now(),
           final_odds: this.odds,
           selected_events: this.betslipData,
+          stake: this.bet_amount,
+          status: 'PENDING', // TODO
           user_id: 0 // TODO
         }
         console.log('store bets')
@@ -86,13 +90,14 @@
         storePrediction(data).then(response => {
           console.log(response)
           console.log('stored')
+          this.active = false
           this.$notify({
             title: 'Success!',
             message: 'You have successfully stored your betslip',
             type: 'success',
             duration: 2000
           })
-          this.betslipData = []
+          this.$emit('stored', response);
         }).catch(error => {
           console.log('error')
           console.log(error)
@@ -102,6 +107,10 @@
     watch: {
       betslipData: {
         handler(val) {
+          if(val.length > 0) {
+            this.active = true
+          }
+          
           console.log('bets added')
           console.log(val)
         },

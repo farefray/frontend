@@ -13,7 +13,7 @@
           </el-button>
         </div>
       </el-col>
-      <el-col :span="4" :offset="8"><betslip :betslipData="betslip_data"></betslip>
+      <el-col :span="4" :offset="8"><betslip :betslipData="betslip_data" @stored="betslipStored()"></betslip>
       </el-col>
     </el-row>
 
@@ -230,6 +230,11 @@
       this.getList()
     },
     methods: {
+      betslipStored(prediction) {
+        console.log('prediction stored')
+        console.log(prediction)
+        this.betslip_data = []
+      },
       getFlagUrl(link) {
         return '/static/flags/' + link + '.svg';
       },
