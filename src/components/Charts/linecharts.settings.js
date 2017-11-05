@@ -6,18 +6,15 @@ const settings = {
   tooltip: {
     show: true,
     formatter: function(params, ticket, callback) {
-      let cl = params[0].data.bet.status === 'win' ? 'green' : 'red'
-      let profit = (params[0].data.bet.status === 'win' ? ('+ ' + (params[0].data.bet.stake * params[0].data.bet.odds - params[0].data.bet.stake)) : ('- ' + params[0].data.bet.stake))
+      console.log(params);
+      let cl = params[0].data.bet.status[0] === 'WON' ? 'green' : (params[0].data.bet.status[0] === 'LOST' ? 'red' : 'gray');
+      let profit = (params[0].data.bet.status[0] === 'WON' ? ('+ ' + (params[0].data.bet.stake * params[0].data.bet.final_odds - params[0].data.bet.stake)) : ('- ' + params[0].data.bet.stake))
 
-      let res = '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background-color:' + cl + ';margin-right:5px;"></span>' + params[0].data.bet.discipline +
+      return '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background-color:' + cl + ';margin-right:5px;"></span>' +
         '<br/>' +
-        params[0].data.bet.participants[0] + ' vs ' + params[0].data.bet.participants[1] +
+        params[0].data.bet.stake + ' with ' + params[0].data.bet.final_odds + ' odds' +
         '<br/>' +
-        params[0].data.bet.stake + ' ' + params[0].data.bet.currency + ' with ' + params[0].data.bet.odds + ' odds' +
-        '<br/>' +
-        profit + ' ' + params[0].data.bet.currency
-
-      return res
+        profit;
     },
     trigger: 'axis',
     axisPointer: {

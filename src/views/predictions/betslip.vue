@@ -107,10 +107,10 @@
     watch: {
       betslipData: {
         handler(val) {
-          if(val.length > 0) {
+          if (val.length > 0) {
             this.active = true
           }
-          
+
           console.log('bets added')
           console.log(val)
         },
