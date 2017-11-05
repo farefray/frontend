@@ -77,11 +77,13 @@ export const asyncRouterMap = [
   {
     path: '/stats',
     component: Layout,
-    redirect: '/stats/index',
-    name: 'My stats',
+    redirect: 'noredirect',
+    name: 'My statistic',
     meta: {},
-    noDropdown: true,
-    children: [{ path: 'stats/index', component: _import('stats/index'), name: 'My stats' }]
+    children: [
+      { path: 'stats/dashboard', component: _import('stats/dashboard'), name: 'Dashboard' },
+      { path: 'stats/table', component: _import('stats/table'), name: 'Predictions' }
+    ]
   },
   {
     path: '/predictions',

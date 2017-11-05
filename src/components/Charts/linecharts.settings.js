@@ -2,7 +2,19 @@ let graphic = {}
 graphic.LinearGradient = require('zrender/lib/graphic/LinearGradient')
 
 const settings = {
-  backgroundColor: 'rgba(137,189,125,0.1)',
+  backgroundColor: '#344b58',
+  title: {
+    text: '统计',
+    x: '4%',
+    textStyle: {
+      color: '#fff',
+      fontSize: '22'
+    },
+    subtextStyle: {
+      color: '#90979c',
+      fontSize: '16'
+    }
+  },
   tooltip: {
     show: true,
     formatter: function(params, ticket, callback) {
@@ -18,6 +30,9 @@ const settings = {
     },
     trigger: 'axis',
     axisPointer: {
+      textStyle: {
+        color: '#fff'
+      },
       lineStyle: {
         type: 'cross'
       }
@@ -32,13 +47,33 @@ const settings = {
     }
   },
   calculable: true,
-  dataZoom: {
+  dataZoom: [{
     type: 'slider',
     show: true,
     realtime: true,
     start: 0,
-    end: 100
-  },
+    end: 100,
+    height: 30,
+    xAxisIndex: [
+      0
+    ],
+    bottom: 30,
+    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+    handleSize: '110%',
+    handleStyle: {
+      color: '#d3dee5'
+
+    },
+    textStyle: {
+      color: '#fff' },
+    borderColor: '#90979c'
+    }, {
+    type: 'inside',
+    show: true,
+    height: 15,
+    start: 1,
+    end: 35
+  }],
   toolbox: {
     show: true,
     itemSize: 15,
@@ -95,8 +130,13 @@ const settings = {
   grid: {
     left: '3%',
     right: '4%',
-    bottom: '3%',
-    containLabel: true
+    containLabel: true,
+    borderWidth: 0,
+    top: 110,
+    bottom: 95,
+    textStyle: {
+      color: '#fff'
+    }
   },
   xAxis: [{
     type: 'category',
@@ -106,8 +146,21 @@ const settings = {
     },
     axisLine: {
       lineStyle: {
-        color: '#57617B'
+        color: '#90979c'
       }
+    },
+    splitLine: {
+      show: false
+    },
+    axisTick: {
+      show: false
+    },
+    splitArea: {
+      show: false
+    },
+    axisLabel: {
+      interval: 0
+
     },
     /* axisLabel: {
       formatter: function (value, index) {
@@ -129,11 +182,6 @@ const settings = {
     axisTick: {
       show: false
     },
-    axisLine: {
-      lineStyle: {
-        color: '#57617B'
-      }
-    },
     axisLabel: {
       margin: 10,
       textStyle: {
@@ -144,6 +192,14 @@ const settings = {
       lineStyle: {
         color: '#57617B'
       }
+    },
+    axisLine: {
+      lineStyle: {
+        color: '#90979c'
+      }
+    },
+    splitArea: {
+      show: false
     }
   }],
   series: [{
