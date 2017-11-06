@@ -23,33 +23,30 @@
                        filter-placement="bottom-end">
         <template scope="scope">
           <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
-          <img :src="logos[scope.row.game]" width="32px" close-transition>
         </template>
       </el-table-column>
 
       <el-table-column width="210px" align="center" label="Participant">
         <template scope="scope">
-          <span><img :src="getFlagUrl(scope.row.team_A.flag)" width="32px"></span>
-          <span>{{scope.row.team_A.name}}</span>
+          <span>asd</span>
         </template>
       </el-table-column>
 
       <el-table-column width="100px" align="center" label="Chance">
         <template scope="scope">
-          <el-tag :type="scope.row.odds_1 | oddsFilter">{{scope.row.percent_odds_1}}</el-tag>
+          <el-tag :type="scope.row.odds_1">{{scope.row.percent_odds_1}}</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column width="210px" align="center" label="Participant">
         <template scope="scope">
-          <span> <img :src="getFlagUrl(scope.row.team_B.flag)" width="32px"></span>
-          <span>{{scope.row.team_B.name}}</span>
+          <span>basd</span>
         </template>
       </el-table-column>
 
       <el-table-column width="100px" align="center" label="Chance">
         <template scope="scope">
-          <el-tag :type="scope.row.odds_2 | oddsFilter">{{scope.row.percent_odds_2}}</el-tag>
+          <el-tag :type="scope.row.odds_2">{{scope.row.percent_odds_2}}</el-tag>
         </template>
       </el-table-column>
     </el-table>

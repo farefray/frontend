@@ -81,5 +81,19 @@ export default {
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="scss">
+  .login-container {
+    .el-dialog__body {
+      background: #223756;
+    }
+
+    .el-dialog__header {
+      background: #223756;
+    }
+
+    .el-dialog__title {
+      color: #db7f31;
+
+    }
+  }
  </style>
