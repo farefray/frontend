@@ -6,7 +6,7 @@ import router from './router'
 import store from './store'
 import * as filters from './filters'
 import './styles/index.scss'
-import 'element-theme-chalk';
+import './styles/element-variables.scss'
 import 'vue-awesome/icons' // maybe not needed?
 
 import './errorLog'
