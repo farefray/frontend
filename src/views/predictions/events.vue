@@ -17,11 +17,11 @@
       </el-col>
     </el-row>
 
-    <el-table :data="list" @sort-change="onSortChange" @filter-change="onFilterChange"
+    <el-table :data="list" @filter-change="onFilterChange"
               v-loading="listLoading" element-loading-text="Loading..." border fit
               style="width: 100%">
 
-      <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date" sortable>
+      <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date">
         <template scope="scope">
           <span><strong>{{(scope.row.date) | moment("DD.MM kk:mm")}}</strong></span><br/>
           <span>({{(scope.row.date) | moment("from")}})</span>
@@ -86,7 +86,7 @@
 
     <div v-show="!listLoading" class="pagination-container">
       <el-pagination @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                     :page-size="50" layout="total, prev, pager, next" :total="total">
+                     :page-size="listQuery.per_page" layout="total, prev, pager, next" :total="total">
       </el-pagination>
     </div>
 
@@ -190,8 +190,11 @@
         listLoading: true,
         listQuery: {
           page: 1,
-          limit: 50,
-          title: undefined
+          per_page: 25,
+          title: undefined,
+          discipline: undefined,
+          until: moment().add(3, 'day').unix(),
+          since: moment().subtract(1, 'day').unix()
         },
         selected: undefined,
         selected_odds: 0,
@@ -249,10 +252,6 @@
         this.dialogStatus = status
         this.dialogFormVisible = true
       },
-      onSortChange(sort) {
-        console.log(sort)
-        // Apply that sort to query and re-ask backend
-      },
       onFilterChange(filters) {
         console.log(filters)
         // Apply filter to query and re-ask backend
@@ -264,11 +263,14 @@
         this.listLoading = true
         let self = this
         fetchEventsList(this.listQuery).then(response => {
-          response.items.forEach(function(item) {
-            self.list.push(new Event(item))
-          });
+          if (response && response.items) {
+            response.items.forEach(function(item) {
+              self.list.push(new Event(item))
+            });
 
-          this.total = response.total
+            this.total = response.total
+          }
+
           this.listLoading = false
         })
       },

@@ -2,8 +2,10 @@ import service from './service'
 
 export function fetchEventsList(params) {
   console.log(params)
+  // params.offset = (params.page - 1) * params.per_page;
+  params.sort = '-date,createdAt';
   return service.get('/api/v1/events', {
-
+    params: params
   }).then(response => {
     console.log(response);
     if (!response || !response.data) {
@@ -11,14 +13,16 @@ export function fetchEventsList(params) {
     }
 
     let eventList = response.data;
-    for (let i = 0; i < eventList.length; i++) {
-      eventList[i].date = eventList[i].date * 1000;
-    }
+    if (eventList.length && eventList[0].date) {
+      for (let i = 0; i < eventList.length; i++) {
+        eventList[i].date = eventList[i].date * 1000;
+      }
 
-    const pageList = eventList.filter((item, index) => index < params.limit * params.page && index >= params.limit * (params.page - 1))
-    return {
-      total: eventList.length,
-      items: pageList
+      const pageList = eventList.filter((item, index) => index < params.per_page * params.page && index >= params.per_page * (params.page - 1))
+      return {
+        total: eventList.length,
+        items: pageList
+      }
     }
   })
 }
