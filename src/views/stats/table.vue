@@ -6,7 +6,7 @@
               style="width: 100%">
 
       <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date" sortable>
-        <template scope="scope">
+        <template slot-scope="scope">
           <span><strong>{{(scope.row.date) | moment("DD.MM kk:mm")}}</strong></span><br/>
           <span>({{(scope.row.date) | moment("from")}})</span>
         </template>
@@ -21,31 +21,31 @@
                        ]"
                        :filter-method="filterGameType"
                        filter-placement="bottom-end">
-        <template scope="scope">
+        <template slot-scope="scope">
           <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="210px" align="center" label="Participant">
-        <template scope="scope">
+        <template slot-scope="scope">
           <span>asd</span>
         </template>
       </el-table-column>
 
       <el-table-column width="100px" align="center" label="Chance">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tag :type="scope.row.odds_1">{{scope.row.percent_odds_1}}</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column width="210px" align="center" label="Participant">
-        <template scope="scope">
+        <template slot-scope="scope">
           <span>basd</span>
         </template>
       </el-table-column>
 
       <el-table-column width="100px" align="center" label="Chance">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tag :type="scope.row.odds_2">{{scope.row.percent_odds_2}}</el-tag>
         </template>
       </el-table-column>

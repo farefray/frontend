@@ -8,17 +8,17 @@
     trigger="click">
     <el-table :data="betslipData">
         <el-table-column width="100" label="Date" prop="date" column-key="date">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{(scope.row.date) | moment("DD.MM kk:mm")}}
         </template>
         </el-table-column>
         <el-table-column width="150" label="Participant">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{scope.row.team_A.name}}
           </template>
         </el-table-column>
         <el-table-column width="150" label="Participant">
-          <template scope="scope">
+          <template slot-scope="scope">
             {{scope.row.team_B.name}}
           </template>
         </el-table-column>

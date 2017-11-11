@@ -22,7 +22,7 @@
               style="width: 100%">
 
       <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date">
-        <template scope="scope">
+        <template slot-scope="scope">
           <span><strong>{{(scope.row.date) | moment("DD.MM kk:mm")}}</strong></span><br/>
           <span>({{(scope.row.date) | moment("from")}})</span>
         </template>
@@ -37,40 +37,40 @@
                        ]"
                        :filter-method="filterGameType"
                        filter-placement="bottom-end">
-        <template scope="scope">
+        <template slot-scope="scope">
           <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
           <img :src="logos[scope.row.game]" width="32px" close-transition>
         </template>
       </el-table-column>
 
       <el-table-column width="210px" align="center" label="Participant">
-        <template scope="scope">
+        <template slot-scope="scope">
           <span><img :src="getFlagUrl(scope.row.team_A.flag)" width="32px"></span>
           <span>{{scope.row.team_A.name}}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tag :type="scope.row.odds_1 | oddsFilter">{{scope.row.percent_odds_1}}</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column width="210px" align="center" label="Participant">
-        <template scope="scope">
+        <template slot-scope="scope">
           <span> <img :src="getFlagUrl(scope.row.team_B.flag)" width="32px"></span>
           <span>{{scope.row.team_B.name}}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-tag :type="scope.row.odds_2 | oddsFilter">{{scope.row.percent_odds_2}}</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column align="center" label="Operation">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button v-if="isAfter(scope.row.date)" type="success"
                      @click="openPredictionDialog(scope.row, 'predict')">Predict
 

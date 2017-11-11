@@ -4,23 +4,19 @@
 		<levelbar></levelbar>
 		<tabs-view></tabs-view>
 		<error-log v-if="log.length>0" class="errLog-container" :logsList="log"></error-log>
-    <template  v-if="username !== ''">
-      <el-dropdown trigger="click" class="username-container">
-        <el-submenu index="1">
-          <template slot="title">
-            {{username}}
-            <div class="avatar-container">
-              <div class="avatar-wrapper">
-                <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'" v-if="avatar">
-                <icon style="border:  2px ridge #b2b8b2;" class="user-avatar" name="user" v-else></icon>
-              </div>
-            </div>
-          </template>
-          <el-menu-item index="1-1">Settings</el-menu-item>
-          <el-menu-item index="1-2"><span @click="logout" style="display:block;">Log out</span></el-menu-item>
-        </el-submenu>
-      </el-dropdown>
-    </template>
+    <el-submenu class="errLog-container" index="1" v-if="username !== ''">
+      <template slot="title">
+        {{username}}
+        <div class="avatar-container">
+          <div class="avatar-wrapper">
+            <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'" v-if="avatar">
+            <icon style="border:  2px ridge #b2b8b2;" class="user-avatar" name="user" v-else></icon>
+          </div>
+        </div>
+      </template>
+      <el-menu-item index="1-1">Settings</el-menu-item>
+      <el-menu-item index="1-2"><span @click="logout" style="display:block;">Log out</span></el-menu-item>
+    </el-submenu>
     <router-link to="/login" v-else>
       <el-button type="primary" size="small" class="login-button">Login / Register</el-button>
     </router-link>
