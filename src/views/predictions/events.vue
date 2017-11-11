@@ -9,7 +9,7 @@
 
           <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">Search</el-button>
           <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="edit">
-            Add
+            Add my own event
           </el-button>
         </div>
       </el-col>
@@ -28,7 +28,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="80px" max-width="150px" label="Event" prop="game" column-key="game"
+      <el-table-column width="175px" label="Event" prop="game" column-key="game"
                        :filters="[
                           { text: 'Dota 2', value: 'Dota 2' },
                           { text: 'LoL', value: 'LoL' },
@@ -38,34 +38,38 @@
                        :filter-method="filterGameType"
                        filter-placement="bottom-end">
         <template slot-scope="scope">
-          <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
-          <img :src="logos[scope.row.game]" width="32px" close-transition>
+          <img :src="logos[scope.row.game]" width="24px" close-transition v-if="logos[scope.row.game]">
+          <span v-else>[{{scope.row.game}}] </span>
+          <br/>
+          <span @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="210px" align="center" label="Participant">
+      <el-table-column width="240px" align="center" label="Participant">
         <template slot-scope="scope">
-          <span><img :src="getFlagUrl(scope.row.team_A.flag)" width="32px"></span>
+          <span><img :src="getFlagUrl(scope.row.team_A.flag)" width="22px"></span>
           <span>{{scope.row.team_A.name}}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.odds_1 | oddsFilter">{{scope.row.percent_odds_1}}</el-tag>
+          <el-tag :type="scope.row.odds_1 | oddsFilter" v-if="scope.row.odds_1">{{scope.row.percent_odds_1}}%</el-tag>
+          <el-tag v-else>?</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column width="210px" align="center" label="Participant">
+      <el-table-column width="240px" align="center" label="Participant">
         <template slot-scope="scope">
-          <span> <img :src="getFlagUrl(scope.row.team_B.flag)" width="32px"></span>
+          <span> <img :src="getFlagUrl(scope.row.team_B.flag)" width="22px"></span>
           <span>{{scope.row.team_B.name}}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.odds_2 | oddsFilter">{{scope.row.percent_odds_2}}</el-tag>
+          <el-tag :type="scope.row.odds_2 | oddsFilter" v-if="scope.row.odds_2">{{scope.row.percent_odds_2}}%</el-tag>
+          <el-tag v-else>?</el-tag>
         </template>
       </el-table-column>
 
@@ -194,7 +198,8 @@
           title: undefined,
           discipline: undefined,
           until: moment().add(3, 'day').unix(),
-          since: moment().subtract(1, 'day').unix()
+          since: moment().subtract(1, 'day').unix(),
+          game: []
         },
         selected: undefined,
         selected_odds: 0,
@@ -255,6 +260,11 @@
       onFilterChange(filters) {
         console.log(filters)
         // Apply filter to query and re-ask backend
+        this.loading = true;
+        this.list = [];
+        this.listQuery.game = filters.game;
+        this.getList()
+        return false
       },
       filterGameType(value, row) {
         return row.game === value;
@@ -263,6 +273,7 @@
         this.listLoading = true
         let self = this
         fetchEventsList(this.listQuery).then(response => {
+          self.list = []
           if (response && response.items) {
             response.items.forEach(function(item) {
               self.list.push(new Event(item))
@@ -373,9 +384,38 @@
     background: rgba(26, 99, 17, 0.5) !important;;
   }
 
+  .el-table th, .el-table td {
+    padding: 5px 0;
+    font-size: 13px;
+  }
+
+  .el-table .cell {
+    text-align: center;
+    line-height: 20px;
+  }
+
   el-dialog {
     .el-input {
       width: auto;
     }
+  }
+
+  .el-tag--red {
+    background-color: rgba(240, 91, 61, 0.08);
+    color: #f89616;
+  }
+
+  .el-tag--green {
+    background-color: rgba(84, 126, 69, 0.08);
+    color: #3ea74c;
+  }
+
+  .el-tag--gray {
+    background-color: rgba(188, 177, 180, 0.08);
+    color: #bcb1b4;
+  }
+
+  .el-pager li.active {
+    color: #f99008;
   }
 </style>
