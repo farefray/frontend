@@ -17,7 +17,7 @@
       </el-col>
     </el-row>
 
-    <el-table :data="list" @filter-change="onFilterChange"
+    <el-table :data="events_table" @filter-change="onFilterChange"
               v-loading="listLoading" element-loading-text="Loading..." border fit
               style="width: 100%">
 
@@ -85,7 +85,6 @@
           </el-button>
         </template>
       </el-table-column>
-
     </el-table>
 
     <div v-show="!listLoading" class="pagination-container">
@@ -94,72 +93,8 @@
       </el-pagination>
     </div>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form class="small-space" :model="temp" label-position="top" label-width="120px"
-               style='width: 95%; margin: 0 40px;'>
-
-        <el-form-item label="Event details">
-          <el-row :gutter="20">
-            <el-col :span="8">
-              <el-input placeholder="Event type" v-model="temp.game"></el-input>
-            </el-col>
-            <el-col :span="14">
-              <el-input placeholder="Event league" v-model="temp.game_league"></el-input>
-            </el-col>
-          </el-row>
-        </el-form-item>
-
-        <el-form-item label="Date">
-          <el-date-picker v-model="temp.date" type="datetime" placeholder="Select date">
-          </el-date-picker>
-        </el-form-item>
-
-        <el-form-item label="Odds">
-          <el-row justify="center">
-            <el-col :span="8">
-              <el-tooltip placement="top">
-                <div slot="content">Click to select</div>
-                <el-input-number v-bind:class="{ selected: selected=='odds_1' }" v-model="temp.odds_1" :min="1" :max="10" :step="0.05" @focus="selected='odds_1'"></el-input-number>
-              </el-tooltip>
-            </el-col>
-            <el-col :span="8">
-              <el-tooltip placement="top">
-                <div slot="content">Click to select</div>
-                <el-input-number v-bind:class="{ selected: selected=='odds_draw' }" v-model="temp.odds_draw" :min="1" :max="10" :step="0.05" @focus="selected='odds_draw'"></el-input-number>
-              </el-tooltip>
-            </el-col>
-            <el-col :span="8">
-              <el-tooltip placement="top">
-                <div slot="content">Click to select</div>
-                <el-input-number v-bind:class="{ selected: selected=='odds_2' }" v-model="temp.odds_2" :min="1" :max="10" :step="0.05" @focus="selected='odds_2'"></el-input-number>
-              </el-tooltip>
-            </el-col>
-          </el-row>
-        </el-form-item>
-
-        <el-form-item label="Participants">
-          <el-row :gutter="20">
-            <el-col :span="11">
-              <el-input v-bind:class="{ selected: selected=='odds_1' }" placeholder="Participant A" v-model="temp.team_A.name" @focus="selected='odds_1'"></el-input>
-            </el-col>
-            <el-col :span="11">
-              <el-input v-bind:class="{ selected: selected=='odds_2' }" placeholder="Participant B" v-model="temp.team_B.name" @focus="selected='odds_2'"></el-input>
-            </el-col>
-          </el-row>
-        </el-form-item>
-
-        <el-form-item label="Verified">
-          <el-switch v-model="temp.verified" disabled>
-          </el-switch>
-        </el-form-item>
-
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="create">Create</el-button>
-        <el-button v-if="dialogStatus=='update'" @click="update">Update</el-button>
-        <el-button v-else type="primary" @click="predict">Add to bet slip</el-button>
-      </div>
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%" top="9vh">
+      <event_form :temp_event="temp_event" :dialogStatus="dialogStatus" @cancel="formCancel" @submitted="eventSubmitted"></event_form>
     </el-dialog>
   </div>
 </template>
@@ -167,7 +102,8 @@
 <script>
   import { fetchEventsList } from '@/api/events'
   import waves from '@/directive/waves.js'// water ripples
-  import betslip from './betslip.vue'
+  import betslip from './events/betslip.vue'
+  import event_form from './events/event_form.vue'
   import Event from './model/event.js'
   const moment = require('moment')
 
@@ -177,19 +113,20 @@
 
   export default {
     name: 'events_table',
-    components: { betslip },
+    components: { betslip, event_form },
     directives: {
       waves
     },
     data() {
       return {
         betslip_data: [],
+        events_table: [],
+        temp_event: new Event(),
         logos: {
           'LoL': lol_logo,
           'Dota 2': dota2_logo,
           'Counter-Strike': cs_go
         },
-        list: [],
         total: null,
         listLoading: true,
         listQuery: {
@@ -201,11 +138,6 @@
           since: moment().subtract(1, 'day').unix(),
           game: []
         },
-        selected: undefined,
-        selected_odds: 0,
-        selected_event: undefined,
-        temp: new Event(),
-        statusOptions: ['published', 'draft', 'deleted'],
         dialogFormVisible: false,
         dialogStatus: '',
         textMap: {
@@ -215,12 +147,6 @@
           store: 'Store bet'
         },
         showOdds: true
-      }
-    },
-    watch: {
-      selected(value) {
-        this.selected_odds = this.temp[value]
-        this.selected_event = value;
       }
     },
     filters: {
@@ -238,6 +164,9 @@
       this.getList()
     },
     methods: {
+      setDialog(status) {
+        this.dialogStatus = status;
+      },
       betslipStored(prediction) {
         console.log('prediction stored')
         console.log(prediction)
@@ -253,15 +182,15 @@
         return moment(str).isBefore()
       },
       openPredictionDialog(row, status) {
-        this.resetTemp(row)
-        this.dialogStatus = status
+        this.temp_event = new Event(row);
+        this.setDialog(status)
         this.dialogFormVisible = true
       },
       onFilterChange(filters) {
         console.log(filters)
         // Apply filter to query and re-ask backend
         this.loading = true;
-        this.list = [];
+        this.events_table = [];
         this.listQuery.game = filters.game;
         this.getList()
         return false
@@ -273,10 +202,10 @@
         this.listLoading = true
         let self = this
         fetchEventsList(this.listQuery).then(response => {
-          self.list = []
+          self.events_table = []
           if (response && response.items) {
             response.items.forEach(function(item) {
-              self.list.push(new Event(item))
+              self.events_table.push(new Event(item))
             });
 
             this.total = response.total
@@ -302,47 +231,20 @@
         this.listQuery.end = parseInt((+time[1] + 3600 * 1000 * 24) / 1000)
       },
       handleCreate() {
-        this.resetTemp()
-        this.dialogStatus = 'create'
+        this.setDialog('create')
         this.dialogFormVisible = true
       },
       handleUpdate(row) {
-        this.temp = Object.assign({}, row)
-        this.dialogStatus = 'update'
+        // Todo only update current events or what?
+        this.temp_event = Object.assign({}, row)
+        this.setDialog('update')
         this.dialogFormVisible = true
       },
-      handleDelete(row) {
-        this.$notify({
-          title: 'Success',
-          message: 'Success!',
-          type: 'success',
-          duration: 2000
-        })
-        const index = this.list.indexOf(row)
-        this.list.splice(index, 1)
-      },
-      create() {
-        this.temp.id = parseInt(Math.random() * 100) + 1024
-        this.temp.timestamp = +new Date()
-        this.temp.author = 'Test'
-        this.list.unshift(this.temp)
+      eventSubmitted(event) {
+        console.log('event submitted')
         this.dialogFormVisible = false
-        this.$notify({
-          title: 'Success',
-          message: 'Success!',
-          type: 'success',
-          duration: 2000
-        })
-      },
-      predict() {
-        // Store prediction
-        // Todo check if time is still okay for prediction!
-        console.log(this.temp)
-        this.temp.selected_odds = this.selected_odds
-        this.temp.selected_event = this.selected_event
-        this.betslip_data.push(this.temp)
-        this.dialogFormVisible = false
-        this.resetTemp()
+        this.betslip_data.push(event)
+        console.log(this.betslip_data);
         this.$message({
           title: 'Bet was successfully added to bet slip!',
           message: 'Bet added',
@@ -350,28 +252,16 @@
           duration: 2000
         })
       },
-      update() {
-        this.temp.timestamp = +this.temp.timestamp
-        for (const v of this.list) {
-          if (v.id === this.temp.id) {
-            const index = this.list.indexOf(v)
-            this.list.splice(index, 1, this.temp)
-            break
-          }
+      formCancel() {
+        this.dialogFormVisible = false;
+        this.temp_event = new Event(event);
+      }
+    },
+    watch: {
+      dialogFormVisible(value) {
+        if (value === false) {
+          this.temp_event = new Event(event);
         }
-        this.dialogFormVisible = false
-        this.$notify({
-          title: 'Success!',
-          message: 'Success',
-          type: 'success',
-          duration: 2000
-        })
-      },
-      resetTemp(bet) {
-        this.selected_event = undefined
-        this.selected = undefined
-        this.selected_odds = 0
-        this.temp = new Event(bet);
       }
     }
   }
