@@ -8,12 +8,13 @@
           </el-input>
 
           <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">Search</el-button>
-          <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="edit">
+          <el-button class="filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit">
             Add my own event
           </el-button>
         </div>
       </el-col>
-      <el-col :span="4" :offset="8"><betslip :betslipData="betslip_data" @stored="betslipStored()"></betslip>
+      <el-col :span="4" :offset="8">
+        <betslip :betslipData="betslip_data" @stored="betslipStored()"></betslip>
       </el-col>
     </el-row>
 
@@ -76,11 +77,11 @@
       <el-table-column align="center" label="Operation">
         <template slot-scope="scope">
           <el-button v-if="isAfter(scope.row.date)" type="success"
-                     @click="openPredictionDialog(scope.row, 'predict')">Predict
+                     @click="openDialog(C.DIALOG_PREDICT, scope.row)">Predict
 
           </el-button>
           <el-button v-if="isBefore(scope.row.date)"
-                     @click="openPredictionDialog(scope.row, 'store')">Store Bet
+                     @click="openDialog(C.DIALOG_STORE, scope.row)">Store Bet
 
           </el-button>
         </template>
@@ -105,6 +106,8 @@
   import betslip from './events/betslip.vue'
   import event_form from './events/event_form.vue'
   import Event from './model/event.js'
+  import C from './constants.js'
+
   const moment = require('moment')
 
   import dota2_logo from '@/assets/icons/dota2.svg'
@@ -119,6 +122,7 @@
     },
     data() {
       return {
+        C: C,
         betslip_data: [],
         events_table: [],
         temp_event: new Event(),
@@ -141,10 +145,10 @@
         dialogFormVisible: false,
         dialogStatus: '',
         textMap: {
-          predict: 'Do a prediction',
-          update: 'Edit',
-          create: 'Create',
-          store: 'Store bet'
+          [C.DIALOG_PREDICT]: 'Do a prediction',
+          [C.DIALOG_EDIT]: 'Edit',
+          [C.DIALOG_CREATE]: 'Store custom event',
+          [C.DIALOG_STORE]: 'Store bet'
         },
         showOdds: true
       }
@@ -181,7 +185,7 @@
       isBefore(str) {
         return moment(str).isBefore()
       },
-      openPredictionDialog(row, status) {
+      openDialog(status, row) {
         this.temp_event = new Event(row);
         this.setDialog(status)
         this.dialogFormVisible = true
@@ -230,10 +234,6 @@
         this.listQuery.start = parseInt(+time[0] / 1000)
         this.listQuery.end = parseInt((+time[1] + 3600 * 1000 * 24) / 1000)
       },
-      handleCreate() {
-        this.setDialog('create')
-        this.dialogFormVisible = true
-      },
       handleUpdate(row) {
         // Todo only update current events or what?
         this.temp_event = Object.assign({}, row)
@@ -254,13 +254,13 @@
       },
       formCancel() {
         this.dialogFormVisible = false;
-        this.temp_event = new Event(event);
+        this.temp_event = new Event();
       }
     },
     watch: {
       dialogFormVisible(value) {
         if (value === false) {
-          this.temp_event = new Event(event);
+          this.temp_event = new Event();
         }
       }
     }

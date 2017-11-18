@@ -45,7 +45,9 @@
       </el-col>
     </el-row>
   </el-popover>
-  <el-button v-popover:popover1 :disabled="betslipData.length === 0">Show betslip</el-button>
+    <el-badge :value="betslipData.length" class="item" v-if="betslipData.length > 0">
+      <el-button v-popover:popover1 :disabled="betslipData.length === 0" @click="active=true">Show betslip</el-button>
+    </el-badge>
   </div>
 </template>
 
@@ -90,7 +92,6 @@
         storePrediction(data).then(response => {
           console.log(response)
           console.log('stored')
-          this.active = false
           this.$notify({
             title: 'Success!',
             message: 'You have successfully stored your betslip',
@@ -107,10 +108,6 @@
     watch: {
       betslipData: {
         handler(val) {
-          if (val.length > 0) {
-            this.active = true
-          }
-
           console.log('bets added')
           console.log(val)
         },

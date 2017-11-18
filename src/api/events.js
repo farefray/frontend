@@ -27,6 +27,19 @@ export function fetchEventsList(params) {
   })
 }
 
+export function createCustomEvent(event) {
+  return service.post('/api/v1/events', {
+    event: event
+  }).then(response => {
+    console.log(response);
+    if (!response || !response.data) {
+      return false
+    }
+
+    return true
+  })
+}
+
 // TODO \/
 export function fetchList(params) {
   console.log(params)

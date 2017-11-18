@@ -52,34 +52,38 @@
       </el-row>
     </el-form-item>
 
-    <el-form-item label="Verified" v-if="dialogStatus =='predict'">
+    <el-form-item label="Verified" v-if="dialogStatus ==C.DIALOG_PREDICT">
       <el-switch v-model="temp_event.verified" disabled>
       </el-switch>
     </el-form-item>
 
     <el-form-item>
       <el-button @click="cancel()">Cancel</el-button>
-      <el-button v-if="dialogStatus=='create'" type="primary" @click="create">Create</el-button>
-      <el-button v-if="dialogStatus=='update'" @click="update">Update</el-button>
+      <el-button v-if="dialogStatus==C.DIALOG_CREATE" type="primary" @click="create">Create</el-button>
+      <el-button v-if="dialogStatus==C.DIALOG_UPDATE" @click="update">Update</el-button>
       <el-button v-else type="primary" @click="submitForm">Add to bet slip</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
+  import { createCustomEvent } from '@/api/events'
   import Event from '../model/event.js'
+  import C from '../constants.js'
 
   export default {
     name: 'betslip',
     props: ['temp_event', 'dialogStatus'],
     data() {
       return {
+        C: C,
         selected: undefined,
         selected_event: undefined
       };
     },
     mounted() {
       console.log('mounted')
+      console.log(this.temp_event);
     },
     computed: {
     },
@@ -91,14 +95,18 @@
       },
       create() { // TODO
         this.temp_event.id = parseInt(Math.random() * 100) + 1024 // TODO
-        this.temp_event.timestamp = +new Date()
-        this.temp_event.author = 'Test' // TODO
-        this.dialogFormVisible = false
-        this.$notify({
-          title: 'Success',
-          message: 'Success!',
-          type: 'success',
-          duration: 2000
+        this.temp_event.author = 0 // TODO
+
+        const self = this;
+        createCustomEvent(this.temp_event).then(response => {
+          self.dialogFormVisible = false
+
+          self.$notify({
+            title: 'Success',
+            message: 'Success!',
+            type: 'success',
+            duration: 2000
+          })
         })
       },
       submitForm() {

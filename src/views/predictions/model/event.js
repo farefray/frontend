@@ -1,6 +1,30 @@
 export default class Event {
+  date = new Date();
+  game = '';
+  game_league = '';
+  odds_1 = 1;
+  odds_2 = 1;
+  odds_draw = 1;
+  source = ['']; // TODO
+  team_A = {
+    name: '',
+    flag: '',
+    ex: ''
+  };
+  team_B = {
+    name: '',
+    flag: '',
+    ex: ''
+  };
+  user_id = 0;
+  verified = false;
+  selected_odds = 0;
+  selected_event = undefined;
+
   constructor(_event) {
+    console.log('creating event object')
     if (_event !== undefined) {
+      console.log('creating event not undefined')
       this.date = _event.date;
       this.game = _event.game;
       this.game_league = _event.game_league;
@@ -13,29 +37,6 @@ export default class Event {
       this.user_id = _event.user_id;
       this.verified = _event.verified;
       this.selected_odds = _event.selected_odds;
-    } else {
-      // default
-      this.date = undefined;
-      this.game = "";
-      this.game_league = "";
-      this.odds_1 = 1;
-      this.odds_2 = 1;
-      this.odds_draw = 1;
-      this.source = [''];
-      this.team_A = {
-        name: '',
-        flag: '',
-        ex: ''
-      };
-      this.team_B = {
-        name: '',
-        flag: '',
-        ex: ''
-      };
-      this.user_id = 0;
-      this.verified = false;
-      this.selected_odds = 0;
-      this.selected_event = undefined;
     }
   }
 
