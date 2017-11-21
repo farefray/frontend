@@ -139,7 +139,7 @@
           title: undefined,
           discipline: undefined,
           until: moment().add(3, 'day').unix(),
-          since: moment().subtract(1, 'day').unix(),
+          since: moment().subtract(2, 'day').unix(),
           game: []
         },
         dialogFormVisible: false,

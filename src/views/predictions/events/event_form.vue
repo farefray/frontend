@@ -70,6 +70,7 @@
   import { createCustomEvent } from '@/api/events'
   import Event from '../model/event.js'
   import C from '../constants.js'
+  const moment = require('moment')
 
   export default {
     name: 'betslip',
@@ -94,13 +95,16 @@
         this.$emit('cancel');
       },
       create() { // TODO
-        this.temp_event.id = parseInt(Math.random() * 100) + 1024 // TODO
-        this.temp_event.author = 0 // TODO
+        let event = this.temp_event
+        event._id = parseInt(Math.random() * 1000) + parseInt(Math.random() * 1000) // TODO
+        event.author = 0 // TODO
+        event.date = moment(this.temp_event.date).unix()
 
         const self = this;
-        createCustomEvent(this.temp_event).then(response => {
+        createCustomEvent(event).then(response => {
           self.dialogFormVisible = false
 
+          console.log(response);
           self.$notify({
             title: 'Success',
             message: 'Success!',
