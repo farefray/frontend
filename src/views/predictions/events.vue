@@ -95,7 +95,7 @@
     </div>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%" top="9vh">
-      <event_form :temp_event="temp_event" :dialogStatus="dialogStatus" @cancel="formCancel" @submitted="eventSubmitted"></event_form>
+      <event_form :temp_event="temp_event" :dialogStatus="dialogStatus" @close="formClose" @toBetSlip="toBetSlip"></event_form>
     </el-dialog>
   </div>
 </template>
@@ -209,7 +209,7 @@
           self.events_table = []
           if (response && response.items) {
             response.items.forEach(function(item) {
-              self.events_table.push(new Event(item))
+              self.events_table.push(new Event(item)) // TODO shall we create events for every row?
             });
 
             this.total = response.total
@@ -240,7 +240,7 @@
         this.setDialog('update')
         this.dialogFormVisible = true
       },
-      eventSubmitted(event) {
+      toBetSlip(event) {
         console.log('event submitted')
         this.dialogFormVisible = false
         this.betslip_data.push(event)
@@ -252,7 +252,25 @@
           duration: 2000
         })
       },
-      formCancel() {
+      formClose(reload, event) {
+        console.log('closing form after dialog was opened')
+        if (reload === true) {
+          this.getList();
+        }
+
+        if (event !== undefined) {
+          // its newly created event, re-open prediction dialog
+          this.dialogFormVisible = false;
+
+          let self = this;
+          setTimeout(() => {
+            // TODO decide its predict or store
+            self.openDialog(C.DIALOG_STORE, event)
+          }, 150)
+
+          return true
+        }
+
         this.dialogFormVisible = false;
         this.temp_event = new Event();
       }

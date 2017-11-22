@@ -22,9 +22,7 @@ export default class Event {
   selected_event = undefined;
 
   constructor(_event) {
-    console.log('creating event object')
     if (_event !== undefined) {
-      console.log('creating event not undefined')
       this.date = _event.date;
       this.game = _event.game;
       this.game_league = _event.game_league;

@@ -28,15 +28,17 @@ export function fetchEventsList(params) {
 }
 
 export function createCustomEvent(event) {
+  console.log('creating event')
   return service.post('/api/v1/events', {
     event: event
   }).then(response => {
+    console.log('created event')
     console.log(response);
-    if (!response || !response.data) {
+    if (!response || response.status !== 200) {
       return false
     }
 
-    return true
+    return response.data
   })
 }
 
