@@ -85,7 +85,7 @@
       <el-button @click="cancel()">Cancel</el-button>
       <el-button v-if="dialogStatus==C.DIALOG_CREATE" type="primary" @click="submitForm(false)">List event</el-button>
       <el-button v-if="dialogStatus==C.DIALOG_UPDATE" @click="update">Update</el-button>
-      <el-button v-else type="primary" @click="submitForm(true)">Add this event to bet slip</el-button>
+      <el-button v-else type="primary" @click="submitForm(true)" :disabled="temp_event[selected_event] == '1'">Add this event to bet slip</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -95,7 +95,7 @@
   import Event from '../model/event.js'
   import C from '../constants.js'
   import ElInput from "../../../../node_modules/element-ui/packages/input/src/input.vue";
-  const moment = require('moment')
+  const moment = require('moment') // Move global if used a lot?
   const _ = require('lodash'); // Move global if used a lot?
 
   export default {

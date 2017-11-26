@@ -38,6 +38,14 @@
             </div>
           </template>
         </el-table-column>
+        <el-table-column>
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)">Remove</el-button>
+          </template>
+        </el-table-column>
     </el-table>
     <br />
     <el-row :gutter="10">
@@ -57,6 +65,22 @@
         Profit: {{this.profit}}
       </el-col>
     </el-row>
+    <el-row :gutter="10" v-if="canStoreResult">
+      <el-col :span="10">
+        Bet result:
+      </el-col>
+      <el-col :span="10">
+        <el-switch
+          v-model="result"
+          activeColor="#13ce66"
+          inactiveColor="#ff4949"
+          activeText="Won"
+          activeValue="true"
+          inactiveText="Lost"
+          inactiveValue="false">
+        </el-switch>
+      </el-col>
+    </el-row>
     <br />
     <el-row :gutter="10">
       <el-col :offset="20">
@@ -72,6 +96,7 @@
 
 <script>
   import { storePrediction } from '@/api/apipredictions'
+  const moment = require('moment')
 
   export default {
     name: 'betslip',
@@ -79,10 +104,23 @@
     data() {
       return {
         bet_amount: 0,
-        active: false
+        active: false,
+        result: undefined
       };
     },
     computed: {
+      canStoreResult() {
+        // Check if all bets in betslip are finished already and reporter can set a result
+        let store_result = true;
+        this.betslipData.forEach(function(bet) {
+          console.log(bet)
+          if (moment(bet.date).isAfter()) { // is bet finished. TODO check for cheats here
+            store_result = false;
+          }
+        });
+
+        return store_result;
+      },
       odds() {
         let odds = 1;
         this.betslipData.forEach(function(bet) {
@@ -97,15 +135,25 @@
       }
     },
     methods: {
+      handleDelete(index, row) {
+        this.betslipData.splice(index, 1);
+
+        if (!this.betslipData.length) {
+          this.active = false;
+        }
+      },
       store() {
         let data = {
           date: Date.now(),
           final_odds: this.odds,
           selected_events: this.betslipData,
           stake: this.bet_amount,
-          status: 'PENDING', // TODO
+          status: this.canStoreResult ? (this.result === 'true' ? 'WON' : 'LOST') : 'PENDING',
           user_id: 0 // TODO
         }
+
+        console.log(this.result)
+        console.log(this.canStoreResult)
         console.log('store bets')
         console.log(data)
         storePrediction(data).then(response => {
