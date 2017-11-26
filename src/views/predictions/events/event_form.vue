@@ -60,6 +60,17 @@
       </el-row>
     </el-form-item>
 
+    <el-form-item label="Bet details" v-if="dialogStatus !== C.DIALOG_CREATE">
+      <el-row :gutter="20">
+        <el-col>
+          <el-autocomplete placeholder="Bet details" v-model="ex"
+                           autoComplete="on"
+                           :fetch-suggestions="queryEventEx"
+                           @select="handleExSelect"></el-autocomplete>
+        </el-col>
+      </el-row>
+    </el-form-item>
+
     <el-form-item label="Verified" v-if="dialogStatus ==C.DIALOG_PREDICT">
       <el-switch v-model="temp_event.verified" disabled>
       </el-switch>
@@ -78,10 +89,12 @@
   import { createCustomEvent } from '@/api/events'
   import Event from '../model/event.js'
   import C from '../constants.js'
+  import ElInput from "../../../../node_modules/element-ui/packages/input/src/input.vue";
   const moment = require('moment')
   const _ = require('lodash'); // Move global if used a lot?
 
   export default {
+    components: { ElInput },
     name: 'betslip',
     props: ['temp_event', 'dialogStatus'],
     data() {
@@ -93,7 +106,8 @@
         ], // TODO
         C: C,
         selected: undefined,
-        selected_event: undefined
+        selected_event: undefined,
+        ex: undefined
       };
     },
     mounted() {
@@ -119,6 +133,18 @@
         console.log(queryString) // autohelp?
         // call callback function to return suggestions
         cb(this.event_types);
+      },
+      queryEventEx(queryString, cb) { // TODO
+        console.log(queryString)
+        cb([
+          { "value": "Wins at least 1 map", "data": "plus1" },
+          { "value": "Wins map 1", "data": "map1" },
+          { "value": "Wins map 2", "data": "map2" }
+        ]);
+      },
+      handleExSelect(item) {
+        this.temp_event.odds_1 = 1;
+        this.temp_event.odds_2 = 1;
       },
       handleSelect(item) {
         // TODO when even type selected, fill events to autocomplete
@@ -162,6 +188,23 @@
           let event = new Event(self.temp_event)
           event.selected_odds = self.temp_event[self.selected_event]
           event.selected_event = self.selected_event
+
+          // process .ex, as its set in one field, so we need to pass it to one team
+          if (this.ex !== undefined) {
+            // TODO refactoring
+            switch (self.selected_event) {
+              case 'odds_1': {
+                event.team_A.ex = this.ex;
+                break;
+              }
+
+              case 'odds_2': {
+                event.team_B.ex = this.ex;
+                break;
+              }
+            }
+          }
+
           self.selected_event = undefined
           self.selected = undefined
           self.$emit('toBetSlip', event);

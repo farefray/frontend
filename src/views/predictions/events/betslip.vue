@@ -14,17 +14,24 @@
         </el-table-column>
         <el-table-column width="150" label="Participant">
           <template slot-scope="scope">
-            {{scope.row.team_A.name}}
+            <strong v-if="scope.row.selected_event == 'odds_1'">
+              {{scope.row.team_A.name}}
+            </strong>
           </template>
         </el-table-column>
         <el-table-column width="150" label="Participant">
           <template slot-scope="scope">
-            {{scope.row.team_B.name}}
+            <strong v-if="scope.row.selected_event == 'odds_1'">
+              {{scope.row.team_B.name}}
+            </strong>
           </template>
         </el-table-column>
     </el-table>
     <br />
     <el-row :gutter="10">
+      <el-col>
+        Stake:
+      </el-col>
       <el-col>
           <el-input-number v-model="bet_amount" :min="0" :step="50"></el-input-number>
       </el-col>
@@ -40,7 +47,7 @@
     </el-row>
     <br />
     <el-row :gutter="10">
-      <el-col>
+      <el-col :offset="20">
         <el-button type="primary" @click="store">Store</el-button>
       </el-col>
     </el-row>
