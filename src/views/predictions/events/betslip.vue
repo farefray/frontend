@@ -14,16 +14,28 @@
         </el-table-column>
         <el-table-column width="150" label="Participant">
           <template slot-scope="scope">
-            <strong v-if="scope.row.selected_event == 'odds_1'">
+            <span v-bind:class="{ bold: scope.row.selected_event === 'odds_1' }">
               {{scope.row.team_A.name}}
-            </strong>
+            </span>
+            <div v-if="scope.row.team_A.ex">
+              ({{scope.row.team_A.ex}})
+            </div>
+            <div v-if="scope.row.live && scope.row.selected_event === 'odds_1'">
+              [Live]
+            </div>
           </template>
         </el-table-column>
         <el-table-column width="150" label="Participant">
           <template slot-scope="scope">
-            <strong v-if="scope.row.selected_event == 'odds_1'">
+            <span v-bind:class="{ bold: scope.row.selected_event === 'odds_2' }">
               {{scope.row.team_B.name}}
-            </strong>
+            </span>
+            <div v-if="scope.row.team_B.ex">
+              ({{scope.row.team_B.ex}})
+            </div>
+            <div v-if="scope.row.live && scope.row.selected_event === 'odds_2'">
+              [Live]
+            </div>
           </template>
         </el-table-column>
     </el-table>
@@ -99,6 +111,7 @@
         storePrediction(data).then(response => {
           console.log(response)
           console.log('stored')
+          this.active = false;
           this.$notify({
             title: 'Success!',
             message: 'You have successfully stored your betslip',
@@ -125,4 +138,7 @@
 </script>
 
 <style scoped>
+  .bold {
+    font-weight: bold;
+  }
 </style>

@@ -71,8 +71,13 @@
       </el-row>
     </el-form-item>
 
-    <el-form-item label="Verified" v-if="dialogStatus ==C.DIALOG_PREDICT">
+    <el-form-item label="Verified" v-if="dialogStatus == C.DIALOG_PREDICT">
       <el-switch v-model="temp_event.verified" disabled>
+      </el-switch>
+    </el-form-item>
+
+    <el-form-item label="Live event" v-if="dialogStatus !== C.DIALOG_PREDICT">
+      <el-switch v-model="temp_event.live">
       </el-switch>
     </el-form-item>
 

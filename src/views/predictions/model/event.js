@@ -18,7 +18,8 @@ export default class Event {
   };
   user_id = 0;
   verified = false;
-  selected_odds = 0;
+  live = false;
+  selected_odds = 0; // if this really needed in event model?
   selected_event = undefined;
 
   constructor(_event) {
@@ -34,6 +35,7 @@ export default class Event {
       this.team_B = _event.team_B;
       this.user_id = _event.user_id;
       this.verified = _event.verified;
+      this.live = _event.live;
       this.selected_odds = _event.selected_odds;
     }
   }
