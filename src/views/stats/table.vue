@@ -1,7 +1,7 @@
 <template>
   <div class="components-container" style='height:100vh'>
 
-    <el-table :data="predictions" @filter-change="onFilterChange"
+    <el-table :fit="true" :data="predictions"
               v-loading="listLoading" element-loading-text="Loading..." border fit
               style="width: 100%">
 
@@ -12,50 +12,83 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="80px" max-width="150px" label="Event" prop="game" column-key="game"
-                       :filters="[
-                          { text: 'Dota 2', value: 'Dota 2' },
-                          { text: 'LoL', value: 'LoL' },
-                          { text: 'Overwatch', value: 'Overwatch' },
-                          { text: 'Counter-Strike', value: 'Counter-Strike' }
-                       ]"
-                       :filter-method="filterGameType"
-                       filter-placement="bottom-end">
+      <el-table-column label="Event" prop="game" column-key="game">
         <template slot-scope="scope">
-          <span class="link-type" @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
+          <el-table :data="scope.row.selected_events" :fit="true" style="width:100%;">
+            <el-table-column width="120" label="Date">
+              <template slot-scope="row_scope">
+                {{(row_scope.row.date) | moment("DD.MM kk:mm")}}
+              </template>
+            </el-table-column>
+            <el-table-column width="120" label="Game">
+              <template slot-scope="row_scope">
+                {{(row_scope.row.game)}} <br/>
+                {{row_scope.row.game_league}}
+              </template>
+            </el-table-column>
+            <el-table-column label="Participant">
+              <template slot-scope="row_scope">
+                <span v-bind:class="{ bold: row_scope.row.selected_event === 'odds_1' }">
+                  {{row_scope.row.team_A.name}}
+                </span>
+                <div v-if="row_scope.row.team_A.ex">
+                  ({{row_scope.row.team_A.ex}})
+                </div>
+                <div v-if="row_scope.row.live && row_scope.row.selected_event === 'odds_1'">
+                  [Live]
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="Participant">
+              <template slot-scope="row_scope">
+                <span v-bind:class="{ bold: row_scope.row.selected_event === 'odds_2' }">
+                  {{row_scope.row.team_B.name}}
+                </span>
+                <div v-if="row_scope.row.team_B.ex">
+                  ({{row_scope.row.team_B.ex}})
+                </div>
+                <div v-if="row_scope.row.live && row_scope.row.selected_event === 'odds_2'">
+                  [Live]
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="Odds">
+              <template slot-scope="row_scope">
+                <span>
+                  {{row_scope.row.selected_odds}}
+                </span>
+              </template>
+            </el-table-column>
+          </el-table>
         </template>
       </el-table-column>
 
-      <el-table-column width="210px" align="center" label="Participant">
+      <el-table-column width="80" align="center" label="Stake">
         <template slot-scope="scope">
-          <span>asd</span>
+          {{scope.row.stake}}
         </template>
       </el-table-column>
 
-      <el-table-column width="100px" align="center" label="Chance">
+      <el-table-column width="140" align="center" label="Status">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.odds_1">{{scope.row.percent_odds_1}}</el-tag>
+          <el-tag :type="scope.row.status[0]">{{scope.row.status[0]}}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column width="210px" align="center" label="Participant">
+      <el-table-column width="100">
         <template slot-scope="scope">
-          <span>basd</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="100px" align="center" label="Chance">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.odds_2">{{scope.row.percent_odds_2}}</el-tag>
+          <el-button
+            size="mini"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)">Remove</el-button>
         </template>
       </el-table-column>
     </el-table>
-
   </div>
 </template>
 
 <script>
-  import { getPredictions } from '@/api/apipredictions'
+  import { getPredictions, removePrediction } from '@/api/apipredictions'
 
   export default {
     components: {},
@@ -76,18 +109,38 @@
       })
     },
     methods: {
-      onFilterChange(filters) {
-        console.log(filters)
-        // Apply filter to query and re-ask backend
-      },
-      filterGameType(value, row) {
-        return row.game === value;
+      handleDelete(index, row) {
+        this.$confirm('Are you sure to remove this prediction?')
+          .then(_ => {
+            removePrediction(row)
+              .then(response => {
+                console.log(response.data)
+              });
+          })
+          .catch(_ => {});
       }
     }
   }
 </script>
 
 <style scoped>
+  .el-tag--LOST {
+    background-color: rgba(240, 91, 61, 0.08);
+    color: #f81329;
+  }
 
+  .el-tag--WON {
+    background-color: rgba(84, 126, 69, 0.08);
+    color: #3ea74c;
+  }
+
+  .el-tag--PENDING {
+    background-color: rgba(188, 177, 180, 0.08);
+    color: #bcb1b4;
+  }
+
+  .bold {
+    font-weight: bold;
+  }
 </style>
 

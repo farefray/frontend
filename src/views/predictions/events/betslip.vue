@@ -152,8 +152,7 @@
           user_id: 0 // TODO
         }
 
-        console.log(this.result)
-        console.log(this.canStoreResult)
+        // TODO: set date of prediction to a date of last event in betslip
         console.log('store bets')
         console.log(data)
         storePrediction(data).then(response => {
