@@ -69,6 +69,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column width="80" align="center" label="Odds">
+        <template slot-scope="scope">
+          {{scope.row.final_odds}}
+        </template>
+      </el-table-column>
+
       <el-table-column width="140" align="center" label="Status">
         <template slot-scope="scope">
           <el-tag :type="scope.row.status[0]">{{scope.row.status[0]}}</el-tag>
