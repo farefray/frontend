@@ -1,5 +1,5 @@
 import service from './service'
-
+import { getToken } from '@/utils/auth'
 export function storePrediction(prediction) {
   // const self = this
   return service.post('/api/v1/predictions', prediction)
@@ -16,7 +16,12 @@ export function storePrediction(prediction) {
 
 export function removePrediction(prediction) {
   // TODO validation/verification
-  return service.delete('/api/v1/predictions', prediction)
+  return service.delete('/api/v1/predictions', {
+    data: prediction,
+    headers: {
+      auth: getToken()
+    }
+  })
     .then(response => {
       console.log(response);
       if (response && response.status === 200) {
