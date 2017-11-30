@@ -15,22 +15,12 @@ export function storePrediction(prediction) {
 }
 
 export function removePrediction(prediction) {
-  // TODO validation/verification
   return service.delete('/api/v1/predictions', {
     data: prediction,
     headers: {
       auth: getToken()
     }
   })
-    .then(response => {
-      console.log(response);
-      if (response && response.status === 200) {
-        return true
-      }
-
-      console.log(response.data);
-      return false
-    })
 }
 
 export function getPredictions() {

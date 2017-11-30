@@ -116,12 +116,33 @@
     },
     methods: {
       handleDelete(index, row) {
-        this.$confirm('Are you sure to remove this prediction?')
+        const self = this;
+        self.$confirm('Are you sure to remove this prediction?')
           .then(_ => {
             removePrediction(row)
               .then(response => {
-                console.log(response.data)
-              });
+                console.log(response);
+                if (response && response.status === 200) {
+                  self.$message({
+                    message: 'Success! ',
+                    type: 'success',
+                    duration: 5 * 1000
+                  });
+
+                  self.predictions.splice(index, 1);
+                  return true
+                }
+
+                console.log(response.data);
+                return false
+              })
+              .catch(error => {
+                self.$message({
+                  message: 'Error! ' + error.data.message,
+                  type: 'error',
+                  duration: 5 * 1000
+                })
+              })
           })
           .catch(_ => {});
       }
