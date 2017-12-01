@@ -81,27 +81,46 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="100">
+      <el-table-column>
         <template slot-scope="scope">
+          <el-button size="mini" tyle="success" @click="handleReportStatus(scope.$index, scope.row)" v-if="scope.row.status[0] ==='PENDING'">
+            Report status
+          </el-button>
           <el-button
             size="mini"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)">Remove</el-button>
+            @click="handleDelete(scope.$index, scope.row)">Remove
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog
+      title="Report bet status"
+      :visible.sync="dialogVisible"
+      width="30%">
+      <span>Is your prediction was correct?</span>
+      <el-button @click="dialogVisible = false">Cancel</el-button>
+      <el-button type="warning" @click="reportStatus(false)">Not</el-button>
+      <el-button type="success" @click="reportStatus(true)">Yes</el-button>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-  import { getPredictions, removePrediction } from '@/api/apipredictions'
+  import { getPredictions, removePrediction, updatePrediction } from '@/api/apipredictions'
+  import ElButton from "element-ui/packages/button/src/button";
 
+  // TODO make prediction status string instead of array
   export default {
-    components: {},
+    components: {
+      ElButton
+    },
     data() {
       return {
         listLoading: true,
-        predictions: null
+        predictions: null,
+        dialogVisible: false,
+        current_prediction: null
       }
     },
     mounted() {
@@ -115,6 +134,39 @@
       })
     },
     methods: {
+      reportStatus(result) {
+        const self = this;
+        self.current_prediction.status[0] = result === true ? 'WON' : 'LOST';
+        updatePrediction(self.current_prediction)
+          .then(response => {
+            console.log(response);
+            if (response && response.status === 200) {
+              self.$message({
+                message: 'Success! ',
+                type: 'success',
+                duration: 5 * 1000
+              });
+
+              return true
+            }
+
+            console.log(response.data);
+            return false
+          })
+          .catch(error => {
+            self.$message({
+              message: 'Error! ' + error.data.message,
+              type: 'error',
+              duration: 5 * 1000
+            })
+          })
+        self.dialogVisible = false;
+      },
+      handleReportStatus(index, row) {
+        const self = this;
+        self.dialogVisible = true;
+        self.current_prediction = row;
+      },
       handleDelete(index, row) {
         const self = this;
         self.$confirm('Are you sure to remove this prediction?')

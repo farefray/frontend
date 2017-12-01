@@ -14,6 +14,23 @@ export function storePrediction(prediction) {
     })
 }
 
+export function updatePrediction(prediction) {
+  return service.put('/api/v1/predictions', prediction, {
+    headers: {
+      auth: getToken()
+    }
+  })
+    .then(response => {
+      console.log(response);
+      if (response && response.status === 200) {
+        return true
+      }
+
+      console.log(response.data);
+      return false
+    })
+}
+
 export function removePrediction(prediction) {
   return service.delete('/api/v1/predictions', {
     data: prediction,
@@ -23,9 +40,12 @@ export function removePrediction(prediction) {
   })
 }
 
-export function getPredictions() {
+export function getPredictions(params = {}) {
+  params.sort = '-date,createdAt';
   // todo user validation
-  return service.get('/api/v1/predictions')
+  return service.get('/api/v1/predictions', {
+    params: params
+  })
     .then(response => {
       console.log(response);
       return response;
