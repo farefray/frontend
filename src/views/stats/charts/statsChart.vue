@@ -10,9 +10,8 @@
   const bows = require('bows')
   const log = bows('LineChart')
 
-  function parseDate(timestamp) { // TODO avoid this *1000 hack
+  function parseDate(timestamp) {
     let date = new Date(timestamp)
-    console.log(date);
     return [('0' + date.getDate()).slice(-2), ('0' + (date.getMonth() + 1)).slice(-2), date.getFullYear()].join('/')
   }
 

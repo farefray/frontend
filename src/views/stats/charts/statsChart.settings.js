@@ -2,12 +2,12 @@ let graphic = {}
 graphic.LinearGradient = require('zrender/lib/graphic/LinearGradient')
 
 const settings = {
-  backgroundColor: '#344b58',
+  backgroundColor: '#EEF6EE',
   title: {
-    text: '统计',
+    text: 'Profit graph',
     x: '4%',
     textStyle: {
-      color: '#fff',
+      color: '#476b3b',
       fontSize: '22'
     },
     subtextStyle: {
@@ -18,15 +18,28 @@ const settings = {
   tooltip: {
     show: true,
     formatter: function(params, ticket, callback) {
+      // TODO optimize this?
+      console.log(ticket);
       console.log(params);
-      let cl = params[0].data.bet.status[0] === 'WON' ? 'green' : (params[0].data.bet.status[0] === 'LOST' ? 'red' : 'gray');
-      let profit = (params[0].data.bet.status[0] === 'WON' ? ('+ ' + (params[0].data.bet.stake * params[0].data.bet.final_odds - params[0].data.bet.stake)) : ('- ' + params[0].data.bet.stake))
+      let color = params[0].data.bet.status[0] === 'WON' ? 'green' : (params[0].data.bet.status[0] === 'LOST' ? 'red' : 'gray');
+      let profit = (params[0].data.bet.status[0] === 'WON'
+        ? ('+ ' + (params[0].data.bet.stake * params[0].data.bet.final_odds - params[0].data.bet.stake).toFixed(2))
+        : ('- ' + params[0].data.bet.stake.toFixed(2)))
 
-      return '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background-color:' + cl + ';margin-right:5px;"></span>' +
+      let participants = '';
+      const selected_events = params[0].data.bet.selected_events;
+      for (let i = 0; i < selected_events.length; i++) {
+        participants += (selected_events[i].selected_event === 'odds_1' ? '<strong>' : '') + selected_events[i].team_A.name + (selected_events[i].selected_event === 'odds_1' ? '</strong>' : '') +
+          " vs " +
+          (selected_events[i].selected_event === 'odds_2' ? '<strong>' : '') + selected_events[i].team_B.name + (selected_events[i].selected_event === 'odds_1' ? '<strong>' : '') + '</br>';
+      }
+
+      return '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background-color:' + color + ';margin-right:5px;"></span>' +
+        params[0].data.bet.status[0] + '<span class="el-tag" style="position:absolute; right:5px; top: 3px;">' + params[0].data.bet.final_odds + '</span>' +
         '<br/>' +
-        params[0].data.bet.stake + ' with ' + params[0].data.bet.final_odds + ' odds' +
+        '<div style="padding-top:5px;">' + participants + '</div>' +
         '<br/>' +
-        profit;
+        '<strong>' + profit + '</strong>';
     },
     trigger: 'axis',
     axisPointer: {
@@ -38,41 +51,67 @@ const settings = {
       }
     }
   },
-  axisPointer: {
-    link: {
-      xAxisIndex: 'all'
+  // TODO make it dynamically built after chart submitting
+  visualMap: /* [{
+    show: false,
+    type: 'continuous',
+    dimension: 0,
+    min: 0,
+    max: 400,
+    color: '#007e02'
+  }],*/
+  {
+    show: false,
+    pieces: [
+    {
+      lte: 0,
+      color: '#cc0033'
     },
-    label: {
-      backgroundColor: '#777'
+    {
+      gt: 0,
+      lte: 100,
+      color: '#096'
+    }, {
+      gt: 300,
+      color: '#007e02'
+    }],
+    outOfRange: {
+      color: '#999'
     }
   },
   calculable: true,
   dataZoom: [{
-    type: 'slider',
-    show: true,
-    realtime: true,
-    start: 0,
-    end: 100,
-    height: 30,
-    xAxisIndex: [
-      0
-    ],
-    bottom: 30,
-    handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
-    handleSize: '110%',
-    handleStyle: {
-      color: '#d3dee5'
-
+      type: 'slider',
+      show: true,
+      realtime: true,
+      start: 0,
+      end: 100,
+      height: 30,
+      xAxisIndex: [
+        0
+      ],
+      bottom: 30,
+      handleIcon: 'path://M306.1,413c0,2.2-1.8,4-4,4h-59.8c-2.2,0-4-1.8-4-4V200.8c0-2.2,1.8-4,4-4h59.8c2.2,0,4,1.8,4,4V413z',
+      handleSize: '110%',
+      handleStyle: {
+        color: '#e2e58a'
+      },
+      textStyle: {
+        color: '#476b3b'
+      }
     },
-    textStyle: {
-      color: '#fff' },
-    borderColor: '#90979c'
-    }, {
-    type: 'inside',
-    show: true,
-    height: 15,
-    start: 1,
-    end: 35
+    {
+      type: 'inside',
+      show: true,
+      height: 15,
+      start: 1,
+      end: 35,
+      dataBackgroundStyle: {
+        color: '#f99008'
+      },
+      handleStyle: {
+        color: '#f99008'
+      }
   }],
   toolbox: {
     show: true,
@@ -103,10 +142,6 @@ const settings = {
           table += '</tbody></table>'
           return table
         }
-      },
-      magicType: {
-        show: true,
-        type: ['line', 'bar']
       },
       saveAsImage: {
         show: true,
@@ -210,12 +245,6 @@ const settings = {
     symbolSize: 4,
     showSymbol: true,
     showAllSymbol: true,
-    lineStyle: {
-      normal: {
-        color: '#414141',
-        width: 2
-      }
-    },
     areaStyle: {
       normal: {
         color: new graphic.LinearGradient(0, 0, 0, 1, [{

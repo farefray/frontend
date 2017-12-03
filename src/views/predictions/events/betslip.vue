@@ -128,7 +128,7 @@
           odds *= bet.selected_odds
         });
 
-        return odds
+        return odds.toFixed(2)
       },
       profit() {
         return (this.odds * this.bet_amount - this.bet_amount).toFixed(2);
