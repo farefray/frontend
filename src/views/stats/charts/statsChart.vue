@@ -5,7 +5,7 @@
 </template>
 
 <script type="text/javascript">
-  import IEcharts from 'vue-echarts-v3/src/full.vue'
+  import IEcharts from 'vue-echarts-v3/src/full'
   import settings from './statsChart.settings'
   const bows = require('bows')
   const log = bows('LineChart')

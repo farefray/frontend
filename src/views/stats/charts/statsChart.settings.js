@@ -249,7 +249,7 @@ const settings = {
       normal: {
         color: new graphic.LinearGradient(0, 0, 0, 1, [{
           offset: 1,
-          color: '#960208' // 0%
+          color: '#f99008' // 0%
         }, {
           offset: 0,
           color: '#00842b' // 100%
