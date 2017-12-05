@@ -16,7 +16,7 @@
   }
 
   export default {
-    name: 'LineChart',
+    name: 'stats-chart',
     components: {
       IEcharts
     },
@@ -37,11 +37,10 @@
     watch: {
       chartdata(val) {
         console.log(val);
+        this.loading = val === null;
       }
     },
     mounted() {
-      this.loading = true;
-
       log('mounted');
       log(this.chartdata);
       if (this.chartdata !== null) {
@@ -67,7 +66,6 @@
         settings.xAxis[0].data = labels
         log(settings)
         this.opts = settings
-        this.loading = false
       }
     },
     methods: {

@@ -1,6 +1,6 @@
 <template>
   <div class="components-container" style='height:100vh'>
-
+    <predictions_filter @filter="fillData"></predictions_filter>
     <el-table :fit="true" :data="predictions"
               v-loading="listLoading" element-loading-text="Loading..." border fit
               style="width: 100%">
@@ -108,12 +108,13 @@
 
 <script>
   import { getPredictions, removePrediction, updatePrediction } from '@/api/apipredictions'
-  import ElButton from "element-ui/packages/button/src/button";
+  import predictions_filter from './predictions_filter'
 
   // TODO make prediction status string instead of array
+  // TODO rename this component
   export default {
     components: {
-      ElButton
+      predictions_filter
     },
     data() {
       return {
@@ -125,15 +126,18 @@
     },
     mounted() {
       this.$nextTick(() => {
-        getPredictions()
+        this.fillData()
+      })
+    },
+    methods: {
+      fillData(query) {
+        getPredictions(query)
           .then(response => {
             this.predictions = response.data
             console.log(response.data)
             this.listLoading = false
           });
-      })
-    },
-    methods: {
+      },
       reportStatus(result) {
         const self = this;
         self.current_prediction.status[0] = result === true ? 'WON' : 'LOST';

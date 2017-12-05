@@ -1,18 +1,28 @@
 <template>
   <div class="components-container" style='height:100vh'>
-    <button @click="rerender()">Refresh</button>
-    <div class='chart-container' v-if="show">
-      <stats-chart height='100%' width='100%' :chartdata="predictions"></stats-chart>
-    </div>
+    <el-row>
+      <el-col>
+        <predictions_filter @filter="fillData"></predictions_filter>
+        <button @click="rerender()">Refresh</button>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col>
+        <div class='chart-container' v-if="show">
+          <stats-chart height='100%' width='100%' :chartdata="predictions"></stats-chart>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
   import statsChart from './charts/statsChart'
+  import predictions_filter from './predictions_filter'
   import { getPredictions } from '@/api/apipredictions'
 
   export default {
-    components: { statsChart },
+    components: { statsChart, predictions_filter },
     data() {
       return {
         predictions: null,
@@ -36,8 +46,9 @@
           })
         })
       },
-      fillData() {
-        getPredictions()
+      fillData(query) {
+        this.predictions = null;
+        getPredictions(query)
           .then(response => {
             this.predictions = response.data
             console.log(this.predictions)
@@ -49,11 +60,6 @@
 </script>
 
 <style scoped>
-  .chart-container{
-    position: relative;
-    width: 100%;
-    height: 90%;
-    padding-bottom: 40px;
-  }
+
 </style>
 
