@@ -14,11 +14,7 @@ export function fetchEventsList(params) {
 
     let eventList = response.data;
     if (eventList.length && eventList[0].date) {
-      for (let i = 0; i < eventList.length; i++) {
-        eventList[i].date = eventList[i].date * 1000;
-      }
-
-      const pageList = eventList.filter((item, index) => index < params.per_page * params.page && index >= params.per_page * (params.page - 1))
+       const pageList = eventList.filter((item, index) => index < params.per_page * params.page && index >= params.per_page * (params.page - 1))
       return {
         total: eventList.length,
         items: pageList

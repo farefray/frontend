@@ -3,11 +3,7 @@
     <el-row :gutter="20">
       <el-col :span="12">
         <div class="filter-container">
-          <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="Title"
-                    v-model="listQuery.title">
-          </el-input>
-
-          <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">Search</el-button>
+          <events_filter @filter="filterData"></events_filter>
           <el-button class="filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit">
             Add my own event
           </el-button>
@@ -24,8 +20,8 @@
 
       <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date">
         <template slot-scope="scope">
-          <span><strong>{{(scope.row.date) | moment("DD.MM kk:mm")}}</strong></span><br/>
-          <span>({{(scope.row.date) | moment("from")}})</span>
+          <span><strong>{{(parseInt(+scope.row.date / 1000)) | moment("DD.MM kk:mm")}}</strong></span><br/>
+          <span>({{(parseInt(+scope.row.date / 1000)) | moment("from")}})</span>
         </template>
       </el-table-column>
 
@@ -88,7 +84,7 @@
       </el-table-column>
     </el-table>
 
-    <div v-show="!listLoading" class="pagination-container">
+    <div v-show="!listLoading && total > 0" class="pagination-container">
       <el-pagination @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
                      :page-size="listQuery.per_page" layout="total, prev, pager, next" :total="total">
       </el-pagination>
@@ -103,6 +99,7 @@
 <script>
   import { fetchEventsList } from '@/api/events'
   import waves from '@/directive/waves.js'// water ripples
+  import events_filter from '@/views/components/events_filter'
   import betslip from './events/betslip.vue'
   import event_form from './events/event_form.vue'
   import Event from './model/event.js'
@@ -116,7 +113,7 @@
 
   export default {
     name: 'events_table',
-    components: { betslip, event_form },
+    components: { betslip, event_form, events_filter },
     directives: {
       waves
     },
@@ -131,15 +128,13 @@
           'Dota 2': dota2_logo,
           'Counter-Strike': cs_go
         },
-        total: null,
+        total: undefined,
         listLoading: true,
         listQuery: {
           page: 1,
           per_page: 25,
           title: undefined,
           discipline: undefined,
-          until: moment().add(3, 'day').unix(),
-          since: moment().subtract(2, 'day').unix(),
           game: []
         },
         dialogFormVisible: false,
@@ -168,6 +163,13 @@
       this.getList()
     },
     methods: {
+      filterData(filters) {
+        // this comes with default predictions filters, so need to fill up with events data
+
+        Object.assign(this.listQuery, filters);
+        console.log(this.listQuery);
+        this.getList();
+      },
       setDialog(status) {
         this.dialogStatus = status;
       },
@@ -204,6 +206,7 @@
       },
       getList() {
         this.listLoading = true
+        this.total = 0
         let self = this
         fetchEventsList(this.listQuery).then(response => {
           self.events_table = []
@@ -215,6 +218,7 @@
             this.total = response.total
           }
 
+          console.log(this.total);
           this.listLoading = false
         })
       },
@@ -224,15 +228,6 @@
       handleCurrentChange(val) {
         this.listQuery.page = val
         this.getList()
-      },
-      timeFilter(time) {
-        if (!time[0]) {
-          this.listQuery.start = undefined
-          this.listQuery.end = undefined
-          return
-        }
-        this.listQuery.start = parseInt(+time[0] / 1000)
-        this.listQuery.end = parseInt((+time[1] + 3600 * 1000 * 24) / 1000)
       },
       handleUpdate(row) {
         // Todo only update current events or what?

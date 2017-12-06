@@ -43,13 +43,6 @@
           },
           pickerOptions: {
             shortcuts: [{
-              text: 'Today',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
               text: 'Last 24 hours',
               onClick(picker) {
                 const end = new Date();

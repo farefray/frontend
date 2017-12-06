@@ -164,7 +164,7 @@
         let event = _.cloneDeep(this.temp_event)
         event._id = parseInt(Math.random() * 1000) + parseInt(Math.random() * 1000) // TODO
         event.author = 0 // TODO
-        event.date = moment(this.temp_event.date).unix()
+        event.date = moment(this.temp_event.date).valueOf()
 
         console.log('create event')
         createCustomEvent(event).then(response => {
@@ -181,7 +181,6 @@
 
             self.createEvent(function(event) {
               console.log('create event callback')
-              event.date *= 1000; // TODO FIX THIS
               self.$emit('close', false, event);
             });
 
