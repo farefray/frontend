@@ -1,6 +1,6 @@
 <template>
   <div class="components-container" style='height:100vh'>
-    <predictions_filter @filter="fillData"></predictions_filter>
+    <events_filter @filter="fillData"></events_filter>
     <el-table :fit="true" :data="predictions"
               v-loading="listLoading" element-loading-text="Loading..." border fit
               style="width: 100%">
@@ -108,13 +108,12 @@
 
 <script>
   import { getPredictions, removePrediction, updatePrediction } from '@/api/apipredictions'
-  import predictions_filter from './predictions_filter'
+  import events_filter from '@/views/components/events_filter'
 
   // TODO make prediction status string instead of array
-  // TODO rename this component
   export default {
     components: {
-      predictions_filter
+      events_filter
     },
     data() {
       return {

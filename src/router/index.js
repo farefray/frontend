@@ -82,7 +82,7 @@ export const asyncRouterMap = [
     meta: {},
     children: [
       { path: 'dashboard', component: _import('stats/dashboard'), name: 'Dashboard' },
-      { path: 'table', component: _import('stats/table'), name: 'Predictions' }
+      { path: 'table', component: _import('stats/predictions'), name: 'Predictions' }
     ]
   },
   {

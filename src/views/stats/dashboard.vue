@@ -2,8 +2,7 @@
   <div class="components-container" style='height:100vh'>
     <el-row>
       <el-col>
-        <predictions_filter @filter="fillData"></predictions_filter>
-        <button @click="rerender()">Refresh</button>
+        <events_filter @filter="fillData"></events_filter>
       </el-col>
     </el-row>
     <el-row>
@@ -18,11 +17,11 @@
 
 <script>
   import statsChart from './charts/statsChart'
-  import predictions_filter from './predictions_filter'
+  import events_filter from '@/views/components/events_filter'
   import { getPredictions } from '@/api/apipredictions'
 
   export default {
-    components: { statsChart, predictions_filter },
+    components: { statsChart, events_filter },
     data() {
       return {
         predictions: null,
