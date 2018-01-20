@@ -143,13 +143,14 @@
         }
       },
       store() {
+        console.log(this.$store.state.user.id);
         let data = {
           date: Date.now(),
           final_odds: this.odds,
           selected_events: this.betslipData,
           stake: this.bet_amount,
           status: this.canStoreResult ? (this.result === 'true' ? 'WON' : 'LOST') : 'PENDING',
-          user_id: 0 // TODO
+          user_id: this.$store.state.user.id
         }
 
         // TODO: set date of prediction to a date of last event in betslip
