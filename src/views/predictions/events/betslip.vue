@@ -145,7 +145,7 @@
       store() {
         console.log(this.$store.state.user.id);
         let data = {
-          date: Date.now(),
+          date: Math.round(new Date() / 1000),
           final_odds: this.odds,
           selected_events: this.betslipData,
           stake: this.bet_amount,
