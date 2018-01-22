@@ -139,15 +139,6 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/theme',
-    component: Layout,
-    redirect: 'noredirect',
-    name: 'theme',
-    noDropdown: true,
-    meta: { role: ['admin'] },
-    children: [{ path: 'index', component: _import('theme/index'), name: '换肤' }]
-  },
-  {
     path: '/introduction',
     component: Layout,
     redirect: '/introduction/index',

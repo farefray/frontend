@@ -17,9 +17,6 @@
 			<el-col :span="4" class='text-center'>
 				<router-link class="pan-btn tiffany-btn" to="/example/form/edit">Form</router-link>
 			</el-col>
-			<el-col :span="4" class='text-center'>
-				<router-link class="pan-btn yellow-btn" to="/theme/index">Theme</router-link>
-			</el-col>
 		</el-row>
 
 		<el-row>
