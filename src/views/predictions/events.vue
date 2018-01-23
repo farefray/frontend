@@ -1,324 +1,329 @@
 <template>
-  <div class="app-container calendar-list-container">
+  <el-main class="app-container calendar-list-container">
     <el-row :gutter="20">
       <el-col :span="12">
         <div class="filter-container">
-          <events_filter @filter="filterData"></events_filter>
-          <el-button class="filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit">
-            Add my own event
-          </el-button>
+          <events_filter @filter="filterData"></events_filter>          
         </div>
+      </el-col>
+      <el-col :span="4">
+        <el-button class="filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit">
+          Add my own event
+        </el-button>
       </el-col>
       <el-col :span="4" :offset="8">
         <betslip :betslipData="betslip_data" @stored="betslipStored()"></betslip>
       </el-col>
     </el-row>
+    <br/>
+    <el-row :gutter="20">
+      <el-table :data="events_table" @filter-change="onFilterChange"
+        v-loading="listLoading" element-loading-text="Loading..." border fit
+        style="width: 100%">
 
-    <el-table :data="events_table" @filter-change="onFilterChange"
-              v-loading="listLoading" element-loading-text="Loading..." border fit
-              style="width: 100%">
+        <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date">
+          <template slot-scope="scope">
+            <span><strong>{{(parseInt(+scope.row.date / 1000)) | moment("DD.MM kk:mm")}}</strong></span><br/>
+            <span>({{(parseInt(+scope.row.date / 1000)) | moment("from")}})</span>
+          </template>
+        </el-table-column>
 
-      <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date">
-        <template slot-scope="scope">
-          <span><strong>{{(parseInt(+scope.row.date / 1000)) | moment("DD.MM kk:mm")}}</strong></span><br/>
-          <span>({{(parseInt(+scope.row.date / 1000)) | moment("from")}})</span>
-        </template>
-      </el-table-column>
+        <el-table-column width="175px" label="Event" prop="game" column-key="game"
+                        :filters="[
+                            { text: 'Dota 2', value: 'Dota 2' },
+                            { text: 'LoL', value: 'LoL' },
+                            { text: 'Overwatch', value: 'Overwatch' },
+                            { text: 'Counter-Strike', value: 'Counter-Strike' }
+                        ]"
+                        :filter-method="filterGameType"
+                        filter-placement="bottom-end">
+          <template slot-scope="scope">
+            <img :src="logos[scope.row.game]" width="24px" close-transition v-if="logos[scope.row.game]">
+            <span v-else>[{{scope.row.game}}] </span>
+            <br/>
+            <span @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
+          </template>
+        </el-table-column>
 
-      <el-table-column width="175px" label="Event" prop="game" column-key="game"
-                       :filters="[
-                          { text: 'Dota 2', value: 'Dota 2' },
-                          { text: 'LoL', value: 'LoL' },
-                          { text: 'Overwatch', value: 'Overwatch' },
-                          { text: 'Counter-Strike', value: 'Counter-Strike' }
-                       ]"
-                       :filter-method="filterGameType"
-                       filter-placement="bottom-end">
-        <template slot-scope="scope">
-          <img :src="logos[scope.row.game]" width="24px" close-transition v-if="logos[scope.row.game]">
-          <span v-else>[{{scope.row.game}}] </span>
-          <br/>
-          <span @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
-        </template>
-      </el-table-column>
+        <el-table-column width="240px" align="center" label="Participant">
+          <template slot-scope="scope">
+            <span><img :src="getFlagUrl(scope.row.team_A.flag)" width="22px"></span>
+            <span>{{scope.row.team_A.name}}</span>
+          </template>
+        </el-table-column>
 
-      <el-table-column width="240px" align="center" label="Participant">
-        <template slot-scope="scope">
-          <span><img :src="getFlagUrl(scope.row.team_A.flag)" width="22px"></span>
-          <span>{{scope.row.team_A.name}}</span>
-        </template>
-      </el-table-column>
+        <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
+          <template slot-scope="scope">
+            <el-tag :type="scope.row.odds_1 | oddsFilter" v-if="scope.row.odds_1">{{scope.row.percent_odds_1}}%</el-tag>
+            <el-tag v-else>?</el-tag>
+          </template>
+        </el-table-column>
 
-      <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.odds_1 | oddsFilter" v-if="scope.row.odds_1">{{scope.row.percent_odds_1}}%</el-tag>
-          <el-tag v-else>?</el-tag>
-        </template>
-      </el-table-column>
+        <el-table-column width="240px" align="center" label="Participant">
+          <template slot-scope="scope">
+            <span> <img :src="getFlagUrl(scope.row.team_B.flag)" width="22px"></span>
+            <span>{{scope.row.team_B.name}}</span>
+          </template>
+        </el-table-column>
 
-      <el-table-column width="240px" align="center" label="Participant">
-        <template slot-scope="scope">
-          <span> <img :src="getFlagUrl(scope.row.team_B.flag)" width="22px"></span>
-          <span>{{scope.row.team_B.name}}</span>
-        </template>
-      </el-table-column>
+        <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
+          <template slot-scope="scope">
+            <el-tag :type="scope.row.odds_2 | oddsFilter" v-if="scope.row.odds_2">{{scope.row.percent_odds_2}}%</el-tag>
+            <el-tag v-else>?</el-tag>
+          </template>
+        </el-table-column>
 
-      <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.odds_2 | oddsFilter" v-if="scope.row.odds_2">{{scope.row.percent_odds_2}}%</el-tag>
-          <el-tag v-else>?</el-tag>
-        </template>
-      </el-table-column>
+        <el-table-column align="center" label="Operation">
+          <template slot-scope="scope">
+            <el-button v-if="isAfter(scope.row.date)" type="success"
+                      @click="openDialog(C.DIALOG_PREDICT, scope.row)">Predict
 
-      <el-table-column align="center" label="Operation">
-        <template slot-scope="scope">
-          <el-button v-if="isAfter(scope.row.date)" type="success"
-                     @click="openDialog(C.DIALOG_PREDICT, scope.row)">Predict
+            </el-button>
+            <el-button v-if="isBefore(scope.row.date)"
+                      @click="openDialog(C.DIALOG_STORE, scope.row)">Store Bet
 
-          </el-button>
-          <el-button v-if="isBefore(scope.row.date)"
-                     @click="openDialog(C.DIALOG_STORE, scope.row)">Store Bet
-
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-row>
 
     <div v-show="!listLoading && total > 0" class="pagination-container">
       <el-pagination @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-                     :page-size="listQuery.per_page" layout="total, prev, pager, next" :total="total">
+          :page-size="listQuery.per_page" layout="total, prev, pager, next" :total="total">
       </el-pagination>
     </div>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%" top="9vh">
       <event_form :temp_event="temp_event" :dialogStatus="dialogStatus" @close="formClose" @toBetSlip="toBetSlip"></event_form>
     </el-dialog>
-  </div>
+  </el-main>
 </template>
 
 <script>
-  import { fetchEventsList } from '@/api/events'
-  import waves from '@/directive/waves.js'// water ripples
-  import events_filter from '@/views/components/events_filter'
-  import betslip from './events/betslip.vue'
-  import event_form from './events/event_form.vue'
-  import Event from './model/event.js'
-  import C from './constants.js'
+import { fetchEventsList } from "@/api/events";
+import waves from "@/directive/waves.js"; // water ripples
+import events_filter from "@/views/components/events_filter";
+import betslip from "./events/betslip.vue";
+import event_form from "./events/event_form.vue";
+import Event from "./model/event.js";
+import C from "./constants.js";
 
-  const moment = require('moment')
+const moment = require("moment");
 
-  import dota2_logo from '@/assets/icons/dota2.svg'
-  import lol_logo from '@/assets/icons/lol.svg'
-  import cs_go from '@/assets/icons/csgo.svg'
+import dota2_logo from "@/assets/icons/dota2.svg";
+import lol_logo from "@/assets/icons/lol.svg";
+import cs_go from "@/assets/icons/csgo.svg";
 
-  export default {
-    name: 'events_table',
-    components: { betslip, event_form, events_filter },
-    directives: {
-      waves
-    },
-    data() {
-      return {
-        C: C,
-        betslip_data: [],
-        events_table: [],
-        temp_event: new Event(),
-        logos: {
-          'LoL': lol_logo,
-          'Dota 2': dota2_logo,
-          'Counter-Strike': cs_go
-        },
-        total: undefined,
-        listLoading: true,
-        listQuery: {
-          page: 1,
-          per_page: 25,
-          title: undefined,
-          discipline: undefined,
-          game: []
-        },
-        dialogFormVisible: false,
-        dialogStatus: '',
-        textMap: {
-          [C.DIALOG_PREDICT]: 'Do a prediction',
-          [C.DIALOG_EDIT]: 'Edit',
-          [C.DIALOG_CREATE]: 'Store custom event',
-          [C.DIALOG_STORE]: 'Store bet'
-        },
-        showOdds: true
+export default {
+  name: "events_table",
+  components: { betslip, event_form, events_filter },
+  directives: {
+    waves
+  },
+  data() {
+    return {
+      C: C,
+      betslip_data: [],
+      events_table: [],
+      temp_event: new Event(),
+      logos: {
+        LoL: lol_logo,
+        "Dota 2": dota2_logo,
+        "Counter-Strike": cs_go
+      },
+      total: undefined,
+      listLoading: true,
+      listQuery: {
+        page: 1,
+        per_page: 25,
+        title: undefined,
+        discipline: undefined,
+        game: []
+      },
+      dialogFormVisible: false,
+      dialogStatus: "",
+      textMap: {
+        [C.DIALOG_PREDICT]: "Do a prediction",
+        [C.DIALOG_EDIT]: "Edit",
+        [C.DIALOG_CREATE]: "Store custom event",
+        [C.DIALOG_STORE]: "Store bet"
+      },
+      showOdds: true
+    };
+  },
+  filters: {
+    oddsFilter(odds) {
+      if (odds < 1.5) {
+        return "success";
+      } else if (odds > 2.2) {
+        return "red";
       }
+
+      return "gray";
+    }
+  },
+  created() {
+    this.getList();
+  },
+  methods: {
+    filterData(filters) {
+      // this comes with default predictions filters, so need to fill up with events data
+
+      Object.assign(this.listQuery, filters);
+      console.log(this.listQuery);
+      this.getList();
     },
-    filters: {
-      oddsFilter(odds) {
-        if (odds < 1.5) {
-          return 'success'
-        } else if (odds > 2.2) {
-          return 'red'
+    setDialog(status) {
+      this.dialogStatus = status;
+    },
+    betslipStored(prediction) {
+      console.log("prediction stored");
+      console.log(prediction);
+      this.betslip_data = [];
+    },
+    getFlagUrl(link) {
+      return "/static/flags/" + link + ".svg";
+    },
+    isAfter(str) {
+      return moment(str).isAfter();
+    },
+    isBefore(str) {
+      return moment(str).isBefore();
+    },
+    openDialog(status, row) {
+      this.temp_event = new Event(row);
+      this.setDialog(status);
+      this.dialogFormVisible = true;
+    },
+    onFilterChange(filters) {
+      console.log(filters);
+      // Apply filter to query and re-ask backend
+      this.loading = true;
+      this.events_table = [];
+      this.listQuery.game = filters.game;
+      this.getList();
+      return false;
+    },
+    filterGameType(value, row) {
+      return row.game === value;
+    },
+    getList() {
+      this.listLoading = true;
+      this.total = 0;
+      let self = this;
+      fetchEventsList(this.listQuery).then(response => {
+        self.events_table = [];
+        if (response && response.items) {
+          response.items.forEach(function(item) {
+            self.events_table.push(new Event(item)); // TODO shall we create events for every row?
+          });
+
+          this.total = response.total;
         }
 
-        return 'gray'
-      }
+        console.log(this.total);
+        this.listLoading = false;
+      });
     },
-    created() {
-      this.getList()
+    handleFilter() {
+      this.getList();
     },
-    methods: {
-      filterData(filters) {
-        // this comes with default predictions filters, so need to fill up with events data
-
-        Object.assign(this.listQuery, filters);
-        console.log(this.listQuery);
+    handleCurrentChange(val) {
+      this.listQuery.page = val;
+      this.getList();
+    },
+    handleUpdate(row) {
+      // Todo only update current events or what?
+      this.temp_event = Object.assign({}, row);
+      this.setDialog("update");
+      this.dialogFormVisible = true;
+    },
+    toBetSlip(event) {
+      console.log("event submitted");
+      this.dialogFormVisible = false;
+      this.betslip_data.push(event);
+      console.log(this.betslip_data);
+      this.$message({
+        title: "Bet was successfully added to bet slip!",
+        message: "Bet added",
+        type: "success",
+        duration: 2000
+      });
+    },
+    formClose(reload, event) {
+      console.log("closing form after dialog was opened");
+      if (reload === true) {
         this.getList();
-      },
-      setDialog(status) {
-        this.dialogStatus = status;
-      },
-      betslipStored(prediction) {
-        console.log('prediction stored')
-        console.log(prediction)
-        this.betslip_data = []
-      },
-      getFlagUrl(link) {
-        return '/static/flags/' + link + '.svg';
-      },
-      isAfter(str) {
-        return moment(str).isAfter()
-      },
-      isBefore(str) {
-        return moment(str).isBefore()
-      },
-      openDialog(status, row) {
-        this.temp_event = new Event(row);
-        this.setDialog(status)
-        this.dialogFormVisible = true
-      },
-      onFilterChange(filters) {
-        console.log(filters)
-        // Apply filter to query and re-ask backend
-        this.loading = true;
-        this.events_table = [];
-        this.listQuery.game = filters.game;
-        this.getList()
-        return false
-      },
-      filterGameType(value, row) {
-        return row.game === value;
-      },
-      getList() {
-        this.listLoading = true
-        this.total = 0
-        let self = this
-        fetchEventsList(this.listQuery).then(response => {
-          self.events_table = []
-          if (response && response.items) {
-            response.items.forEach(function(item) {
-              self.events_table.push(new Event(item)) // TODO shall we create events for every row?
-            });
-
-            this.total = response.total
-          }
-
-          console.log(this.total);
-          this.listLoading = false
-        })
-      },
-      handleFilter() {
-        this.getList()
-      },
-      handleCurrentChange(val) {
-        this.listQuery.page = val
-        this.getList()
-      },
-      handleUpdate(row) {
-        // Todo only update current events or what?
-        this.temp_event = Object.assign({}, row)
-        this.setDialog('update')
-        this.dialogFormVisible = true
-      },
-      toBetSlip(event) {
-        console.log('event submitted')
-        this.dialogFormVisible = false
-        this.betslip_data.push(event)
-        console.log(this.betslip_data);
-        this.$message({
-          title: 'Bet was successfully added to bet slip!',
-          message: 'Bet added',
-          type: 'success',
-          duration: 2000
-        })
-      },
-      formClose(reload, event) {
-        console.log('closing form after dialog was opened')
-        if (reload === true) {
-          this.getList();
-        }
-
-        if (event !== undefined) {
-          // its newly created event, re-open prediction dialog
-          this.dialogFormVisible = false;
-
-          let self = this;
-          setTimeout(() => {
-            // TODO decide its predict or store
-            self.openDialog(C.DIALOG_STORE, event)
-          }, 150)
-
-          return true
-        }
-
-        this.dialogFormVisible = false;
-        this.temp_event = new Event();
       }
-    },
-    watch: {
-      dialogFormVisible(value) {
-        if (value === false) {
-          this.temp_event = new Event();
-        }
+
+      if (event !== undefined) {
+        // its newly created event, re-open prediction dialog
+        this.dialogFormVisible = false;
+
+        let self = this;
+        setTimeout(() => {
+          // TODO decide its predict or store
+          self.openDialog(C.DIALOG_STORE, event);
+        }, 150);
+
+        return true;
+      }
+
+      this.dialogFormVisible = false;
+      this.temp_event = new Event();
+    }
+  },
+  watch: {
+    dialogFormVisible(value) {
+      if (value === false) {
+        this.temp_event = new Event();
       }
     }
   }
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  .selected input {
-    border: 1px solid green !important;
-    color: darkgreen !important;;
-    background: rgba(26, 99, 17, 0.5) !important;;
-  }
+.selected input {
+  border: 1px solid green !important;
+  color: darkgreen !important;
+  background: rgba(26, 99, 17, 0.5) !important;
+}
 
-  .el-table th, .el-table td {
-    padding: 5px 0;
-    font-size: 13px;
-  }
+.el-table th,
+.el-table td {
+  padding: 5px 0;
+  font-size: 13px;
+}
 
-  .el-table .cell {
-    text-align: center;
-    line-height: 20px;
-  }
+.el-table .cell {
+  text-align: center;
+  line-height: 20px;
+}
 
-  el-dialog {
-    .el-input {
-      width: auto;
-    }
+el-dialog {
+  .el-input {
+    width: auto;
   }
+}
 
-  .el-tag--red {
-    background-color: rgba(240, 91, 61, 0.08);
-    color: #f89616;
-  }
+.el-tag--red {
+  background-color: rgba(240, 91, 61, 0.08);
+  color: #f89616;
+}
 
-  .el-tag--green {
-    background-color: rgba(84, 126, 69, 0.08);
-    color: #3ea74c;
-  }
+.el-tag--green {
+  background-color: rgba(84, 126, 69, 0.08);
+  color: #3ea74c;
+}
 
-  .el-tag--gray {
-    background-color: rgba(188, 177, 180, 0.08);
-    color: #bcb1b4;
-  }
+.el-tag--gray {
+  background-color: rgba(188, 177, 180, 0.08);
+  color: #bcb1b4;
+}
 
-  .el-pager li.active {
-    color: #f99008;
-  }
+.el-pager li.active {
+  color: #f99008;
+}
 </style>
