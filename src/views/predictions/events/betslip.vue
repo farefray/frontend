@@ -94,8 +94,7 @@
   </div>
 </template>
 
-<script>
-  import { storePrediction } from '@/api/apipredictions'
+<script>  
   const moment = require('moment')
 
   export default {
@@ -143,7 +142,7 @@
         }
       },
       store() {
-        console.log(this.$store.state.user.id);
+        // TODO: set date of prediction to a date of last event in betslip
         let data = {
           date: Math.round(new Date() / 1000),
           final_odds: this.odds,
@@ -153,24 +152,8 @@
           user_id: this.$store.state.user.id
         }
 
-        // TODO: set date of prediction to a date of last event in betslip
-        console.log('store bets')
-        console.log(data)
-        storePrediction(data).then(response => {
-          console.log(response)
-          console.log('stored')
-          this.active = false;
-          this.$notify({
-            title: 'Success!',
-            message: 'You have successfully stored your betslip',
-            type: 'success',
-            duration: 2000
-          })
-          this.$emit('stored', response);
-        }).catch(error => {
-          console.log('error')
-          console.log(error)
-        })
+        this.$emit('store', data)
+        this.active = false;
       }
     },
     watch: {

@@ -85,7 +85,11 @@
       <el-button @click="cancel()">Cancel</el-button>
       <el-button v-if="dialogStatus==C.DIALOG_CREATE" type="primary" @click="submitForm(false)">List event</el-button>
       <el-button v-if="dialogStatus==C.DIALOG_UPDATE" @click="update">Update</el-button>
-      <el-button v-else type="primary" @click="submitForm(true)" :disabled="temp_event[selected_event] == '1'">Add this event to bet slip</el-button>
+      <div v-else>
+        <el-button type="default" @click="submitForm(true)" :disabled="temp_event[selected_event] == '1'">Add this event to bet slip</el-button>
+        <el-button v-if="dialogStatus==C.DIALOG_STORE" type="primary"
+           @click="submitForm(true, true)" :disabled="temp_event[selected_event] == '1'">Store bet</el-button>
+      </div>
     </el-form-item>
   </el-form>
 </template>
@@ -172,10 +176,14 @@
           cb(response);
         })
       },
-      submitForm(reopen) {
-        // 3 cases: create new event(1), add to bet slip event from list(2) or add to bet slip event which supposed to be created(3)
+      submitForm(openBetslip, instantBet = false) {
+        // 4 cases: 
+        // create new event(1), 
+        // add to bet slip event from list(2) or 
+        // add to bet slip event which supposed to be created(3) or 
+        // store bet instantly(4)
         const self = this;
-        if (reopen) {
+        if (openBetslip) {
           if (self.dialogStatus === C.DIALOG_CREATE) {
             // Store prediction and add to bet slip (3)
 
@@ -211,7 +219,7 @@
 
           self.selected_event = undefined
           self.selected = undefined
-          self.$emit('toBetSlip', event);
+          self.$emit('toBetSlip', event, instantBet);
           return true
         }
 

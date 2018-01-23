@@ -12,11 +12,11 @@
         </el-button>
       </el-col>
       <el-col :span="4" :offset="8">
-        <betslip :betslipData="betslip_data" @stored="betslipStored()"></betslip>
+        <betslip :betslipData="betslip_data" @store="storeBetslip()"></betslip>
       </el-col>
     </el-row>
     <br/>
-    <el-row :gutter="20">
+    <el-row>
       <el-table :data="events_table" @filter-change="onFilterChange"
         v-loading="listLoading" element-loading-text="Loading..." border fit
         style="width: 100%">
@@ -102,6 +102,7 @@
 
 <script>
 import { fetchEventsList } from "@/api/events";
+import { storePrediction } from '@/api/apipredictions'
 import waves from "@/directive/waves.js"; // water ripples
 import events_filter from "@/views/components/events_filter";
 import betslip from "./events/betslip.vue";
@@ -177,9 +178,26 @@ export default {
     setDialog(status) {
       this.dialogStatus = status;
     },
-    betslipStored(prediction) {
-      console.log("prediction stored");
-      console.log(prediction);
+    storeBetslip(data) {
+      console.log("prediction store");
+      console.log('store bets')
+      console.log(data)
+      storePrediction(data).then(response => {
+        console.log(response)
+        console.log('stored')
+        
+        // ToDo response processed
+        this.$notify({
+          title: 'Success!',
+          message: 'You have successfully stored your betslip',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(error => {
+        console.log('error')
+        console.log(error)
+      })
+
       this.betslip_data = [];
     },
     getFlagUrl(link) {
@@ -239,17 +257,34 @@ export default {
       this.setDialog("update");
       this.dialogFormVisible = true;
     },
-    toBetSlip(event) {
+    toBetSlip(event, instantBet = false) {
       console.log("event submitted");
       this.dialogFormVisible = false;
-      this.betslip_data.push(event);
+      
       console.log(this.betslip_data);
+
+      if (instantBet === true) {
+        // todo prepare data for storeBetslip(data) only for single event
+        // move this to some helper and use from betslip, aswell as from here
+        let data = {
+          date: Math.round(new Date() / 1000),
+          final_odds: event.selected_odds,
+          selected_events: [event],
+          stake: 20, // ToDo request for this
+          status: 'PENDING', // ToDo
+          user_id: this.$store.state.user.id
+        }
+        // this.storeBetslip(data);
+        return;
+      }
+
+      this.betslip_data.push(event);
       this.$message({
-        title: "Bet was successfully added to bet slip!",
-        message: "Bet added",
-        type: "success",
-        duration: 2000
-      });
+          title: "Bet was successfully added to bet slip!",
+          message: "Bet added",
+          type: "success",
+          duration: 2000
+        });
     },
     formClose(reload, event) {
       console.log("closing form after dialog was opened");
