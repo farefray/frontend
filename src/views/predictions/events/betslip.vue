@@ -53,25 +53,25 @@
         Stake:
       </el-col>
       <el-col>
-          <el-input-number v-model="bet_amount" :min="0" :step="50"></el-input-number>
+          <el-input-number v-model="betslipObj.bet_amount" :min="0" :step="50" @change="update"></el-input-number>
       </el-col>
     </el-row>
     <br />
     <el-row :gutter="10">
       <el-col :span="10">
-        Final odds: {{this.odds}}
+        Final odds: {{this.betslipObj.odds}}
       </el-col>
       <el-col :span="10">
-        Profit: {{this.profit}}
+        Profit: {{this.betslipObj.profit}}
       </el-col>
     </el-row>
-    <el-row :gutter="10" v-if="canStoreResult">
+    <el-row :gutter="10" v-if="betslipObj.valid">
       <el-col :span="10">
         Bet result:
       </el-col>
       <el-col :span="10">
         <el-switch
-          v-model="result"
+          v-model="betslipObj.result"
           activeColor="#13ce66"
           inactiveColor="#ff4949"
           activeText="Won"
@@ -84,7 +84,7 @@
     <br />
     <el-row :gutter="10">
       <el-col :offset="20">
-        <el-button type="primary" @click="store">Store</el-button>
+        <el-button type="primary" @click="storeBetslip">Store</el-button>
       </el-col>
     </el-row>
   </el-popover>
@@ -95,44 +95,18 @@
 </template>
 
 <script>  
-  const moment = require('moment')
+  // const moment = require('moment')
+  import BetSlip from '../helpers/betslip';
 
   export default {
     name: 'betslip',
     props: ['betslipData'],
     data() {
       return {
-        bet_amount: 0,
-        active: false,
-        result: undefined
+        betslipObj: new BetSlip(),
+        active: false
       };
-    },
-    computed: {
-      canStoreResult() {
-        // Check if all bets in betslip are finished already and reporter can set a result
-        let store_result = true;
-        this.betslipData.forEach(function(bet) {
-          console.log(bet)
-          if (moment(bet.date).isAfter()) { // is bet finished. TODO check for cheats here
-            store_result = false;
-          }
-        });
-
-        return store_result;
-      },
-      odds() {
-        let odds = 1;
-        this.betslipData.forEach(function(bet) {
-          console.log(bet)
-          odds *= bet.selected_odds
-        });
-
-        return odds.toFixed(2)
-      },
-      profit() {
-        return (this.odds * this.bet_amount - this.bet_amount).toFixed(2);
-      }
-    },
+    },    
     methods: {
       handleDelete(index, row) {
         this.betslipData.splice(index, 1);
@@ -140,20 +114,15 @@
         if (!this.betslipData.length) {
           this.active = false;
         }
-      },
-      store() {
-        // TODO: set date of prediction to a date of last event in betslip
-        let data = {
-          date: Math.round(new Date() / 1000),
-          final_odds: this.odds,
-          selected_events: this.betslipData,
-          stake: this.bet_amount,
-          status: this.canStoreResult ? (this.result === 'true' ? 'WON' : 'LOST') : 'PENDING',
-          user_id: this.$store.state.user.id
-        }
 
-        this.$emit('store', data)
+        this.update(this.betslipData);
+      },
+      storeBetslip() {
+        this.$emit('storeBetslip', this.betslipObj.data)
         this.active = false;
+      },
+      update(data = this.betslipData) {
+        this.betslipObj = new BetSlip(data, this.$store.state.user.id);
       }
     },
     watch: {
@@ -161,6 +130,7 @@
         handler(val) {
           console.log('bets added')
           console.log(val)
+          this.update(val);
         },
         deep: true
       }

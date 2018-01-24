@@ -12,7 +12,7 @@
         </el-button>
       </el-col>
       <el-col :span="4" :offset="8">
-        <betslip :betslipData="betslip_data" @store="storeBetslip()"></betslip>
+        <betslip :betslipData="betslip_data" @storeBetslip="storeBetslip"></betslip>
       </el-col>
     </el-row>
     <br/>
@@ -109,6 +109,7 @@ import betslip from "./events/betslip.vue";
 import event_form from "./events/event_form.vue";
 import Event from "./model/event.js";
 import C from "./constants.js";
+import BetSlip from './helpers/betslip.js';
 
 const moment = require("moment");
 
@@ -264,16 +265,8 @@ export default {
       console.log(this.betslip_data);
 
       if (instantBet === true) {
-        // todo prepare data for storeBetslip(data) only for single event
-        // move this to some helper and use from betslip, aswell as from here
-        let data = {
-          date: Math.round(new Date() / 1000),
-          final_odds: event.selected_odds,
-          selected_events: [event],
-          stake: 20, // ToDo request for this
-          status: 'PENDING', // ToDo
-          user_id: this.$store.state.user.id
-        }
+        let betslipObj = new BetSlip([event], this.$store.state.user.id);
+        this.storeBetslip(betslipObj.data);
         // this.storeBetslip(data);
         return;
       }

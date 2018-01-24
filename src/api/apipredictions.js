@@ -8,7 +8,7 @@ export function storePrediction(prediction) {
       }
   })
     .then(response => {
-      console.log(response);
+      console.log(response); // Todo proper response on backend(not it fails even when success)
       if (response && response.status === 200) {
         return true
       }
