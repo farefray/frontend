@@ -266,7 +266,7 @@ export default {
 
       if (instantBet === true) {
         let betslipObj = new BetSlip([event], this.$store.state.user.id);
-        this.storeBetslip(betslipObj.data);
+        this.storeBetslip(betslipObj.getData());
         // this.storeBetslip(data);
         return;
       }

@@ -5,7 +5,8 @@
     placement="right"
     width="500"
     v-model="active"
-    trigger="click">
+    trigger="click"
+    v-if="betslipObj">
     <el-table :data="betslipData">
         <el-table-column width="100" label="Date" prop="date" column-key="date">
           <template slot-scope="scope">
@@ -53,13 +54,13 @@
         Stake:
       </el-col>
       <el-col>
-          <el-input-number v-model="betslipObj.bet_amount" :min="0" :step="50" @change="update"></el-input-number>
+          <el-input-number v-model="bet_amount" :min="0" :step="50" @change="updateBetAmount"></el-input-number>
       </el-col>
     </el-row>
     <br />
     <el-row :gutter="10">
       <el-col :span="10">
-        Final odds: {{this.betslipObj.odds}}
+        Final odds: {{this.betslipObj.final_odds}}
       </el-col>
       <el-col :span="10">
         Profit: {{this.betslipObj.profit}}
@@ -103,7 +104,8 @@
     props: ['betslipData'],
     data() {
       return {
-        betslipObj: new BetSlip(),
+        betslipObj: null,
+        bet_amount: 0,
         active: false
       };
     },    
@@ -115,14 +117,18 @@
           this.active = false;
         }
 
-        this.update(this.betslipData);
+        this.updateBetslip();
       },
       storeBetslip() {
-        this.$emit('storeBetslip', this.betslipObj.data)
+        this.$emit('storeBetslip', this.betslipObj.getData())
         this.active = false;
       },
-      update(data = this.betslipData) {
-        this.betslipObj = new BetSlip(data, this.$store.state.user.id);
+      updateBetAmount(val) {
+        this.betslipObj.bet_amount = val;
+        this.updateBetslip();
+      },
+      updateBetslip() {
+        this.betslipObj.update();
       }
     },
     watch: {
@@ -130,7 +136,8 @@
         handler(val) {
           console.log('bets added')
           console.log(val)
-          this.update(val);
+          
+          this.betslipObj = new BetSlip(val, this.$store.state.user.id);
         },
         deep: true
       }

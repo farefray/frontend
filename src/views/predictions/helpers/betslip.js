@@ -4,7 +4,6 @@ const moment = require('moment')
 export default class BetSlip {
     data = [];
     bet_amount = 0;
-    odds = 1;
     result = false;
     valid = true;
     user_id = 0;
@@ -15,7 +14,7 @@ export default class BetSlip {
         // update valid here 
         // Check if all bets in betslip are finished already and reporter can set a result
         let store_result = true;
-        this.betslipData.forEach(function(bet) {
+        this.data.forEach((bet) => {
           console.log(bet)
           if (moment(bet.date).isAfter()) { // is bet finished. TODO check for cheats here
             store_result = false;
@@ -26,6 +25,8 @@ export default class BetSlip {
     }
 
     constructor(data = [], user_id = 0) {
+        console.log('creating betlip')
+        console.log(data);
         this.data = data;
         this.user_id = user_id;
         this.update();
@@ -35,15 +36,23 @@ export default class BetSlip {
         // update betslip, recount everything
         
         this.final_odds = 1;
-        this.data.forEach(function(bet) {
+        console.log('update');
+        console.log(this.data);
+        this.data.forEach(bet => {
             this.final_odds *= bet.selected_odds
         });
-
+        console.log(this.final_odds);
+        console.log(this.final_odds * this.bet_amount);
+        console.log((this.final_odds * this.bet_amount - this.bet_amount));
+        this.final_odds = this.final_odds.toFixed(2);
         this.profit = (this.final_odds * this.bet_amount - this.bet_amount).toFixed(2);
+        console.log(this.profit);
+
+        console.log(this);
         return true;
     }
    
-    data() {
+    getData() {
         // TODO: set date of prediction to a date of last event in betslip
 
         let data = {

@@ -104,7 +104,7 @@
 
   export default {
     components: { ElInput },
-    name: 'betslip',
+    name: 'eventForm',
     props: ['temp_event', 'dialogStatus'],
     data() {
       return {

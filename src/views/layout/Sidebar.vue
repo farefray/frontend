@@ -1,5 +1,5 @@
 <template>
-    <el-menu mode="vertical" theme="dark" unique-opened :default-active="$route.path" :collapse="isCollapse">
+    <el-menu mode="vertical" unique-opened :default-active="$route.path" :collapse="isCollapse">
       <div id="logoholder">
         <img :src="logo" id="logo" alt="Logo" width="126px" style="margin: 0 auto;">
       </div>
