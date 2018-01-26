@@ -1,6 +1,8 @@
 import service from './service'
 import { getToken } from '@/utils/auth'
 export function storePrediction(prediction) {
+  console.log('api store prediction')
+  console.log(prediction);
   // const self = this
   return service.post('/api/v1/predictions', prediction, {
       headers: {

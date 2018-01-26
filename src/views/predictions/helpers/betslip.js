@@ -9,6 +9,12 @@ export default class BetSlip {
     user_id = 0;
     final_odds = 1;
     profit = 0;
+    game = {
+        type: String,
+        trim: true,
+        default: ""
+    };
+    categories = [];
 
     isValid() {
         // update valid here 
@@ -27,6 +33,10 @@ export default class BetSlip {
     constructor(data = [], user_id = 0) {
         console.log('creating betlip')
         console.log(data);
+        if (!data.length) {
+            data = [];
+        }
+        
         this.data = data;
         this.user_id = user_id;
         this.update();
@@ -61,9 +71,13 @@ export default class BetSlip {
             selected_events: this.data,
             stake: this.bet_amount,
             status: this.isValid() ? (this.result === 'true' ? 'WON' : 'LOST') : 'PENDING',
-            user_id: this.user_id
+            user_id: this.user_id,
+            categories: this.categories
         }
 
+        console.log('getData from betslip');
+        console.log(this);
+        console.log(data);
         return data;
     }
 }

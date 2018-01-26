@@ -84,6 +84,21 @@
     </el-row>
     <br />
     <el-row :gutter="10">
+      <el-col>
+        <el-select
+          v-model="betslipObj.categories"
+          multiple
+          filterable
+          allow-create
+          placeholder="Choose tags for your bet">
+          <el-option
+            v-for="item in default_tags"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-col>
       <el-col :offset="20">
         <el-button type="primary" @click="storeBetslip">Store</el-button>
       </el-col>
@@ -106,6 +121,13 @@
       return {
         betslipObj: null,
         bet_amount: 0,
+        default_tags: [{
+          value: 'Parimatch',
+          label: 'Parimatch'
+        }, {
+          value: 'Pinnacle',
+          label: 'Pinnacle'
+        }],
         active: false
       };
     },    
