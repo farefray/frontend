@@ -1,103 +1,103 @@
 <template>
-  <el-main class="app-container calendar-list-container">
-    <el-row :gutter="20">
-      <el-col :span="12">
-        <div class="filter-container">
-          <events_filter @filter="filterData"></events_filter>          
-        </div>
-      </el-col>
-      <el-col :span="4">
-        <el-button class="filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit">
-          Add my own event
-        </el-button>
-      </el-col>
-      <el-col :span="4" :offset="8">
-        <betslip :betslipData="betslip_data" @storeBetslip="storeBetslip"></betslip>
-      </el-col>
-    </el-row>
-    <br/>
-    <el-row>
-      <el-table :data="events_table" @filter-change="onFilterChange"
-        v-loading="listLoading" element-loading-text="Loading..." border fit
-        style="width: 100%">
+  <div>
+  <el-row :gutter="20">
+    <el-col :span="12">
+      <div class="filter-container">
+        <events_filter @filter="filterData"></events_filter>          
+      </div>
+    </el-col>
+    <el-col :span="4">
+      <el-button class="filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit">
+        Add my own event
+      </el-button>
+    </el-col>
+    <el-col :span="4" :offset="8">
+      <betslip :betslipData="betslip_data" @storeBetslip="storeBetslip"></betslip>
+    </el-col>
+  </el-row>
+  <br/>
+  <el-row>
+    <el-table :data="events_table" @filter-change="onFilterChange"
+      v-loading="listLoading" element-loading-text="Loading..." border fit
+      style="width: 100%">
 
-        <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date">
-          <template slot-scope="scope">
-            <span><strong>{{(parseInt(+scope.row.date / 1000)) | moment("DD.MM kk:mm")}}</strong></span><br/>
-            <span>({{(parseInt(+scope.row.date / 1000)) | moment("from")}})</span>
-          </template>
-        </el-table-column>
+      <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date">
+        <template slot-scope="scope">
+          <span><strong>{{(parseInt(+scope.row.date / 1000)) | moment("DD.MM kk:mm")}}</strong></span><br/>
+          <span>({{(parseInt(+scope.row.date / 1000)) | moment("from")}})</span>
+        </template>
+      </el-table-column>
 
-        <el-table-column width="175px" label="Event" prop="game" column-key="game"
-                        :filters="[
-                            { text: 'Dota 2', value: 'Dota 2' },
-                            { text: 'LoL', value: 'LoL' },
-                            { text: 'Overwatch', value: 'Overwatch' },
-                            { text: 'Counter-Strike', value: 'Counter-Strike' }
-                        ]"
-                        :filter-method="filterGameType"
-                        filter-placement="bottom-end">
-          <template slot-scope="scope">
-            <img :src="logos[scope.row.game]" width="24px" close-transition v-if="logos[scope.row.game]">
-            <span v-else>[{{scope.row.game}}] </span>
-            <br/>
-            <span @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
-          </template>
-        </el-table-column>
+      <el-table-column width="175px" label="Event" prop="game" column-key="game"
+                      :filters="[
+                          { text: 'Dota 2', value: 'Dota 2' },
+                          { text: 'LoL', value: 'LoL' },
+                          { text: 'Overwatch', value: 'Overwatch' },
+                          { text: 'Counter-Strike', value: 'Counter-Strike' }
+                      ]"
+                      :filter-method="filterGameType"
+                      filter-placement="bottom-end">
+        <template slot-scope="scope">
+          <img :src="logos[scope.row.game]" width="24px" close-transition v-if="logos[scope.row.game]">
+          <span v-else>[{{scope.row.game}}] </span>
+          <br/>
+          <span @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
+        </template>
+      </el-table-column>
 
-        <el-table-column width="240px" align="center" label="Participant">
-          <template slot-scope="scope">
-            <span><img :src="getFlagUrl(scope.row.team_A.flag)" width="22px"></span>
-            <span>{{scope.row.team_A.name}}</span>
-          </template>
-        </el-table-column>
+      <el-table-column width="240px" align="center" label="Participant">
+        <template slot-scope="scope">
+          <span><img :src="getFlagUrl(scope.row.team_A.flag)" width="22px"></span>
+          <span>{{scope.row.team_A.name}}</span>
+        </template>
+      </el-table-column>
 
-        <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.odds_1 | oddsFilter" v-if="scope.row.odds_1">{{scope.row.percent_odds_1}}%</el-tag>
-            <el-tag v-else>?</el-tag>
-          </template>
-        </el-table-column>
+      <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.odds_1 | oddsFilter" v-if="scope.row.odds_1">{{scope.row.percent_odds_1}}%</el-tag>
+          <el-tag v-else>?</el-tag>
+        </template>
+      </el-table-column>
 
-        <el-table-column width="240px" align="center" label="Participant">
-          <template slot-scope="scope">
-            <span> <img :src="getFlagUrl(scope.row.team_B.flag)" width="22px"></span>
-            <span>{{scope.row.team_B.name}}</span>
-          </template>
-        </el-table-column>
+      <el-table-column width="240px" align="center" label="Participant">
+        <template slot-scope="scope">
+          <span> <img :src="getFlagUrl(scope.row.team_B.flag)" width="22px"></span>
+          <span>{{scope.row.team_B.name}}</span>
+        </template>
+      </el-table-column>
 
-        <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
-          <template slot-scope="scope">
-            <el-tag :type="scope.row.odds_2 | oddsFilter" v-if="scope.row.odds_2">{{scope.row.percent_odds_2}}%</el-tag>
-            <el-tag v-else>?</el-tag>
-          </template>
-        </el-table-column>
+      <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.odds_2 | oddsFilter" v-if="scope.row.odds_2">{{scope.row.percent_odds_2}}%</el-tag>
+          <el-tag v-else>?</el-tag>
+        </template>
+      </el-table-column>
 
-        <el-table-column align="center" label="Operation">
-          <template slot-scope="scope">
-            <el-button v-if="isAfter(scope.row.date)" type="success"
-                      @click="openDialog(C.DIALOG_PREDICT, scope.row)">Predict
+      <el-table-column align="center" label="Operation">
+        <template slot-scope="scope">
+          <el-button v-if="isAfter(scope.row.date)" type="success"
+                    @click="openDialog(C.DIALOG_PREDICT, scope.row)">Predict
 
-            </el-button>
-            <el-button v-if="isBefore(scope.row.date)"
-                      @click="openDialog(C.DIALOG_STORE, scope.row)">Store Bet
+          </el-button>
+          <el-button v-if="isBefore(scope.row.date)"
+                    @click="openDialog(C.DIALOG_STORE, scope.row)">Store Bet
 
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-row>
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-row>
 
-    <div v-show="!listLoading && total > 0" class="pagination-container">
-      <el-pagination @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-          :page-size="listQuery.per_page" layout="total, prev, pager, next" :total="total">
-      </el-pagination>
-    </div>
+  <div v-show="!listLoading && total > 0" class="pagination-container">
+    <el-pagination @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
+        :page-size="listQuery.per_page" layout="total, prev, pager, next" :total="total">
+    </el-pagination>
+  </div>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%" top="9vh">
-      <event_form :temp_event="temp_event" :dialogStatus="dialogStatus" @close="formClose" @toBetSlip="toBetSlip"></event_form>
-    </el-dialog>
-  </el-main>
+  <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%" top="9vh">
+    <event_form :temp_event="temp_event" :dialogStatus="dialogStatus" @close="formClose" @toBetSlip="toBetSlip"></event_form>
+  </el-dialog>
+  </div>
 </template>
 
 <script>

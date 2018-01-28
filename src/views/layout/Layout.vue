@@ -3,7 +3,9 @@
 		<sidebar class="sidebar-container"></sidebar>
 		<div class="main-container">
 			<navbar></navbar>
-			<app-main></app-main>
+			<el-main class="app-container">
+				<app-main></app-main>
+			</el-main>
 		</div>
 	</div>
 </template>

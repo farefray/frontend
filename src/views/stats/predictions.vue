@@ -1,6 +1,7 @@
 <template>
   <div class="components-container" style='height:100vh'>
     <events_filter @filter="fillData"></events_filter>
+    <br/>
     <el-table :fit="true" :data="predictions"
               v-loading="listLoading" element-loading-text="Loading..." border fit
               style="width: 100%">
@@ -8,7 +9,16 @@
       <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date" sortable>
         <template slot-scope="scope">
           <span><strong>{{(scope.row.date) | moment("DD.MM kk:mm")}}</strong></span><br/>
-          <span>({{(scope.row.date) | moment("from")}})</span>
+          <span>({{(scope.row.date) | moment("from")}})</span> <br/>
+          <el-tag
+                size="mini"
+                :key="tag"
+                v-for="tag in scope.row.categories"
+                closable
+                :disable-transitions="false"
+                @close="removeCategory(scope.row, tag)">
+                {{tag}}
+              </el-tag>
         </template>
       </el-table-column>
 
@@ -17,7 +27,7 @@
           <el-table :data="scope.row.selected_events" :fit="true" style="width:100%;">
             <el-table-column width="120" label="Date">
               <template slot-scope="row_scope">
-                {{(row_scope.row.date) | moment("DD.MM kk:mm")}}
+                {{(row_scope.row.date) | moment("DD.MM kk:mm")}}              
               </template>
             </el-table-column>
             <el-table-column width="120" label="Game">
@@ -82,7 +92,7 @@
       </el-table-column>
 
       <el-table-column>
-        <template slot-scope="scope">
+        <template slot-scope="scope">          
           <el-button size="mini" tyle="success" @click="handleReportStatus(scope.$index, scope.row)" v-if="scope.row.status[0] ==='PENDING'">
             Report status
           </el-button>
@@ -129,6 +139,11 @@
       })
     },
     methods: {
+      removeCategory(row, tag) {
+        console.log(row)
+        console.log(tag);
+        return true;
+      },
       fillData(query) {
         getPredictions(query)
           .then(response => {
