@@ -88,7 +88,7 @@
       <div v-else>
         <el-button type="default" @click="submitForm(true)" :disabled="temp_event[selected_event] == '1'">Add this event to bet slip</el-button>
         <el-button v-if="dialogStatus==C.DIALOG_STORE" type="primary"
-           @click="submitForm(true, true)" :disabled="temp_event[selected_event] == '1'">Store bet</el-button>
+           @click="submitForm(true, true)" :disabled="temp_event[selected_event] == '1' || selected === undefined">Store bet</el-button>
       </div>
     </el-form-item>
   </el-form>

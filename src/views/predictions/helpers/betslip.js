@@ -5,7 +5,7 @@ export default class BetSlip {
     data = [];
     bet_amount = 0;
     result = false;
-    valid = true;
+    valid = true; // Todo??
     user_id = 0;
     final_odds = 1;
     profit = 0;
@@ -16,6 +16,7 @@ export default class BetSlip {
     };
     categories = [];
 
+    // ???
     isValid() {
         // update valid here 
         // Check if all bets in betslip are finished already and reporter can set a result

@@ -11,14 +11,14 @@
           <span><strong>{{(scope.row.date) | moment("DD.MM kk:mm")}}</strong></span><br/>
           <span>({{(scope.row.date) | moment("from")}})</span> <br/>
           <el-tag
-                size="mini"
-                :key="tag"
-                v-for="tag in scope.row.categories"
-                closable
-                :disable-transitions="false"
-                @close="removeCategory(scope.row, tag)">
-                {{tag}}
-              </el-tag>
+            size="mini"
+            :key="tag"
+            v-for="tag in scope.row.categories"
+            closable
+            :disable-transitions="false"
+            @close="removeCategory(scope.row, tag)">
+            {{tag}}
+          </el-tag>
         </template>
       </el-table-column>
 

@@ -1,6 +1,5 @@
 # ToDo:
 
-    Storing single bet right inside 'store bet' dialog [In progress]
     Get rid of dublicated events
     live events storage
     selecting which service I used to bet

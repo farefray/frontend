@@ -76,7 +76,7 @@
       <el-table-column align="center" label="Operation">
         <template slot-scope="scope">
           <el-button v-if="isAfter(scope.row.date)" type="success"
-                    @click="openDialog(C.DIALOG_PREDICT, scope.row)">Predict
+                    @click="openDialog(C.DIALOG_PREDICT, scope.row)" disabled>Predict
 
           </el-button>
           <el-button v-if="isBefore(scope.row.date)"
@@ -87,6 +87,14 @@
       </el-table-column>
     </el-table>
   </el-row>
+
+  <el-dialog title="Bet details" :visible.sync="instabetFormVisible">
+   <betslipParams @updateBetAmount="updateBetAmount" @updateBetResult="updateBetResult"></betslipParams>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="instabetFormVisible = false">Cancel</el-button>
+      <el-button type="primary" @click="storeInstaBet">Confirm</el-button>
+    </span>
+  </el-dialog>
 
   <div v-show="!listLoading && total > 0" class="pagination-container">
     <el-pagination @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
@@ -110,6 +118,7 @@ import event_form from "./events/event_form.vue";
 import Event from "./model/event.js";
 import C from "./constants.js";
 import BetSlip from './helpers/betslip.js';
+import betslipParams from "./components/betslip_params.vue";
 
 const moment = require("moment");
 
@@ -119,7 +128,7 @@ import cs_go from "@/assets/icons/csgo.svg";
 
 export default {
   name: "events_table",
-  components: { betslip, event_form, events_filter },
+  components: { betslip, event_form, events_filter, betslipParams },
   directives: {
     waves
   },
@@ -151,7 +160,11 @@ export default {
         [C.DIALOG_CREATE]: "Store custom event",
         [C.DIALOG_STORE]: "Store bet"
       },
-      showOdds: true
+      showOdds: true,
+      instabetFormVisible: false,
+      instabetResult: false, // this shouldnt be here, should be somehow requested from betslipparams
+      instabetStake: 0, // this shouldnt be here, should be somehow requested from betslipparams
+      instabetCategories: []
     };
   },
   filters: {
@@ -178,6 +191,19 @@ export default {
     },
     setDialog(status) {
       this.dialogStatus = status;
+    },
+    storeInstaBet() {
+      this.instabetFormVisible = false;
+      this.dialogFormVisible = false;
+      console.log(this.temp_event);
+      let betslipObj = new BetSlip([this.temp_event], this.$store.state.user.id);
+      betslipObj.result = this.instabetResult;
+      betslipObj.bet_amount = this.instabetStake;
+      betslipObj.categories = this.instabetCategories;
+      betslipObj.update();
+      console.log(betslipObj);
+      this.storeBetslip(betslipObj.getData());
+      // this.storeBetslip(data);
     },
     storeBetslip(data) {
       console.log("prediction store");
@@ -258,19 +284,26 @@ export default {
       this.setDialog("update");
       this.dialogFormVisible = true;
     },
+    updateBetResult(val) {
+      this.instabetResult = val;
+    },
+    updateBetAmount(val) {
+      this.instabetStake = val;
+    },
     toBetSlip(event, instantBet = false) {
       console.log("event submitted");
-      this.dialogFormVisible = false;
-      
+            
       console.log(this.betslip_data);
 
       if (instantBet === true) {
-        let betslipObj = new BetSlip([event], this.$store.state.user.id);
-        this.storeBetslip(betslipObj.getData());
-        // this.storeBetslip(data);
+        console.log(this.temp_event);
+        console.log(event);
+        this.temp_event = event; // probably already === event
+        this.instabetFormVisible = true;        
         return;
       }
 
+      this.dialogFormVisible = false;
       this.betslip_data.push(event);
       this.$message({
           title: "Bet was successfully added to bet slip!",

@@ -49,14 +49,7 @@
         </el-table-column>
     </el-table>
     <br />
-    <el-row :gutter="10">
-      <el-col>
-        Stake:
-      </el-col>
-      <el-col>
-          <el-input-number v-model="bet_amount" :min="0" :step="50" @change="updateBetAmount"></el-input-number>
-      </el-col>
-    </el-row>
+    <betslipParams @updateBetAmount="updateBetAmount" @updateBetResult="updateBetResult" @updateCategories="updateCategories"></betslipParams>
     <br />
     <el-row :gutter="10">
       <el-col :span="10">
@@ -65,40 +58,9 @@
       <el-col :span="10">
         Profit: {{this.betslipObj.profit}}
       </el-col>
-    </el-row>
-    <el-row :gutter="10" v-if="betslipObj.valid">
-      <el-col :span="10">
-        Bet result:
-      </el-col>
-      <el-col :span="10">
-        <el-switch
-          v-model="betslipObj.result"
-          activeColor="#13ce66"
-          inactiveColor="#ff4949"
-          activeText="Won"
-          activeValue="true"
-          inactiveText="Lost"
-          inactiveValue="false">
-        </el-switch>
-      </el-col>
-    </el-row>
+    </el-row>    
     <br />
     <el-row :gutter="10">
-      <el-col>
-        <el-select
-          v-model="betslipObj.categories"
-          multiple
-          filterable
-          allow-create
-          placeholder="Choose tags for your bet">
-          <el-option
-            v-for="item in default_tags"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </el-col>
       <el-col :offset="20">
         <el-button type="primary" @click="storeBetslip">Store</el-button>
       </el-col>
@@ -113,21 +75,15 @@
 <script>  
   // const moment = require('moment')
   import BetSlip from '../helpers/betslip';
+  import betslipParams from "../components/betslip_params.vue";
 
   export default {
     name: 'betslip',
     props: ['betslipData'],
+    components: { betslipParams },
     data() {
       return {
-        betslipObj: null,
-        bet_amount: 0,
-        default_tags: [{
-          value: 'Parimatch',
-          label: 'Parimatch'
-        }, {
-          value: 'Pinnacle',
-          label: 'Pinnacle'
-        }],
+        betslipObj: null,        
         active: false
       };
     },    
@@ -145,7 +101,18 @@
         this.$emit('storeBetslip', this.betslipObj.getData())
         this.active = false;
       },
+      updateBetResult(val) {
+        console.log('bet result:' + val)
+        this.betslipObj.result = val;
+        this.updateBetslip();
+      },
+      updateCategories(val) {
+        console.log(val);
+        this.betslipObj.categories = val;
+        this.updateBetslip();
+      },
       updateBetAmount(val) {
+        console.log('bet amount:' + val)
         this.betslipObj.bet_amount = val;
         this.updateBetslip();
       },
