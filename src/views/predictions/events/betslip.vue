@@ -1,12 +1,10 @@
 <template>
   <div>
   <el-popover
-    ref="popover1"
-    placement="right"
+    ref="popover"
+    placement="left-end"
     width="500"
-    v-model="active"
-    trigger="click"
-    v-if="betslipObj">
+    v-model="active">
     <el-table :data="betslipData">
         <el-table-column width="100" label="Date" prop="date" column-key="date">
           <template slot-scope="scope">
@@ -51,7 +49,7 @@
     <br />
     <betslipParams @updateBetAmount="updateBetAmount" @updateBetResult="updateBetResult" @updateCategories="updateCategories"></betslipParams>
     <br />
-    <el-row :gutter="10">
+    <el-row :gutter="10" v-if="this.betslipObj">
       <el-col :span="10">
         Final odds: {{this.betslipObj.final_odds}}
       </el-col>
@@ -66,8 +64,10 @@
       </el-col>
     </el-row>
   </el-popover>
+    <el-button v-popover:popover :disabled="betslipData.length === 0" @click="active=true">Show betslip</el-button>
+  
     <el-badge :value="betslipData.length" class="item" v-if="betslipData.length > 0">
-      <el-button v-popover:popover1 :disabled="betslipData.length === 0" @click="active=true">Show betslip</el-button>
+      
     </el-badge>
   </div>
 </template>

@@ -7,11 +7,11 @@
       </div>
     </el-col>
     <el-col :span="4">
-      <el-button class="filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit">
+      <el-button class="filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit" disabled="disabled">
         Add my own event
       </el-button>
     </el-col>
-    <el-col :span="4" :offset="8">
+    <el-col :span="4" :offset="4">
       <betslip :betslipData="betslip_data" @storeBetslip="storeBetslip"></betslip>
     </el-col>
   </el-row>
@@ -117,7 +117,7 @@ import betslip from "./events/betslip.vue";
 import event_form from "./events/event_form.vue";
 import Event from "./model/event.js";
 import C from "./constants.js";
-import BetSlip from './helpers/betslip.js';
+import BetSlipHelper from './helpers/betslip.js';
 import betslipParams from "./components/betslip_params.vue";
 
 const moment = require("moment");
@@ -196,7 +196,7 @@ export default {
       this.instabetFormVisible = false;
       this.dialogFormVisible = false;
       console.log(this.temp_event);
-      let betslipObj = new BetSlip([this.temp_event], this.$store.state.user.id);
+      let betslipObj = new BetSlipHelper([this.temp_event], this.$store.state.user.id);
       betslipObj.result = this.instabetResult;
       betslipObj.bet_amount = this.instabetStake;
       betslipObj.categories = this.instabetCategories;
