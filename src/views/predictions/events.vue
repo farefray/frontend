@@ -96,9 +96,8 @@
     </span>
   </el-dialog>
 
-  <div v-show="!listLoading && total > 0" class="pagination-container">
-    <el-pagination @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
-        :page-size="listQuery.per_page" layout="total, prev, pager, next" :total="total">
+  <div class="pagination-container">
+    <el-pagination @current-change="paginateData" :page-size="listQuery.per_page" layout="total, prev, pager, next" :total="total">
     </el-pagination>
   </div>
 
@@ -136,6 +135,7 @@ export default {
     return {
       C: C,
       betslip_data: [],
+      events_data: null,
       events_table: [],
       temp_event: new Event(),
       logos: {
@@ -178,7 +178,8 @@ export default {
       return "gray";
     }
   },
-  created() {
+  mounted() {
+    console.log('events mounted');
     this.getList();
   },
   methods: {
@@ -187,7 +188,7 @@ export default {
 
       Object.assign(this.listQuery, filters);
       console.log(this.listQuery);
-      this.getList();
+      //this.getList();
     },
     setDialog(status) {
       this.dialogStatus = status;
@@ -243,6 +244,7 @@ export default {
     },
     onFilterChange(filters) {
       console.log(filters);
+      console.log('on filter change');
       // Apply filter to query and re-ask backend
       this.loading = true;
       this.events_table = [];
@@ -254,29 +256,19 @@ export default {
       return row.game === value;
     },
     getList() {
+      console.log('get list')
       this.listLoading = true;
-      this.total = 0;
-      let self = this;
       fetchEventsList(this.listQuery).then(response => {
-        self.events_table = [];
+        this.events_table = [];
         if (response && response.items) {
-          response.items.forEach(function(item) {
-            self.events_table.push(new Event(item)); // TODO shall we create events for every row?
-          });
-
+          this.events_data = response.items;
           this.total = response.total;
+          this.paginateData(1); // first page by default
         }
 
-        console.log(this.total);
         this.listLoading = false;
+        return;
       });
-    },
-    handleFilter() {
-      this.getList();
-    },
-    handleCurrentChange(val) {
-      this.listQuery.page = val;
-      this.getList();
     },
     handleUpdate(row) {
       // Todo only update current events or what?
@@ -315,6 +307,7 @@ export default {
     formClose(reload, event) {
       console.log("closing form after dialog was opened");
       if (reload === true) {
+        console.log('reload after formClose');
         this.getList();
       }
 
@@ -333,7 +326,20 @@ export default {
 
       this.dialogFormVisible = false;
       this.temp_event = new Event();
-    }
+    },
+    paginateData(val) {
+      console.log('paginateData ' + val)
+      this.events_table = [];
+      this.listQuery.page = val;
+      let pagedData = this.events_data.filter((item, index) => 
+            index < this.listQuery.per_page * this.listQuery.page && index >= this.listQuery.per_page * (this.listQuery.page- 1))
+
+      console.log(pagedData);
+      pagedData.forEach(item => {
+        console.log(item);
+        this.events_table.push(new Event(item)); // TODO shall we create events for every row? also DRY
+      });
+    },
   },
   watch: {
     dialogFormVisible(value) {

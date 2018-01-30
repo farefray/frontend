@@ -1,6 +1,7 @@
 import service from './service'
 
 export function fetchEventsList(params) {
+  console.log('fetchEventsList');
   console.log(params)
   // params.offset = (params.page - 1) * params.per_page;
   params.sort = '-date,createdAt';
@@ -14,10 +15,9 @@ export function fetchEventsList(params) {
 
     let eventList = response.data;
     if (eventList.length && eventList[0].date) {
-       const pageList = eventList.filter((item, index) => index < params.per_page * params.page && index >= params.per_page * (params.page - 1))
       return {
         total: eventList.length,
-        items: pageList
+        items: eventList
       }
     }
   })
