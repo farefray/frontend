@@ -101,6 +101,11 @@
             type="danger"
             @click="handleDelete(scope.$index, scope.row)">Remove
           </el-button>
+          <el-button
+            size="mini"
+            type="warning"
+            @click="editPrediction(scope.$index, scope.row)">Edit
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -113,24 +118,33 @@
       <el-button type="warning" @click="reportStatus(false)">Not</el-button>
       <el-button type="success" @click="reportStatus(true)">Yes</el-button>
     </el-dialog>
+    <el-dialog title="Edit prediction" :visible.sync="editFormVisible" width="40%" top="9vh">
+      <event_form :temp_event="editForm.temp_event" :dialogStatus="editForm.dialogStatus" @close="editFormClose"></event_form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import { getPredictions, removePrediction, updatePrediction } from '@/api/apipredictions'
+  import Event from "../predictions/model/event.js";
   import events_filter from '@/views/components/events_filter'
-
+  import event_form from "../predictions/events/event_form.vue"; // Todo multiple bet edit somehow?
   // TODO make prediction status string instead of array
   export default {
     components: {
-      events_filter
+      events_filter, event_form
     },
     data() {
       return {
         listLoading: true,
         predictions: null,
         dialogVisible: false,
-        current_prediction: null
+        current_prediction: null,
+        editFormVisible: false,
+        editForm: {
+          temp_event: new Event(),
+          dialogStatus: ""
+        }
       }
     },
     mounted() {
@@ -184,6 +198,12 @@
         const self = this;
         self.dialogVisible = true;
         self.current_prediction = row;
+      },
+      editFormClose() {
+        this.editFormVisible = false;
+      },
+      editPrediction(index, row) {
+        this.editFormVisible = true;
       },
       handleDelete(index, row) {
         const self = this;
