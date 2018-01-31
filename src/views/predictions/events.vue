@@ -188,7 +188,7 @@ export default {
 
       Object.assign(this.listQuery, filters);
       console.log(this.listQuery);
-      //this.getList();
+      // this.getList();
     },
     setDialog(status) {
       this.dialogStatus = status;
@@ -332,14 +332,14 @@ export default {
       this.events_table = [];
       this.listQuery.page = val;
       let pagedData = this.events_data.filter((item, index) => 
-            index < this.listQuery.per_page * this.listQuery.page && index >= this.listQuery.per_page * (this.listQuery.page- 1))
+            index < this.listQuery.per_page * this.listQuery.page && index >= this.listQuery.per_page * (this.listQuery.page - 1))
 
       console.log(pagedData);
       pagedData.forEach(item => {
         console.log(item);
         this.events_table.push(new Event(item)); // TODO shall we create events for every row? also DRY
       });
-    },
+    }
   },
   watch: {
     dialogFormVisible(value) {
