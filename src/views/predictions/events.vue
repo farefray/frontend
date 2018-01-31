@@ -180,15 +180,16 @@ export default {
   },
   mounted() {
     console.log('events mounted');
-    this.getList();
+    this.loadEvents();
   },
   methods: {
     filterData(filters) {
       // this comes with default predictions filters, so need to fill up with events data
-
+      console.log(filters);
+      console.log(this.listQuery)
       Object.assign(this.listQuery, filters);
       console.log(this.listQuery);
-      // this.getList();
+      this.loadEvents();
     },
     setDialog(status) {
       this.dialogStatus = status;
@@ -249,23 +250,23 @@ export default {
       this.loading = true;
       this.events_table = [];
       this.listQuery.game = filters.game;
-      this.getList();
+      this.loadEvents();
       return false;
     },
     filterGameType(value, row) {
       return row.game === value;
     },
-    getList() {
-      console.log('get list')
+    loadEvents() {
+      console.log('loadEvents')
       this.listLoading = true;
       fetchEventsList(this.listQuery).then(response => {
         this.events_table = [];
-        if (response && response.items) {
-          this.events_data = response.items;
-          this.total = response.total;
+        if (response && response.length) {
+          this.events_data = response;
           this.paginateData(1); // first page by default
-        }
+        } 
 
+        this.total = response.length;
         this.listLoading = false;
         return;
       });
@@ -308,7 +309,7 @@ export default {
       console.log("closing form after dialog was opened");
       if (reload === true) {
         console.log('reload after formClose');
-        this.getList();
+        this.loadEvents();
       }
 
       if (event !== undefined) {

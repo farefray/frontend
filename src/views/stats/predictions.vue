@@ -104,7 +104,7 @@
           <el-button
             size="mini"
             type="warning"
-            @click="editPrediction(scope.$index, scope.row)">Edit
+            @click="editPrediction(scope.$index, scope.row)" disabled="disabled">Edit
           </el-button>
         </template>
       </el-table-column>

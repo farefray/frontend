@@ -13,13 +13,7 @@ export function fetchEventsList(params) {
       return false
     }
 
-    let eventList = response.data;
-    if (eventList.length && eventList[0].date) {
-      return {
-        total: eventList.length,
-        items: eventList
-      }
-    }
+    return response.data;
   })
 }
 
