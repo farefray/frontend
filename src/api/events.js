@@ -1,8 +1,6 @@
 import service from './service'
 
 export function fetchEventsList(params) {
-  console.log('fetchEventsList');
-  console.log(params)
   // params.offset = (params.page - 1) * params.per_page;
   params.sort = '-date,createdAt';
   return service.get('/api/v1/events', {

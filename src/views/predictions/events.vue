@@ -109,7 +109,7 @@
 
 <script>
 import { fetchEventsList } from "@/api/events";
-import { storePrediction } from '@/api/apipredictions'
+import { storePrediction } from '@/api/predictions'
 import waves from "@/directive/waves.js"; // water ripples
 import events_filter from "@/views/components/events_filter";
 import betslip from "./events/betslip.vue";
@@ -335,9 +335,7 @@ export default {
       let pagedData = this.events_data.filter((item, index) => 
             index < this.listQuery.per_page * this.listQuery.page && index >= this.listQuery.per_page * (this.listQuery.page - 1))
 
-      console.log(pagedData);
       pagedData.forEach(item => {
-        console.log(item);
         this.events_table.push(new Event(item)); // TODO shall we create events for every row? also DRY
       });
     }

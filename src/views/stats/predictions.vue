@@ -1,8 +1,8 @@
 <template>
   <div class="components-container" style='height:100vh'>
-    <events_filter @filter="fillData"></events_filter>
+    <events_filter @filter="filterData"></events_filter>
     <br/>
-    <el-table :fit="true" :data="predictions"
+    <el-table :fit="true" :data="predictions_table"
               v-loading="listLoading" element-loading-text="Loading..." border fit
               style="width: 100%">
 
@@ -109,6 +109,12 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <div class="pagination-container">
+      <el-pagination @current-change="paginateData" :page-size="listQuery.per_page" layout="total, prev, pager, next" :total="total">
+      </el-pagination>
+    </div>
+    
     <el-dialog
       title="Report bet status"
       :visible.sync="dialogVisible"
@@ -125,7 +131,7 @@
 </template>
 
 <script>
-  import { getPredictions, removePrediction, updatePrediction } from '@/api/apipredictions'
+  import { fetchPredictions, removePrediction, updatePrediction } from '@/api/predictions'
   import Event from "../predictions/model/event.js";
   import events_filter from '@/views/components/events_filter'
   import event_form from "../predictions/events/event_form.vue"; // Todo multiple bet edit somehow?
@@ -138,32 +144,49 @@
       return {
         listLoading: true,
         predictions: null,
+        predictions_table: [],
         dialogVisible: false,
         current_prediction: null,
         editFormVisible: false,
         editForm: {
           temp_event: new Event(),
           dialogStatus: ""
-        }
+        },
+        listQuery: {
+          page: 1,
+          per_page: 25,
+          title: undefined
+        },
+        total: 0
       }
     },
     mounted() {
       this.$nextTick(() => {
-        this.fillData()
+        this.loadPredictions()
       })
     },
     methods: {
+      filterData(filters) {
+        // this comes with default predictions filters, so need to fill up with events data
+        Object.assign(this.listQuery, filters);
+        this.loadPredictions();
+      },
       removeCategory(row, tag) {
         console.log(row)
         console.log(tag);
         return true;
       },
-      fillData(query) {
-        getPredictions(query)
+      loadPredictions() {
+        this.listLoading = true;
+        this.predictions_table = [];
+        fetchPredictions(this.listQuery)
           .then(response => {
-            this.predictions = response.data
-            console.log(response.data)
+            this.predictions = response
+            console.log(response)
             this.listLoading = false
+            this.paginateData(1);
+            this.total = response.length;
+            this.listLoading = false;
           });
       },
       reportStatus(result) {
@@ -235,6 +258,17 @@
               })
           })
           .catch(_ => {});
+      },
+      paginateData(val) {
+        console.log('paginateData ' + val)
+        this.predictions_table = [];
+        this.listQuery.page = val;
+        let pagedData = this.predictions.filter((item, index) => 
+              index < this.listQuery.per_page * this.listQuery.page && index >= this.listQuery.per_page * (this.listQuery.page - 1))
+
+        pagedData.forEach(item => {
+          this.predictions_table.push(item); // TODO shall we create events for every row? also DRY
+        });
       }
     }
   }

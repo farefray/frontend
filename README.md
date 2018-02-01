@@ -8,8 +8,9 @@
     betslip rework
     better input in 'store bet' for odds
     custom bet options aswell as basic ones[kills, roshans, etc]
-    show time ago from event timing, not from my bet placing.
+    show time ago from event timing, not from my bet placing. (also probably rework dates to mongo dates)
     dashboard - omg
+    merge events.vue with predictions.vue, theres way too much same functionality
 
 
 

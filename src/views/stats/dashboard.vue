@@ -19,7 +19,7 @@
 <script>
   import statsChart from './charts/statsChart'
   import events_filter from '@/views/components/events_filter'
-  import { getPredictions } from '@/api/apipredictions'
+  import { fetchPredictions } from '@/api/predictions'
 
   export default {
     components: { statsChart, events_filter },
@@ -48,7 +48,7 @@
       },
       fillData(query) {
         this.predictions = null;
-        getPredictions(query)
+        fetchPredictions(query)
           .then(response => {
             this.predictions = response.data
             console.log(this.predictions)

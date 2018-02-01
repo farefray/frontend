@@ -1,5 +1,26 @@
 import service from './service'
 import { getToken } from '@/utils/auth'
+
+export function fetchPredictions(params) {
+  params.sort = '-date,createdAt';
+  params.limit = 250;
+  // todo user validation
+  return service.get('/api/v1/predictions', {
+    headers: {
+      auth: getToken()
+    },
+    params: params
+  })
+    .then(response => {
+      if (!response || !response.data) {
+        return false
+      }
+
+      console.log('fetchPredictions', response);
+      return response.data;
+    })
+}
+
 export function storePrediction(prediction) {
   console.log('api store prediction')
   console.log(prediction);
@@ -44,19 +65,4 @@ export function removePrediction(prediction) {
       auth: getToken()
     }
   })
-}
-
-export function getPredictions(params = {}) {
-  params.sort = '-date,createdAt';
-  // todo user validation
-  return service.get('/api/v1/predictions', {
-    headers: {
-      auth: getToken()
-    },
-    params: params
-  })
-    .then(response => {
-      console.log(response);
-      return response;
-    })
 }
