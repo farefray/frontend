@@ -5,6 +5,7 @@
         <events_filter @filter="fillData"></events_filter>
       </el-col>
     </el-row>
+    <br/>
     <el-row>
       <el-col>
         <div class='chart-container' v-if="show">
