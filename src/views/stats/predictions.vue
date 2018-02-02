@@ -2,8 +2,11 @@
   <div class="components-container" style='height:100vh'>
     <events_filter @filter="filterData"></events_filter>
     <br/>
+    <div class='chart-container' v-if="showChart">
+      <stats-chart height='100%' width='100%' :chartdata="predictions_table"></stats-chart>
+    </div>
     <el-table :fit="true" :data="predictions_table"
-              v-loading="listLoading" element-loading-text="Loading..." border fit
+              v-loading="listLoading" element-loading-text="Loading..." border
               style="width: 100%">
 
       <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date" sortable>
@@ -135,10 +138,11 @@
   import Event from "../predictions/model/event.js";
   import events_filter from '@/views/components/events_filter'
   import event_form from "../predictions/events/event_form.vue"; // Todo multiple bet edit somehow?
+  import statsChart from './charts/statsChart'
   // TODO make prediction status string instead of array
   export default {
     components: {
-      events_filter, event_form
+      events_filter, event_form, statsChart
     },
     data() {
       return {
@@ -148,6 +152,7 @@
         dialogVisible: false,
         current_prediction: null,
         editFormVisible: false,
+        showChart: true,
         editForm: {
           temp_event: new Event(),
           dialogStatus: ""
