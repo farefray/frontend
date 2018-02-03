@@ -7,8 +7,6 @@
 <script type="text/javascript">
   import IEcharts from 'vue-echarts-v3/src/full'
   import settings from './statsChart.settings'
-  const bows = require('bows')
-  const log = bows('LineChart')
 
   function parseDate(timestamp) {
     let date = new Date(timestamp)
@@ -41,8 +39,6 @@
       }
     },
     mounted() {
-      log('mounted');
-      log(this.chartdata);
       if (this.chartdata !== null) {
         let labels = []
         let data = []
@@ -64,16 +60,15 @@
 
         settings.series[0].data = data
         settings.xAxis[0].data = labels
-        log(settings)
         this.opts = settings
       }
     },
     methods: {
       onReady(instance) {
-        log(instance)
+        console.log(instance)
       },
       onClick(event, instance, echarts) {
-        log(arguments)
+        console.log(arguments)
       }
     }
   }

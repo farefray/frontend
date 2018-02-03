@@ -6,4 +6,4 @@ const C = {
   DIALOG_EDIT: 5
 }
 
-export default C;
+export default C

@@ -28,7 +28,7 @@
 </template>
 
 <script>
-    import waves from '@/directive/waves.js'
+    import waves from '@/directive/waves/index.js'
 
     export default {
       name: "events_filter",

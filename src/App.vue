@@ -6,14 +6,6 @@
 
 <script>
   export default{
-    name: 'APP',
-    beforeCreate() {
-      console.log('app before created')
-    }
+    name: 'APP'
   }
 </script>
-
-<style lang="scss">
-@import '~normalize.css/normalize.css';// normalize.css 样式格式化
-@import './styles/index.scss'; // global custom css
-</style>

@@ -68,7 +68,7 @@ export default {
           const username = this.registerForm.username
           this.$store.dispatch('RegisterUser', this.registerForm).then(() => {
             this.loading = false
-            this.$emit('registered', username);
+            this.$emit('registered', username)
           }).catch(() => {
             this.loading = false
           })

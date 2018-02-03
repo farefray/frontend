@@ -2,7 +2,7 @@ import service from './service'
 
 export function fetchEventsList(params) {
   // params.offset = (params.page - 1) * params.per_page;
-  params.sort = '-date,createdAt';
+  params.sort = '-date,createdAt'
   return service.get('/api/v1/events', {
     params: params
   }).then(response => {
@@ -11,7 +11,7 @@ export function fetchEventsList(params) {
       return false
     }
 
-    return response.data;
+    return response.data
   })
 }
 

@@ -1,37 +1,53 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 const _import = require('./_import_' + process.env.NODE_ENV)
-// in development env not use Lazy Loading,because Lazy Loading too many pages will cause webpack hot update too slow.so only in production use Lazy Loading
+// in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
+// detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
 
 Vue.use(Router)
 
-/* layout */
+/* Layout */
 import Layout from '../views/layout/Layout'
 
+/** note: submenu only apppear when children.length>=1
+*   detail see  https://panjiachen.github.io/vue-element-admin-site/#/router-and-nav?id=sidebar
+**/
+
 /**
-* icon : the icon show in the sidebar
-* hidden : if `hidden:true` will not show in the sidebar
-* redirect : if `redirect:noredirect` will no redirct in the levelbar
-* noDropdown : if `noDropdown:true` will has no submenu
-* meta : { role: ['admin'] }  will control the page role
+* hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
+* alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
+*                                if not set alwaysShow, only more than one route under the children
+*                                it will becomes nested mode, otherwise not show the root menu
+* redirect: noredirect           if `redirect:noredirect` will no redirct in the breadcrumb
+* name:'router-name'             the name is used by <keep-alive> (must set!!!)
+* meta : {
+    roles: ['admin','editor']     will control the page roles (you can set multiple roles)
+    title: 'title'               the name show in submenu and breadcrumb (recommend set)
+    icon: 'svg-name'             the icon show in the sidebar,
+    noCache: true                if fasle ,the page will no be cached(default is false)
+  }
 **/
 export const constantRouterMap = [
-    { path: '/login', component: _import('login/index'), hidden: true },
-    { path: '/authredirect', component: _import('login/authredirect'), hidden: true },
-    { path: '/404', component: _import('errorPage/404'), hidden: true },
-    { path: '/401', component: _import('errorPage/401'), hidden: true },
+  { path: '/login', component: _import('login/index'), hidden: true },
+  { path: '/authredirect', component: _import('login/authredirect'), hidden: true },
+  { path: '/404', component: _import('errorPage/404'), hidden: true },
+  { path: '/401', component: _import('errorPage/401'), hidden: true },
   {
     path: '',
     component: Layout,
     redirect: 'dashboard',
     icon: 'dashboard',
-    noDropdown: true,
-    children: [{ path: 'dashboard', component: _import('dashboard/index'), name: 'Dashboard' }]
+    children: [{
+      path: 'dashboard',
+      component: _import('dashboard/index'),
+      name: 'dashboard',
+      meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
+    }]
   }
 ]
 
 export default new Router({
-  mode: 'history', // hash mode by default if any issues with webserver https://router.vuejs.org/ru/essentials/history-mode.html
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
@@ -41,37 +57,40 @@ export const asyncRouterMap = [
     path: '/permission',
     component: Layout,
     redirect: '/permission/index',
-    name: 'permission',
-    meta: { role: ['admin'] },
-    noDropdown: true,
-    children: [{ path: 'index', component: _import('permission/index'), name: 'permission', meta: { role: ['admin'] }}]
-  },
-  {
-    path: '/icon',
-    component: Layout,
-    noDropdown: true,
-    meta: { role: ['admin'] },
-    children: [{ path: 'index', component: _import('svg-icons/index'), name: 'icons' }]
+    meta: { roles: ['admin'] }, // you can set roles in root nav
+    children: [{
+      path: 'index',
+      component: _import('permission/index'),
+      name: 'permission',
+      meta: {
+        title: 'permission',
+        icon: 'lock',
+        roles: ['admin'] // or you can only set roles in sub nav
+      }
+    }]
   },
   {
     path: '/components',
     component: Layout,
-    redirect: '/components/index',
-    name: 'components',
-    meta: { role: ['admin'] },
+    redirect: 'noredirect',
+    name: 'component-demo',
+    meta: {
+      title: 'components',
+      icon: 'component',
+      roles: ['admin']
+    },
     children: [
-      { path: 'index', component: _import('components/index'), name: '介绍 ' },
-      { path: 'tinymce', component: _import('components/tinymce'), name: '富文本编辑器' },
-      { path: 'markdown', component: _import('components/markdown'), name: 'Markdown' },
-      { path: 'jsoneditor', component: _import('components/jsonEditor'), name: 'JSON编辑器' },
-      { path: 'dndlist', component: _import('components/dndList'), name: '列表拖拽' },
-      { path: 'splitpane', component: _import('components/splitpane'), name: 'SplitPane' },
-      { path: 'avatarupload', component: _import('components/avatarUpload'), name: '头像上传' },
-      { path: 'dropzone', component: _import('components/dropzone'), name: 'Dropzone' },
-      { path: 'sticky', component: _import('components/sticky'), name: 'Sticky' },
-      { path: 'countto', component: _import('components/countTo'), name: 'CountTo' },
-      { path: 'mixin', component: _import('components/mixin'), name: '小组件' },
-      { path: 'backtotop', component: _import('components/backToTop'), name: '返回顶部' }
+      { path: 'tinymce', component: _import('components/tinymce'), name: 'tinymce-demo', meta: { title: 'tinymce' }},
+      { path: 'markdown', component: _import('components/markdown'), name: 'markdown-demo', meta: { title: 'markdown' }},
+      { path: 'json-editor', component: _import('components/jsonEditor'), name: 'jsonEditor-demo', meta: { title: 'jsonEditor' }},
+      { path: 'dnd-list', component: _import('components/dndList'), name: 'dndList-demo', meta: { title: 'dndList' }},
+      { path: 'splitpane', component: _import('components/splitpane'), name: 'splitpane-demo', meta: { title: 'splitPane' }},
+      { path: 'avatar-upload', component: _import('components/avatarUpload'), name: 'avatarUpload-demo', meta: { title: 'avatarUpload' }},
+      { path: 'dropzone', component: _import('components/dropzone'), name: 'dropzone-demo', meta: { title: 'dropzone' }},
+      { path: 'sticky', component: _import('components/sticky'), name: 'sticky-demo', meta: { title: 'sticky' }},
+      { path: 'count-to', component: _import('components/countTo'), name: 'countTo-demo', meta: { title: 'countTo' }},
+      { path: 'mixin', component: _import('components/mixin'), name: 'componentMixin-demo', meta: { title: 'componentMixin' }},
+      { path: 'back-to-top', component: _import('components/backToTop'), name: 'backToTop-demo', meta: { title: 'backToTop' }}
     ]
   },
   {
@@ -79,71 +98,42 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: 'My statistic',
-    meta: {},
+    meta: {
+      title: 'My statistic',
+      icon: 'chart'
+    },
     children: [
-      { path: 'dashboard', component: _import('stats/dashboard'), name: 'Dashboard' },
-      { path: 'table', component: _import('stats/predictions'), name: 'Predictions' }
+      { path: 'dashboard', component: _import('stats/dashboard'), meta: { title: 'Dashboard', noCache: true }},
+      { path: 'table', component: _import('stats/predictions'), meta: { title: 'Predictions', noCache: true }}
     ]
   },
   {
     path: '/predictions',
     component: Layout,
     redirect: 'noredirect',
-    name: 'Predictions',
-    children: [
-      {
-        path: 'events',
-        component: _import('predictions/events'),
-        name: 'Events'
-        /* children: [
-          { path: 'table', component: _import('predictions/events'), name: 'composite table' },
-          { path: 'dynamictable', component: _import('predictions/table/dynamictable/index'), name: 'dynamic table' },
-          { path: 'dragtable', component: _import('predictions/table/dragTable'), name: 'drag table' },
-          { path: 'inline_edit_table', component: _import('predictions/table/inlineEditTable'), name: 'inline edit' },
-        ] */
-      },
-      { path: 'form/edit', meta: { role: ['admin'], isEdit: true }, component: _import('predictions/form'), name: '编辑Form' },
-      { path: 'form/create', meta: { role: ['admin'] }, component: _import('predictions/form'), name: '创建Form' },
-      { path: 'tab/index', meta: { role: ['admin'] }, component: _import('predictions/tab/index'), name: 'Tab' }
-    ]
+    children: [{ path: 'index', component: _import('predictions/index'), name: 'Events', meta: { title: 'Events', icon: 'table' }}]
   },
   {
     path: '/error',
     component: Layout,
     redirect: 'noredirect',
-    meta: { role: ['admin'] },
-    name: 'error',
+    name: 'errorPages',
+    meta: { roles: ['admin'] },
     children: [
-      { path: '401', component: _import('errorPage/401'), name: '401' },
-      { path: '404', component: _import('errorPage/404'), name: '404' }
+      { path: '401', component: _import('errorPage/401'), name: 'page401', meta: { title: 'page401', noCache: true }},
+      { path: '404', component: _import('errorPage/404'), name: 'page404', meta: { title: 'page404', noCache: true }}
     ]
   },
   {
-    path: '/errlog',
+    path: '/i18n',
     component: Layout,
-    redirect: 'noredirect',
-    name: 'errlog',
-    noDropdown: true,
-    meta: { role: ['admin'] },
-    children: [{ path: 'log', component: _import('errlog/index'), name: '错误日志' }]
-  },
-  {
-    path: '/excel',
-    component: Layout,
-    redirect: '/excel/download',
-    name: 'excel',
-    meta: { role: ['admin'] },
-    children: [
-      { path: 'download', component: _import('excel/index'), name: '导出excel' },
-      { path: 'download2', component: _import('excel/selectExcel'), name: '导出已选择项' }
-    ]
+    children: [{ path: 'index', component: _import('i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
   },
   {
     path: '/introduction',
     component: Layout,
-    redirect: '/introduction/index',
-    noDropdown: true,
-    children: [{ path: 'index', component: _import('introduction/index'), name: 'About us' }]
+    redirect: 'noredirect',
+    children: [{ path: 'index', component: _import('introduction/index'), name: 'About us', meta: { title: 'About us', icon: 'wechat' }}]
   },
   { path: '*', redirect: '/404', hidden: true }
 ]
