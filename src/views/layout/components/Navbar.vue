@@ -9,10 +9,6 @@
 
       <lang-select class="international right-menu-item"></lang-select>
 
-      <el-tooltip effect="dark" :content="$t('navbar.theme')" placement="bottom">
-        <theme-picker class="theme-switch right-menu-item"></theme-picker>
-      </el-tooltip>
-
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
           <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
@@ -44,15 +40,13 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import ErrorLog from '@/components/ErrorLog'
 import LangSelect from '@/components/LangSelect'
-import ThemePicker from '@/components/ThemePicker'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
     ErrorLog,
-    LangSelect,
-    ThemePicker
+    LangSelect
   },
   computed: {
     ...mapGetters([
@@ -60,6 +54,18 @@ export default {
       'name',
       'avatar'
     ])
+  },
+  data() {
+    return {
+      avatar_dropdown: [
+        { title: '基础篇', href: 'https://segmentfault.com/a/1190000009275424' },
+        { title: '登录权限篇', href: 'https://segmentfault.com/a/1190000009506097' },
+        { title: '实战篇', href: 'https://segmentfault.com/a/1190000009762198' },
+        { title: 'vueAdmin-template 篇', href: 'https://segmentfault.com/a/1190000010043013' },
+        { title: '自行封装 component', href: 'https://segmentfault.com/a/1190000009090836' },
+        { title: '优雅的使用 icon', href: 'https://segmentfault.com/a/https://segmentfault.com/a/1190000012213278' }
+      ]
+    }
   },
   methods: {
     toggleSideBar() {

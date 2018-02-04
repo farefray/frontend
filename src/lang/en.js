@@ -8,7 +8,6 @@ export default {
     components: 'Components',
     componentIndex: 'Introduction',
     tinymce: 'Tinymce',
-    markdown: 'Markdown',
     jsonEditor: 'JSON Editor',
     dndList: 'Dnd List',
     splitPane: 'SplitPane',

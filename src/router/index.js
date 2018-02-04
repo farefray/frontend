@@ -41,7 +41,7 @@ export const constantRouterMap = [
       path: 'dashboard',
       component: _import('dashboard/index'),
       name: 'dashboard',
-      meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
+      meta: { roles: [], title: 'dashboard', icon: 'dashboard', noCache: true }
     }]
   }
 ]
@@ -54,22 +54,6 @@ export default new Router({
 
 export const asyncRouterMap = [
   {
-    path: '/permission',
-    component: Layout,
-    redirect: '/permission/index',
-    meta: { roles: ['admin'] }, // you can set roles in root nav
-    children: [{
-      path: 'index',
-      component: _import('permission/index'),
-      name: 'permission',
-      meta: {
-        title: 'permission',
-        icon: 'lock',
-        roles: ['admin'] // or you can only set roles in sub nav
-      }
-    }]
-  },
-  {
     path: '/components',
     component: Layout,
     redirect: 'noredirect',
@@ -81,7 +65,6 @@ export const asyncRouterMap = [
     },
     children: [
       { path: 'tinymce', component: _import('components/tinymce'), name: 'tinymce-demo', meta: { title: 'tinymce' }},
-      { path: 'markdown', component: _import('components/markdown'), name: 'markdown-demo', meta: { title: 'markdown' }},
       { path: 'json-editor', component: _import('components/jsonEditor'), name: 'jsonEditor-demo', meta: { title: 'jsonEditor' }},
       { path: 'dnd-list', component: _import('components/dndList'), name: 'dndList-demo', meta: { title: 'dndList' }},
       { path: 'splitpane', component: _import('components/splitpane'), name: 'splitpane-demo', meta: { title: 'splitPane' }},
@@ -89,7 +72,6 @@ export const asyncRouterMap = [
       { path: 'dropzone', component: _import('components/dropzone'), name: 'dropzone-demo', meta: { title: 'dropzone' }},
       { path: 'sticky', component: _import('components/sticky'), name: 'sticky-demo', meta: { title: 'sticky' }},
       { path: 'count-to', component: _import('components/countTo'), name: 'countTo-demo', meta: { title: 'countTo' }},
-      { path: 'mixin', component: _import('components/mixin'), name: 'componentMixin-demo', meta: { title: 'componentMixin' }},
       { path: 'back-to-top', component: _import('components/backToTop'), name: 'backToTop-demo', meta: { title: 'backToTop' }}
     ]
   },
@@ -118,7 +100,7 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: 'errorPages',
-    meta: { roles: ['admin'] },
+    meta: { roles: ['admin'], title: "Error pages", icon: '404' },
     children: [
       { path: '401', component: _import('errorPage/401'), name: 'page401', meta: { title: 'page401', noCache: true }},
       { path: '404', component: _import('errorPage/404'), name: 'page404', meta: { title: 'page404', noCache: true }}

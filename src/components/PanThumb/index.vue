@@ -130,7 +130,7 @@ export default {
 }
 
 .pan-item:hover .pan-thumb {
-	transform: rotate(-110deg);
+	transform: translate(70px, 0px);
 }
 
 .pan-item:hover .pan-info p a {
