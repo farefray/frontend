@@ -22,9 +22,7 @@
       <br/>
       <el-row :gutter="25">
         <el-col :span="6" :offset="18">
-          <router-link to="/" style="color:lightgray;">
-            Return
-          </router-link>
+          <el-button type="text"><router-link to="/dashboard">Back</router-link></el-button>
         </el-col>
       </el-row>
       <el-row>
@@ -50,7 +48,7 @@
 import { validateUsername, validatePassword } from '@/utils/validate'
 import socialSign from './socialsignin'
 import register from './register'
-import logo from '@/assets/logo_gradient.svg'
+import logo from '@/assets/logo.svg'
 import ElCol from 'element-ui/packages/col/src/col'
 import ElButtonGroup from "../../../node_modules/element-ui/packages/button/src/button-group.vue";
 
@@ -132,7 +130,7 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   @import "src/styles/mixin.scss";
-  $bg:#223756;
+  $bg:#eef6ee;
   $dark_gray:#889aa4;
   $light_gray:#eee;
 
@@ -141,7 +139,7 @@ export default {
     height: 100vh;
     background-color: $bg;
     input:-webkit-autofill {
-      -webkit-box-shadow: inset 0 0 0 50px #1e314d;
+      box-shadow: inset 0 0 0 5px #1e314d;
       -webkit-text-fill-color: #476b3b;
     }
     input {
@@ -191,22 +189,9 @@ export default {
     }
     .el-form-item {
       border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(0, 0, 0, 0.1);
       border-radius: 5px;
       color: #454545;
     }
-  }
-
-  .el-dialog {
-    background: #223756;
-  }
-
-  .el-dialog__body {
-    background: #223756;
-  }
-
-  .el-dialog__header {
-    background: #223756;
   }
 
   .el-dialog__title {

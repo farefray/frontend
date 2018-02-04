@@ -82,11 +82,12 @@ export const asyncRouterMap = [
     name: 'My statistic',
     meta: {
       title: 'My statistic',
-      icon: 'chart'
+      icon: 'chart',
+      roles: ['user']
     },
     children: [
-      { path: 'dashboard', component: _import('stats/dashboard'), meta: { title: 'Dashboard', noCache: true }},
-      { path: 'table', component: _import('stats/predictions'), meta: { title: 'Predictions', noCache: true }}
+      { path: 'dashboard', component: _import('stats/dashboard'), meta: { title: 'Dashboard', roles: ['user'], noCache: true }},
+      { path: 'table', component: _import('stats/predictions'), meta: { title: 'Predictions', roles: ['user'], noCache: true }}
     ]
   },
   {
@@ -109,6 +110,7 @@ export const asyncRouterMap = [
   {
     path: '/i18n',
     component: Layout,
+    meta: { roles: ['admin'] },
     children: [{ path: 'index', component: _import('i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
   },
   {

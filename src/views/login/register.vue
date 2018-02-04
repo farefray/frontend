@@ -84,16 +84,15 @@ export default {
 <style lang="scss">
   .login-container {
     .el-dialog__body {
-      background: #223756;
+      background: #eef6ee;
     }
 
     .el-dialog__header {
-      background: #223756;
+      background: #eef6ee;
     }
 
     .el-dialog__title {
-      color: #db7f31;
-
+      color: #30b070;
     }
   }
  </style>
