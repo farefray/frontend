@@ -145,7 +145,7 @@ const settings = {
       },
       saveAsImage: {
         show: true,
-        name: 'MyBettingStats',
+        name: 'StatMyBets',
         title: 'Save as image'
       }
     }

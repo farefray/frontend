@@ -1,5 +1,3 @@
- //覆盖一些element-ui样式
-
  .el-breadcrumb__inner, .el-breadcrumb__inner a{
   font-weight: 400!important;
 }
@@ -26,7 +24,16 @@
      padding-right: 5px;
    }
  }
-
+ .tags-view-container {
+  .tags-view-wrapper {
+    background: $menuBg!important;
+    border-bottom: 1px solid #d8dce5;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+    .tags-view-item {
+      background: $menuBg!important;
+    }
+  }
+ }
  .fixed-width{
   .el-button--mini{
     padding: 7px 10px;

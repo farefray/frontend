@@ -80,7 +80,7 @@ export default {
     registered(username) {
       this.showRegistrationForm = false
       this.$message({
-        message: 'You have successfully registered on BettingsStats. Now you can login.',
+        message: 'You have successfully registered on StatMyBets. Now you can login.',
         type: 'success',
         duration: 5 * 1000
       })
