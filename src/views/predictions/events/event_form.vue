@@ -98,11 +98,12 @@
   import { createCustomEvent } from '@/api/events'
   import Event from '../model/event.js'
   import C from '../constants.js'
+  import ElInput from "../../../../node_modules/element-ui/packages/input/src/input.vue"; // ??
   const moment = require('moment') // Move global if used a lot?
   const _ = require('lodash'); // Move global if used a lot?
 
   export default {
-    components: {},
+    components: { ElInput },
     name: 'eventForm',
     props: ['temp_event', 'dialogStatus'],
     data() {
