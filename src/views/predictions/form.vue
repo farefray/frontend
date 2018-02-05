@@ -260,7 +260,6 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  @import "src/styles/mixin.scss";
   .title-prompt{
     position: absolute;
     right: 0px;
@@ -274,7 +273,6 @@ export default {
       padding: 40px 45px 20px 50px;
       .postInfo-container {
         position: relative;
-        @include clearfix;
         margin-bottom: 10px;
         .postInfo-container-item {
           float: left;

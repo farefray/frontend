@@ -1,47 +1,54 @@
 <template>
-  <div class="login-container">
-    <el-form class="card-box login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
-      <div class="title"><img :src="logo" alt="Logo" width="225px"></div>
-      <el-form-item prop="username">
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="Username" />
-      </el-form-item>
+  <section class="hero is-success is-fullheight">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <div class="column is-4 is-offset-4">
+          <div class="box">
+            <figure class="avatar">
+              <img :src="logo" width="128px">
+            </figure>
+            <form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm">
+              <div class="field">
+                <div class="control">
+                  <input class="input is-large" name="username" type="text" v-model="loginForm.username" placeholder="Username" autofocus="">
+                </div>
+              </div>
 
-      <el-form-item prop="password">
-        <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
-          placeholder="Password" />
-      </el-form-item>
-
-      <el-row :gutter="10">
-        <el-col :span="14" :offset="5">
-          <el-button-group>
-            <el-button type="success" style="width:90px" :loading="loading" @click.native.prevent="handleLogin">Login</el-button>
-            <el-button type="success" style="width:90px" @click='showRegistrationForm=true'>Register</el-button>
-          </el-button-group>
-        </el-col>
-      </el-row>
-      <br/>
-      <el-row :gutter="25">
-        <el-col :span="6" :offset="18">
-          <el-button type="text"><router-link to="/dashboard">Back</router-link></el-button>
-        </el-col>
-      </el-row>
-      <el-row>
-        <!--el-col :span="12">
+              <div class="field">
+                <div class="control">
+                  <input class="input is-large" name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
+          placeholder="Password">
+                </div>
+              </div>
+              <div class="field">
+                <label class="checkbox">
+                  <input type="checkbox">
+                  Remember me
+                </label>
+              </div>
+              <a href="#" class="button is-block is-info is-large" :loading="loading" @click.native.prevent="handleLogin">Login</a>
+            </form>
+          </div>
+          <p class="has-text-grey">
+            <a href="" @click.native.prevent='showRegistrationForm=true'>Sign Up</a> &nbsp;·&nbsp;
+            <a href="/dashboard">Return</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--el-col :span="12">
         <el-button type="primary" @click='showDialog=true' disabled>Thirdparty login</el-button>
         </el-col-->
-      </el-row>
-    </el-form>
 
-    <el-dialog width="30%" title="Registration" :visible.sync="showRegistrationForm">
+    <!--<el-dialog width="30%" title="Registration" :visible.sync="showRegistrationForm">
       <register @registered="registered"></register>
-    </el-dialog>
+    </el-dialog>-->
 
     <!--el-dialog title="Third party auth" :visible.sync="showDialog">
       Disabled for a while
       <social-sign />
     </el-dialog-->
-
-  </div>
+  </section> 
 </template>
 
 <script>
@@ -49,14 +56,12 @@ import { validateUsername, validatePassword } from '@/utils/validate'
 import socialSign from './socialsignin'
 import register from './register'
 import logo from '@/assets/logo.svg'
-import ElCol from 'element-ui/packages/col/src/col'
-import ElButtonGroup from "../../../node_modules/element-ui/packages/button/src/button-group.vue";
 
 export default {
   components: {
-    ElButtonGroup,
-    ElCol,
-    register, socialSign },
+    register, 
+    socialSign 
+  },
   name: 'login',
   data() {
     return {
@@ -71,7 +76,7 @@ export default {
       loading: false,
       showDialog: false,
       showRegistrationForm: false,
-      logo: logo
+      logo: 'https://placehold.it/128x128' // Todo logo
     }
   },
   methods: {
@@ -129,72 +134,5 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  @import "src/styles/mixin.scss";
-  $bg:#eef6ee;
-  $dark_gray:#889aa4;
-  $light_gray:#eee;
-
-  .login-container {
-    @include relative;
-    height: 100vh;
-    background-color: $bg;
-    input:-webkit-autofill {
-      box-shadow: inset 0 0 0 5px #1e314d;
-      -webkit-text-fill-color: #476b3b;
-    }
-    input {
-      background: transparent;
-      border: 0px;
-      -webkit-appearance: none;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
-    }
-    .el-input {
-      display: inline-block;
-      height: 47px;
-      width: 100%;
-    }
-    .tips {
-      font-size: 14px;
-      color: #fff;
-      margin-bottom: 10px;
-    }
-    .svg-container {
-      padding: 6px 5px 6px 15px;
-      color: $dark_gray;
-      vertical-align: middle;
-      width: 30px;
-      display: inline-block;
-      &_login {
-        font-size: 20px;
-      }
-    }
-    .title {
-      font-size: 26px;
-      font-weight: 400;
-      color: $light_gray;
-      margin: 0px auto 10px auto;
-      text-align: center;
-      font-weight: bold;
-    }
-    .login-form {
-      position: absolute;
-      left: 0;
-      right: 0;
-      width: 400px;
-      padding: 35px 35px 15px 35px;
-      margin: 45px auto 120px auto;
-    }
-    .el-form-item {
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 5px;
-      color: #454545;
-    }
-  }
-
-  .el-dialog__title {
-    color: #f99008 !important;
-  }
+  
 </style>
