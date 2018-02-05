@@ -155,7 +155,7 @@
             // 语言类型
             langType: {
                 type: String,
-                'default': 'zh'
+                'default': 'en'
             },
 
         },
@@ -167,7 +167,7 @@
                             height
                     } = that,
                     isSupported = true,
-                    lang = langBag[langType] ? langBag[langType] : lang['zh'];
+                    lang = langBag[langType] ? langBag[langType] : lang['en'];
 
             if (typeof FormData != 'function') {
                 isSupported = false;

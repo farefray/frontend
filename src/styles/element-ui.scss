@@ -1,6 +1,6 @@
  .el-breadcrumb__inner, .el-breadcrumb__inner a{
-  font-weight: 400!important;
-}
+    font-weight: 400!important;
+  }
 
  .el-upload {
    input[type="file"] {
@@ -80,3 +80,17 @@
      }
    }
  }
+
+ .el-table {
+  background-color: #eef6ee;
+  color: #5a5e66;
+  tr {
+    background-color: #eef6ee;
+  }
+}
+
+.el-input__inner {
+  background-color: #eef6ee;
+  border: 1px solid #dcdfe6;
+  color: #5a5e66;
+}

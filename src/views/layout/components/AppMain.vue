@@ -1,11 +1,11 @@
 <template>
-  <section class="app-main" style="min-height: 100%">
+  <el-main class="app-main" style="min-height: 100%">
     <transition name="fade" mode="out-in">
       <keep-alive :include="cachedViews">
         <router-view></router-view>
       </keep-alive>
     </transition>
-  </section>
+  </el-main>
 </template>
 
 <script>

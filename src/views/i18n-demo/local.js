@@ -1,6 +1,6 @@
 
 export default {
-  zh: {
+  ru: {
     i18nView: {
       title: '切换语言',
       note: '目前只翻译了当前页面和侧边栏和导航，未完待续，敬请期待...',

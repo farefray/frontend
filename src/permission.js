@@ -17,7 +17,8 @@ function hasPermission(roles, permissionRoles) {
 }
 
 // no redirect whitelist (todo it read from router?)
-const whiteList = ['/login', '/authredirect', '/introduction/index', '/dashboard/index', '/dashboard']
+// TODO!! critical issue. When f.e. predictions/index isnt listed here, but user gets into this menu, it somehow freezes whole tab and lags out 4ever
+const whiteList = ['/login', '/authredirect', '/introduction/index', '/dashboard/index', '/dashboard', '/predictions/index', '/predictions']
 
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar

@@ -15,7 +15,6 @@
       <betslip :betslipData="betslip_data" @storeBetslip="storeBetslip"></betslip>
     </el-col>
   </el-row>
-  <br/>
   <el-row>
     <el-table :data="events_table" @filter-change="onFilterChange"
       v-loading="listLoading" element-loading-text="Loading..." border fit
