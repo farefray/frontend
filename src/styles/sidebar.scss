@@ -1,10 +1,10 @@
 #app {
-  // 主体区域
   .main-container {
     min-height: 100%;
     transition: margin-left 0.28s;
     margin-left: 180px;
-  } // 侧边栏
+    background: url(../assets/img/background/body-bg-02.jpg) repeat scroll 0 0;
+  }
   .sidebar-container {
     transition: width 0.28s;
     width: 180px!important;
@@ -13,7 +13,7 @@
     top: 0;
     bottom: 0;
     left: 0;
-    border-right: 1px solid #e6e6e6;
+    border-right: none;
     z-index: 1001;
     a {
       display: inline-block;
@@ -24,11 +24,26 @@
     }
     .el-menu {
       width: 100%;
-      border: none;
+      border: none;      
+    }
+    .menu-icon {
+      position: absolute;
+      top: 50%;
+      right: 3px;
+      margin-top: -7px;
+      -webkit-transition: -webkit-transform .3s;
+      transition: -webkit-transform .3s;
+      transition: transform .3s;
+      transition: transform .3s, -webkit-transform .3s;
+      transition: transform .3s,-webkit-transform .3s;
+      font-size: 12px;
     }
   }
   .el-menu {
-    background-color: $menuBg!important;
+    -webkit-box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+    box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+    background: url(../assets/img/background/body-bg-02-15.jpg) repeat scroll 0 0 #b0b1b7;
   }
   .hideSidebar {
     .sidebar-container,.sidebar-container .el-menu {
@@ -64,15 +79,26 @@
           right: -145px;
           text-align: left;
           text-indent: 20px;
-          top: 0px;
-          background-color: $subMenuBg!important;
+          top: 0px;          
           opacity: 1;
         }
       }
     }
     .el-submenu {
+      border: 1px solid #e5e5e5;
+      margin-bottom: 0;
+      border-top-color: #dadbdd;
+      border-right: none;
+      border-bottom-color: #a2a4aa;
+      border-left: none;
+      -webkit-box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+      -moz-box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+      box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+      background: url(../assets/img/background/body-bg-02-15.jpg) repeat scroll 0 0 #b0b1b7;
+      background-color: rgba(0, 0, 0, 0.15);
+
       &>.el-submenu__title {
-        padding-left: 10px!important;
+        padding-left: 0px!important;
         &>span {
           display: none;
         }
@@ -88,18 +114,41 @@
           display: inline-block!important;
         }
       }
-    }
+    }    
+  }
+  .el-submenu__title:hover, .el-menu-item:hover {
+    background: url(../assets/img/background/transparent-25.png) repeat scroll 0 0;
+    background: rgba(0, 0, 0, 0.05);
   }
   .nest-menu .el-submenu>.el-submenu__title,
   .el-submenu .el-menu-item {
     border-right: 1px solid #e6e6e6;
     min-width: 180px!important;
-    background-color: $subMenuBg!important;
+    background: url(../assets/img/background/body-bg-02-25.jpg) repeat scroll 0 0 #b0b1b7;
+    background-color: rgba(19, 10, 10, 0.15);
     &:hover {
-      background-color: $menuHover!important;
+      
     }
   }
   .el-menu--collapse .el-menu .el-submenu{
     min-width: 180px!important;
+  }
+  .el-menu-item {
+    border: 1px solid #e5e5e5;
+    margin-bottom: 0;
+    border-top-color: #dadbdd;
+    border-right: none;
+    border-bottom-color: #a2a4aa;
+    border-left: none;
+    -webkit-box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+    box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+    background: url(../assets/img/background/body-bg-02-15.jpg) repeat scroll 0 0 #b0b1b7;
+    background-color: rgba(0, 0, 0, 0.15);
+    &.is-active {
+      background: url(../assets/img/background/body-bg-02.jpg) repeat scroll 0 0;
+      border-bottom: 0;
+      box-shadow: none;
+    }
   }
 }

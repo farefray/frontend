@@ -69,15 +69,23 @@ export default {
     margin-bottom: 32px;
   }
   .card-panel {
+    padding: 0 15px;
+    border: 1px solid #ffffff;
+    background-color: #f5f6f9;
+    -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.35);
+    -moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.35);
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.35);
+    margin-bottom: 20px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+
     height: 108px;
     cursor: pointer;
     font-size: 12px;
     position: relative;
     overflow: hidden;
     color: #666;
-    background: #fff;
-    box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
-    border-color: rgba(0, 0, 0, .05);
     &:hover {
       .card-panel-icon-wrapper {
         color: #fff;
