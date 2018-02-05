@@ -2,8 +2,8 @@ import service from './service'
 import { getToken } from '@/utils/auth'
 
 export function fetchPredictions(params) {
-  params.sort = '-date,createdAt';
-  params.limit = 250;
+  params.sort = '-date,createdAt'
+  params.limit = 250
   // todo user validation
   return service.get('/api/v1/predictions', {
     headers: {
@@ -17,18 +17,18 @@ export function fetchPredictions(params) {
       }
 
       console.log('fetchPredictions', response);
-      return response.data;
+      return response.data
     })
 }
 
 export function storePrediction(prediction) {
   console.log('api store prediction')
-  console.log(prediction);
+  console.log(prediction)
   // const self = this
   return service.post('/api/v1/predictions', prediction, {
-      headers: {
-        auth: getToken()
-      }
+    headers: {
+      auth: getToken()
+    }
   })
     .then(response => {
       console.log(response); // Todo proper response on backend(not it fails even when success)
@@ -48,12 +48,12 @@ export function updatePrediction(prediction) {
     }
   })
     .then(response => {
-      console.log(response);
+      console.log(response)
       if (response && response.status === 200) {
         return true
       }
 
-      console.log(response.data);
+      console.log(response.data)
       return false
     })
 }

@@ -1,16 +1,13 @@
 import { asyncRouterMap, constantRouterMap } from '@/router'
 
-/**
- * 通过meta.role判断是否与当前用户权限匹配
- * @param roles
- * @param route
- */
 function hasPermission(roles, route) {
-  if (route.meta && route.meta.role) {
-    return roles.some(role => route.meta.role.indexOf(role) >= 0)
+  if (route.meta && route.meta.roles && route.meta.roles.length) {
+    console.log('has permission')
+    console.log(roles, route);
+    return roles.some(role => route.meta.roles.indexOf(role) >= 0)
+  } else {
+    return true
   }
-
-  return true
 }
 
 function filterAsyncRouter(asyncRouterMap, roles) {

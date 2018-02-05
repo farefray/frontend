@@ -195,7 +195,7 @@
           });
       },
       reportStatus(result) {
-        const self = this;
+        const self = this
         self.current_prediction.status[0] = result === true ? 'WON' : 'LOST';
         updatePrediction(self.current_prediction)
           .then(response => {

@@ -1,6 +1,5 @@
 import { registerUser, loginByUsername, verifyToken } from '@/api/apiuser'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-const log = require('bows')('Store User')
 
 const defaultState = {
   id: '',
@@ -12,7 +11,7 @@ const defaultState = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: ['guest'],
+  roles: [],
   setting: {
     articlePlatform: []
   }
@@ -29,7 +28,7 @@ const user = {
     name: '',
     avatar: '',
     introduction: '',
-    roles: ['guest'],
+    roles: [],
     setting: {
       articlePlatform: []
     }
@@ -123,8 +122,6 @@ const user = {
             return reject(false)
           }
 
-          log(response)
-
           const data = response.data
           setToken(response.data.token)
           commit('SET_TOKEN', data.token)
@@ -167,11 +164,18 @@ const user = {
       })
     },
 
-    ChangeRole({ commit }, role) {
+    ChangeRoles({ commit }, role) {
       return new Promise(resolve => {
         commit('SET_TOKEN', role)
         setToken(role)
-        resolve()
+        /* getUserInfo(role).then(response => {
+          const data = response.data
+          commit('SET_ROLES', data.roles)
+          commit('SET_NAME', data.name)
+          commit('SET_AVATAR', data.avatar)
+          commit('SET_INTRODUCTION', data.introduction)
+          resolve()
+        }) */
       })
     }
   }
