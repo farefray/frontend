@@ -85,9 +85,10 @@ export const asyncRouterMap = [
       icon: 'chart',
       roles: ['user']
     },
+    noCache: true,
     children: [
-      { path: 'dashboard', component: _import('stats/dashboard'), meta: { title: 'Dashboard', roles: ['user'], noCache: true }},
-      { path: 'table', component: _import('stats/predictions'), meta: { title: 'Predictions', roles: ['user'], noCache: true }}
+      { path: 'dashboard', component: _import('stats/dashboard'), meta: { title: 'Dashboard', roles: ['user'], noCache: true, icon: 'component' }},
+      { path: 'table', component: _import('stats/predictions'), meta: { title: 'Predictions', roles: ['user'], noCache: true, icon: 'component' }}
     ]
   },
   {

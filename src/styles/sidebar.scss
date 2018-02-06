@@ -1,13 +1,44 @@
+@mixin sidebarMenuItem {
+  font-size: 16px;
+  font-weight: bold;
+  font-family: Helvetica,sans-serif;
+  color:#494949;
+
+  -webkit-box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15),
+  inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15),
+  inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+  box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15),
+  inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+  background: url(../assets/img/background/body-bg-02-15.jpg) repeat scroll 0 0 #b0b1b7;
+  background-color: rgba(0, 0, 0, 0.15);
+
+  -webkit-transition: none;
+  transition: none;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.045);
+  }
+}
+
 #app {
   .main-container {
     min-height: 100%;
     transition: margin-left 0.28s;
-    margin-left: 180px;
+    margin-left: 200px;
     background: url(../assets/img/background/body-bg-02.jpg) repeat scroll 0 0;
   }
   .sidebar-container {
+    -webkit-box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15),
+      inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15),
+      inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+    box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15),
+      inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+    background: url('../assets/img/background/body-bg-02-15.jpg') repeat scroll 0 0 #c5c6ca;
     transition: width 0.28s;
-    width: 180px!important;
+    width: 200px !important;
+
     height: 100%;
     position: fixed;
     top: 0;
@@ -28,7 +59,7 @@
     }
     .menu-icon {
       position: absolute;
-      top: 50%;
+      top: 53%;
       right: 3px;
       margin-top: -7px;
       -webkit-transition: -webkit-transform .3s;
@@ -36,7 +67,7 @@
       transition: transform .3s;
       transition: transform .3s, -webkit-transform .3s;
       transition: transform .3s,-webkit-transform .3s;
-      font-size: 12px;
+      font-size: 10px;
     }
   }
   .el-menu {
@@ -44,18 +75,86 @@
     -moz-box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
     box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
     background: url(../assets/img/background/body-bg-02-15.jpg) repeat scroll 0 0 #b0b1b7;
-  }
-  .hideSidebar {
-    .sidebar-container,.sidebar-container .el-menu {
-      width: 36px!important;
-      // overflow: inherit;
+
+    .el-menu-item {
+      @include sidebarMenuItem;      
+      border: 1px solid #e5e5e5;
+      margin-bottom: 0;
+      border-top-color: #dadbdd;
+      border-right: none;
+      border-bottom-color: #a2a4aa;
+      border-left: none;
+      
+      &.is-active {
+        background: url(../assets/img/background/body-bg-02.jpg) repeat scroll 0 0;
+        border-bottom: 0;
+        box-shadow: none;
+        color:#f18e0e;
+      }
     }
+
+    .el-submenu {
+      &.is-opened {
+        .el-menu {
+          -webkit-box-shadow: inset 0 2px 6px -2px rgba(0, 0, 0, 0.3), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+          -moz-box-shadow: inset 0 2px 6px -2px rgba(0, 0, 0, 0.3), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+          box-shadow: inset 0 2px 6px -2px rgba(0, 0, 0, 0.3),
+          inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
+          background-color: rgba(0, 0, 0, 0.15);
+          border: 1px solid rgb(68, 68, 68);
+          border-left: none;
+          border-right: none;
+
+          .el-menu-item {
+            font-size: 14px;
+            background: url(../assets/img/background/body-bg-02-25.jpg) repeat scroll 0 0;
+            border: 0;
+            border-top-color: none;
+            border-right: none;
+            border-bottom-color: none;
+            border-left: none;
+            box-shadow: none;
+            
+            height: 30px;
+            line-height: 30px;
+            min-width: 200px;
+          }
+          .router-link-active {
+            .el-menu-item {
+              background: url(../assets/img/background/body-bg-02.jpg) repeat scroll 0 0;
+              border-bottom: 0;
+              box-shadow: none;
+            }
+          }
+        }
+
+        .menu-icon {
+          transform: rotate(90deg);
+        }
+      }
+
+      .el-submenu__title {
+        @include sidebarMenuItem;
+        
+        .el-submenu__icon-arrow {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .hideSidebar {
+    .sidebar-container,
+    .sidebar-container .el-menu {
+      width: 36px !important; // overflow: inherit;
+    }
+
     .main-container {
       margin-left: 36px;
     }
-  }
-  .hideSidebar {
+
     .submenu-title-noDropdown {
+
       padding-left: 10px!important;
       position: relative;
       span {
@@ -115,15 +214,11 @@
         }
       }
     }    
-  }
-  .el-submenu__title:hover, .el-menu-item:hover {
-    background: url(../assets/img/background/transparent-25.png) repeat scroll 0 0;
-    background: rgba(0, 0, 0, 0.05);
-  }
+  }  
   .nest-menu .el-submenu>.el-submenu__title,
   .el-submenu .el-menu-item {
     border-right: 1px solid #e6e6e6;
-    min-width: 180px!important;
+    min-width: 200px!important;
     background: url(../assets/img/background/body-bg-02-25.jpg) repeat scroll 0 0 #b0b1b7;
     background-color: rgba(19, 10, 10, 0.15);
     &:hover {
@@ -131,24 +226,7 @@
     }
   }
   .el-menu--collapse .el-menu .el-submenu{
-    min-width: 180px!important;
+    min-width: 200px!important;
   }
-  .el-menu-item {
-    border: 1px solid #e5e5e5;
-    margin-bottom: 0;
-    border-top-color: #dadbdd;
-    border-right: none;
-    border-bottom-color: #a2a4aa;
-    border-left: none;
-    -webkit-box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
-    box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15), inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
-    background: url(../assets/img/background/body-bg-02-15.jpg) repeat scroll 0 0 #b0b1b7;
-    background-color: rgba(0, 0, 0, 0.15);
-    &.is-active {
-      background: url(../assets/img/background/body-bg-02.jpg) repeat scroll 0 0;
-      border-bottom: 0;
-      box-shadow: none;
-    }
-  }
+  
 }
