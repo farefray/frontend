@@ -47,7 +47,9 @@ export default {
     line-height: 50px;
     margin-left: 10px;
     .no-redirect {
-      color: #97a8be;
+      font-weight: bold;
+      color: #1b1b1b;
+      font-size: 20px;
       cursor: text;
     }
   }

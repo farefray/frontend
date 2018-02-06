@@ -16,6 +16,12 @@
   -webkit-transition: none;
   transition: none;
 
+  border: 1px solid #e5e5e5;
+  border-top-color: #dadbdd;
+  border-right: none;
+  border-bottom-color: #a2a4aa;
+  border-left: none;
+
   &:hover {
     background: rgba(0, 0, 0, 0.045);
   }
@@ -78,12 +84,7 @@
 
     .el-menu-item {
       @include sidebarMenuItem;      
-      border: 1px solid #e5e5e5;
       margin-bottom: 0;
-      border-top-color: #dadbdd;
-      border-right: none;
-      border-bottom-color: #a2a4aa;
-      border-left: none;
       
       &.is-active {
         background: url(../assets/img/background/body-bg-02.jpg) repeat scroll 0 0;
@@ -136,6 +137,7 @@
       .el-submenu__title {
         @include sidebarMenuItem;
         
+            
         .el-submenu__icon-arrow {
           display: none;
         }
