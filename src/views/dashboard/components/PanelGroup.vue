@@ -1,13 +1,16 @@
 <template>
   <el-row class="panel-group" :gutter="40">
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class='card-panel' @click="handleSetLineChartData('newVisitis')">
-        <div class="card-panel-icon-wrapper icon-people">
-          <svg-icon icon-class="peoples" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">New Visits</div>
-          <count-to class="card-panel-num" :startVal="0" :endVal="102400" :duration="2600"></count-to>
+      <div class='card-panel well-black' @click="handleSetLineChartData('newVisitis')">
+        <div class="statistic-group">
+            <span class="SPBarPositive" values="1,4,6,4,7,5,9,0,10,7,3,6,4,4,7,5,9,10,7,3,6,4">
+              <canvas width="109" height="24" style="display: inline-block; width: 109px; height: 24px; vertical-align: top;"></canvas>
+            </span>
+            <h3 class="statistic-values">
+              <count-to class="card-panel-num" :startVal="0" :endVal="102400" :duration="2600"></count-to>
+              <sup>84%</sup>
+            </h3>
+            <p class="info-block">The content below are loaded</p>
         </div>
       </div>
     </el-col>
@@ -69,76 +72,50 @@ export default {
     margin-bottom: 32px;
   }
   .card-panel {
-    padding: 0 15px;
-    border: 1px solid #ffffff;
-    background-color: #f5f6f9;
-    -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.35);
-    -moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.35);
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.35);
+    text-align: -webkit-match-parent;
+    text-align: center;
+    border-color: #d3d5d9;
+    background-color: #f6f7fe;
+    color: #333333;
+
+    min-height: 20px;
+    padding: 19px;
     margin-bottom: 20px;
+    border: 1px solid #d3d5d9;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 
     height: 108px;
     cursor: pointer;
     font-size: 12px;
     position: relative;
     overflow: hidden;
-    color: #666;
-    &:hover {
-      .card-panel-icon-wrapper {
-        color: #fff;
-      }
-      .icon-people {
-         background: #40c9c6;
-      }
-      .icon-message {
-        background: #36a3f7;
-      }
-      .icon-money {
-        background: #f4516c;
-      }
-      .icon-shoppingCard {
-        background: #34bfa3
-      }
+
+    .well-black {
+      color: #eeeeee;
+      background: #373b3e;
+      border-color: #303336;
     }
-    .icon-people {
-      color: #40c9c6;
-    }
-    .icon-message {
-      color: #36a3f7;
-    }
-    .icon-money {
-      color: #f4516c;
-    }
-    .icon-shoppingCard {
-      color: #34bfa3
-    }
-    .card-panel-icon-wrapper {
-      float: left;
-      margin: 14px 0 0 14px;
-      padding: 16px;
-      transition: all 0.38s ease-out;
-      border-radius: 6px;
-    }
-    .card-panel-icon {
-      float: left;
-      font-size: 48px;
-    }
-    .card-panel-description {
-      float: right;
-      font-weight: bold;
-      margin: 26px;
-      margin-left: 0px;
-      .card-panel-text {
-        line-height: 18px;
-        color: rgba(0, 0, 0, 0.45);
-        font-size: 16px;
-        margin-bottom: 12px;
-      }
-      .card-panel-num {
-        font-size: 20px;
+
+  
+    h1, h2, h3, h4, h5, h6 {
+      display: block;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #c8cbd0;
+      line-height: 30px;
+      -webkit-box-shadow: 0 1px 0 #ffffff;
+      -moz-box-shadow: 0 1px 0 #ffffff;
+      box-shadow: 0 1px 0 #ffffff;
+      padding-bottom: 5px;
+      line-height: 30px;
+
+      &:first-child {
+        margin-top: -10px;
       }
     }
   }
