@@ -1,6 +1,6 @@
 <template>
   <div>
-  <el-row :gutter="20">
+  <el-row>
     <el-col :span="12">
       <div class="filter-container">
         <events_filter @filter="filterData"></events_filter>          
@@ -15,10 +15,10 @@
       <betslip :betslipData="betslip_data" @storeBetslip="storeBetslip"></betslip>
     </el-col>
   </el-row>
-  <el-row>
+  <el-row class="widget widget-simple widget-table">
     <el-table :data="events_table" @filter-change="onFilterChange"
       v-loading="listLoading" element-loading-text="Loading..." border fit
-      style="width: 100%">
+      class="table boo-table table-striped table-content table-hover dataTable">
 
       <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date">
         <template slot-scope="scope">
@@ -354,6 +354,10 @@ export default {
   border: 1px solid green !important;
   color: darkgreen !important;
   background: rgba(26, 99, 17, 0.5) !important;
+}
+
+.el-table__column-filter-trigger {
+  line-height: 18px; // fixing centering for table header
 }
 
 .el-table th,

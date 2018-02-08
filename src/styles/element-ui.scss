@@ -82,15 +82,21 @@
  }
 
  .el-table {
-  background-color: #eef6ee;
-  color: #5a5e66;
+  background-color: transparent;
   tr {
-    background-color: #eef6ee;
+    background-color: transparent;
   }
 }
 
 .el-input__inner {
-  background-color: #eef6ee;
-  border: 1px solid #dcdfe6;
-  color: #5a5e66;
+  background-color: #ffffff;
+  border: 1px solid;
+  border-color: #a8abba #b5b7c5 #c5c7d2;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2) inset;
+  -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2) inset;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2) inset;
+
 }
