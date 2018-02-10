@@ -9,9 +9,12 @@
 
       <lang-select class="international right-menu-item"></lang-select>
 
-      <el-dropdown class="avatar-container right-menu-item" trigger="click">
+      <el-dropdown class="avatar-container right-menu-item" trigger="click" v-if="name">
         <div class="avatar-wrapper">
-          <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'" v-if="avatar">
+          <span class="img-shadow" v-if="avatar">
+            <img class="media-object thumb" :src="avatar">
+          </span>
+          <img class="media-object thumb" src="/static/misc/avatar.svg" v-else/>
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -30,6 +33,11 @@
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
+      <router-link to="login" v-else>
+        <el-button class="btn btn-yellow btn-block" style="margin-right: 15px;">
+          Login
+        </el-button>
+      </router-link>
     </div>
   </el-menu>
 </template>
@@ -121,16 +129,15 @@ export default {
         cursor: pointer;
         margin-top: 5px;
         position: relative;
-        .user-avatar {
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+        .thumb {
+          width: 35px;
+          height: 35px;
         }
         .el-icon-caret-bottom {
           position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
+          right: -5px;
+          top: 26px;
+          font-size: 11px;
         }
       }
     }

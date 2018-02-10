@@ -1,6 +1,6 @@
 <template>
   <div class="widget well well-black">
-    <div class="widget-header header-small">
+    <div class="widget-header">
       <h4><i class="fontello-icon-popup-2"></i>Latest bets</h4>
     </div>
     <el-table :data="list" style="width: 100%;padding-top: 15px;">
@@ -50,3 +50,4 @@ export default {
   }
 }
 </script>
+

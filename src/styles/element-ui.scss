@@ -86,6 +86,9 @@
   tr {
     background-color: transparent;
   }
+  &::before, &::after{
+    background-color: transparent;
+  }
 }
 
 .el-input__inner {

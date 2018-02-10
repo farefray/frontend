@@ -2,24 +2,24 @@
   <div class="login-container">
     <el-form class="card-box login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
       <div class="title"><img :src="logo" alt="Logo" width="225px"></div>
-      <el-form-item prop="username">
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="Username" />
-      </el-form-item>
+      <div class="well well-black well-impressed">
+        <h3 class="no-margin-top"><i class="fontello-icon-user-4"></i>Sign in with your ID</h3>
+        <el-form-item>
+          <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="Username" />
+          <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
+            placeholder="Password" />
+        </el-form-item>
 
-      <el-form-item prop="password">
-        <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
-          placeholder="Password" />
-      </el-form-item>
-
-      <el-row :gutter="10">
-        <el-col :span="14" :offset="5">
-          <el-button-group>
-            <el-button type="success" style="width:90px" :loading="loading" @click.native.prevent="handleLogin">Login</el-button>
-            <el-button type="success" style="width:90px" @click='showRegistrationForm=true'>Register</el-button>
-          </el-button-group>
-        </el-col>
-      </el-row>
+        <el-row :gutter="10">
+          <el-col :span="14" :offset="5">
+            <button type="submit" class="btn btn-yellow btn-block btn-large" :loading="loading" @click.native.prevent="handleLogin">SIGN IN</button>
+          </el-col>
+        </el-row>
+      </div>
+      
       <br/>
+      <a href="#register" class="btn btn-block btn-yellow btn-large f12" @click='showRegistrationForm=true'>No account yet? Register now for free!</a>
+      
       <el-row :gutter="25">
         <el-col :span="6" :offset="18">
           <el-button type="text"><router-link to="/dashboard">Back</router-link></el-button>
@@ -130,14 +130,12 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   @import "src/styles/mixin.scss";
-  $bg:#eef6ee;
   $dark_gray:#889aa4;
   $light_gray:#eee;
 
   .login-container {
     @include relative;
     height: 100vh;
-    background-color: $bg;
     input:-webkit-autofill {
       box-shadow: inset 0 0 0 5px #1e314d;
       -webkit-text-fill-color: #476b3b;
