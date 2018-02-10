@@ -33,11 +33,13 @@
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <router-link to="login" v-else>
-        <el-button class="btn btn-yellow btn-block" style="margin-right: 15px;">
+      <div class="right-menu-item" v-else>
+        <router-link to="login">
+          <el-button class="btn btn-yellow btn-block" style="margin-right: 15px;">
           Login
-        </el-button>
-      </router-link>
+          </el-button>
+        </router-link>
+      </div>
     </div>
   </el-menu>
 </template>

@@ -2,19 +2,29 @@
   <div class="login-container">
     <el-form class="card-box login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
       <div class="title"><img :src="logo" alt="Logo" width="225px"></div>
-      <div class="well well-black well-impressed">
-        <h3 class="no-margin-top"><i class="fontello-icon-user-4"></i>Sign in with your ID</h3>
-        <el-form-item>
-          <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="Username" />
-          <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
-            placeholder="Password" />
-        </el-form-item>
+      <div class="well well-nice form-dark">
+        <div class="tab-content overflow">
+          <div class="tab-pane fade in active">
+          <h3 class="no-margin-top"><svg-icon icon-class="peoples" class-name="card-panel-icon" /> Authorization</h3>
+          <el-form-item>
+            <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="Username" />
+            <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
+              placeholder="Password" />
+          </el-form-item>
 
-        <el-row :gutter="10">
-          <el-col :span="14" :offset="5">
-            <button type="submit" class="btn btn-yellow btn-block btn-large" :loading="loading" @click.native.prevent="handleLogin">SIGN IN</button>
-          </el-col>
-        </el-row>
+          <el-row :gutter="10">
+            <el-col :span="14" :offset="5">
+              <el-button type="submit" class="btn btn-envato btn-block btn-large" :loading="loading" @click.native.prevent="handleLogin">SIGN IN</el-button>
+            </el-col>
+          </el-row>
+          <hr class="margin-xm">
+          <el-row>
+            <el-col :offset="18" :span="6">
+              <a href="/dashboard" class="link pull-right" data-toggle="tab">Return</a>
+            </el-col>
+          </el-row>
+          </div>
+        </div>
       </div>
       
       <br/>
@@ -22,7 +32,7 @@
       
       <el-row :gutter="25">
         <el-col :span="6" :offset="18">
-          <el-button type="text"><router-link to="/dashboard">Back</router-link></el-button>
+          
         </el-col>
       </el-row>
       <el-row>
@@ -32,7 +42,7 @@
       </el-row>
     </el-form>
 
-    <el-dialog width="30%" title="Registration" :visible.sync="showRegistrationForm">
+    <el-dialog width="30%" title="Registration" :visible.sync="showRegistrationForm" class="modal hide fade in">
       <register @registered="registered"></register>
     </el-dialog>
 
