@@ -137,7 +137,4 @@
   .betslip {
     margin: 0px 15px;
   }
-  sup.el-badge__content {
-    background-color: #3e5f33;
-  }
 </style>
