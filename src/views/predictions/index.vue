@@ -10,90 +10,63 @@
       <el-button class="filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit" disabled="disabled">
         Add my own event
       </el-button>
+    </el-col>   
+  </el-row>
+  <el-row>
+    <el-col :span="16" class="widget widget-simple widget-table">
+      <el-table :data="events_table" @filter-change="onFilterChange"
+        v-loading="listLoading" element-loading-text="Loading..." border fit
+        class="table boo-table table-striped table-content table-hover dataTable">
+
+        <el-table-column align="center" label="DATE (UTC)" prop="date" column-key="date">
+          <template slot-scope="scope">
+            <span><strong>{{(parseInt(+scope.row.date / 1000)) | moment("DD.MM kk:mm")}}</strong></span><br/>
+            <span>({{(parseInt(+scope.row.date / 1000)) | moment("from")}})</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="Event" prop="game" column-key="game"
+                        :filters="[
+                            { text: 'Dota 2', value: 'Dota 2' },
+                            { text: 'LoL', value: 'LoL' },
+                            { text: 'Overwatch', value: 'Overwatch' },
+                            { text: 'Counter-Strike', value: 'Counter-Strike' }
+                        ]"
+                        :filter-method="filterGameType"
+                        filter-placement="bottom-end">
+          <template slot-scope="scope">
+            <svg-icon :icon-class="scope.row.game" width="24px" close-transition/>
+            <br/>
+            <span @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="Side A" class-name="event">
+          <template slot-scope="scope">
+            <div @click="placeBetToBetslip(scope.row, 'odds_1')">
+            <span><img :src="getFlagUrl(scope.row.team_A.flag)" width="22px"></span>
+            <span>{{scope.row.team_A.name}}</span> <br/>
+            <el-tag :type="scope.row.odds_1 | oddsFilter" v-if="scope.row.odds_1">{{scope.row.percent_odds_1}}%</el-tag>
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column align="center" label="Side B" class-name="event">
+          <template slot-scope="scope">
+            <div @click="placeBetToBetslip(scope.row, 'odds_2')">
+            <span> <img :src="getFlagUrl(scope.row.team_B.flag)" width="22px"></span>
+            <span>{{scope.row.team_B.name}}</span> <br/>
+            <el-tag :type="scope.row.odds_2 | oddsFilter" v-if="scope.row.odds_2">{{scope.row.percent_odds_2}}%</el-tag>
+            </div>
+          </template>
+        </el-table-column>
+
+      </el-table>
     </el-col>
-    <el-col :span="4" :offset="4">
+    <el-col :span="8">
       <betslip :betslipData="betslip_data" @storeBetslip="storeBetslip"></betslip>
     </el-col>
   </el-row>
-  <el-row class="widget widget-simple widget-table">
-    <el-table :data="events_table" @filter-change="onFilterChange"
-      v-loading="listLoading" element-loading-text="Loading..." border fit
-      class="table boo-table table-striped table-content table-hover dataTable">
-
-      <el-table-column width="150" align="center" label="DATE (UTC)" prop="date" column-key="date">
-        <template slot-scope="scope">
-          <span><strong>{{(parseInt(+scope.row.date / 1000)) | moment("DD.MM kk:mm")}}</strong></span><br/>
-          <span>({{(parseInt(+scope.row.date / 1000)) | moment("from")}})</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="175px" label="Event" prop="game" column-key="game"
-                      :filters="[
-                          { text: 'Dota 2', value: 'Dota 2' },
-                          { text: 'LoL', value: 'LoL' },
-                          { text: 'Overwatch', value: 'Overwatch' },
-                          { text: 'Counter-Strike', value: 'Counter-Strike' }
-                      ]"
-                      :filter-method="filterGameType"
-                      filter-placement="bottom-end">
-        <template slot-scope="scope">
-          <img :src="logos[scope.row.game]" width="24px" close-transition v-if="logos[scope.row.game]">
-          <span v-else>[{{scope.row.game}}] </span>
-          <br/>
-          <span @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="240px" align="center" label="Participant">
-        <template slot-scope="scope">
-          <span><img :src="getFlagUrl(scope.row.team_A.flag)" width="22px"></span>
-          <span>{{scope.row.team_A.name}}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.odds_1 | oddsFilter" v-if="scope.row.odds_1">{{scope.row.percent_odds_1}}%</el-tag>
-          <el-tag v-else>?</el-tag>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="240px" align="center" label="Participant">
-        <template slot-scope="scope">
-          <span> <img :src="getFlagUrl(scope.row.team_B.flag)" width="22px"></span>
-          <span>{{scope.row.team_B.name}}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="100px" v-if='showOdds' align="center" label="Chance">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.odds_2 | oddsFilter" v-if="scope.row.odds_2">{{scope.row.percent_odds_2}}%</el-tag>
-          <el-tag v-else>?</el-tag>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="Operation">
-        <template slot-scope="scope">
-          <el-button v-if="isAfter(scope.row.date)" type="success"
-                    @click="openDialog(C.DIALOG_PREDICT, scope.row)" disabled>Predict
-
-          </el-button>
-          <el-button v-if="isBefore(scope.row.date)"
-                    @click="openDialog(C.DIALOG_STORE, scope.row)">Store Bet
-
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-  </el-row>
-
-  <el-dialog title="Bet details" :visible.sync="instabetFormVisible">
-   <betslipParams @updateBetAmount="updateBetAmount" @updateBetResult="updateBetResult"></betslipParams>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="instabetFormVisible = false">Cancel</el-button>
-      <el-button type="primary" @click="storeInstaBet">Confirm</el-button>
-    </span>
-  </el-dialog>
 
   <div class="pagination-container">
     <el-pagination @current-change="paginateData" :page-size="listQuery.per_page" layout="total, prev, pager, next" :total="total">
@@ -101,7 +74,7 @@
   </div>
 
   <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%" top="9vh">
-    <event_form :temp_event="temp_event" :dialogStatus="dialogStatus" @close="formClose" @toBetSlip="toBetSlip"></event_form>
+    <event_form :temp_event="temp_event" :dialogStatus="dialogStatus" @close="formClose" @toBetSlip="placeBetToBetslip"></event_form>
   </el-dialog>
   </div>
 </template>
@@ -109,27 +82,19 @@
 <script>
 import { fetchEventsList } from "@/api/events";
 import { storePrediction } from '@/api/predictions'
-import waves from '@/directive/waves/index.js'
+import Event from "./model/event.js";
+import C from "./constants.js";
 import events_filter from "@/views/components/events_filter";
 import betslip from "./events/betslip.vue";
 import event_form from "./events/event_form.vue";
-import Event from "./model/event.js";
-import C from "./constants.js";
-import BetSlipHelper from './helpers/betslip.js';
+// import BetSlipHelper from './helpers/betslip.js';
 import betslipParams from "./components/betslip_params.vue";
 
-const moment = require("moment");
-
-import dota2_logo from "@/assets/icons/dota2.svg";
-import lol_logo from "@/assets/icons/lol.svg";
-import cs_go from "@/assets/icons/csgo.svg";
+// const moment = require("moment");
 
 export default {
   name: "events_table",
   components: { betslip, event_form, events_filter, betslipParams },
-  directives: {
-    waves
-  },
   data() {
     return {
       C: C,
@@ -137,11 +102,6 @@ export default {
       events_data: null,
       events_table: [],
       temp_event: new Event(),
-      logos: {
-        LoL: lol_logo,
-        "Dota 2": dota2_logo,
-        "Counter-Strike": cs_go
-      },
       total: undefined,
       listLoading: true,
       listQuery: {
@@ -158,12 +118,7 @@ export default {
         [C.DIALOG_EDIT]: "Edit",
         [C.DIALOG_CREATE]: "Store custom event",
         [C.DIALOG_STORE]: "Store bet"
-      },
-      showOdds: true,
-      instabetFormVisible: false,
-      instabetResult: false, // this shouldnt be here, should be somehow requested from betslipparams
-      instabetStake: 0, // this shouldnt be here, should be somehow requested from betslipparams
-      instabetCategories: []
+      }
     };
   },
   filters: {
@@ -182,6 +137,24 @@ export default {
     this.loadEvents();
   },
   methods: {
+    placeBetToBetslip(row, side) {
+      console.log(row);
+      console.log(side);
+      let event = new Event(row);
+      event.selected_odds = event[side]
+      event.selected_event = side
+            
+      // let operation = (moment(event.date).isAfter()) ? C.DIALOG_PREDICT : C.DIALOG_STORE; 
+
+      this.dialogFormVisible = false;
+      this.betslip_data.push(event);
+      this.$message({
+          title: "Bet was successfully added to bet slip!",
+          message: "Bet added",
+          type: "success",
+          duration: 2000
+        });
+    },
     filterData(filters) {
       // this comes with default predictions filters, so need to fill up with events data
       console.log(filters);
@@ -189,22 +162,6 @@ export default {
       Object.assign(this.listQuery, filters);
       console.log(this.listQuery);
       this.loadEvents();
-    },
-    setDialog(status) {
-      this.dialogStatus = status;
-    },
-    storeInstaBet() {
-      this.instabetFormVisible = false;
-      this.dialogFormVisible = false;
-      console.log(this.temp_event);
-      let betslipObj = new BetSlipHelper([this.temp_event], this.$store.state.user.id);
-      betslipObj.result = this.instabetResult;
-      betslipObj.bet_amount = this.instabetStake;
-      betslipObj.categories = this.instabetCategories;
-      betslipObj.update();
-      console.log(betslipObj);
-      this.storeBetslip(betslipObj.getData());
-      // this.storeBetslip(data);
     },
     storeBetslip(data) {
       console.log("prediction store");
@@ -229,17 +186,12 @@ export default {
       this.betslip_data = [];
     },
     getFlagUrl(link) {
+      // todo better way
       return "/static/flags/" + link + ".svg";
-    },
-    isAfter(str) {
-      return moment(str).isAfter();
-    },
-    isBefore(str) {
-      return moment(str).isBefore();
     },
     openDialog(status, row) {
       this.temp_event = new Event(row);
-      this.setDialog(status);
+      this.dialogStatus = status;
       this.dialogFormVisible = true;
     },
     onFilterChange(filters) {
@@ -273,36 +225,8 @@ export default {
     handleUpdate(row) {
       // Todo only update current events or what?
       this.temp_event = Object.assign({}, row);
-      this.setDialog("update");
+      this.dialogStatus = "update";
       this.dialogFormVisible = true;
-    },
-    updateBetResult(val) {
-      this.instabetResult = val;
-    },
-    updateBetAmount(val) {
-      this.instabetStake = val;
-    },
-    toBetSlip(event, instantBet = false) {
-      console.log("event submitted");
-            
-      console.log(this.betslip_data);
-
-      if (instantBet === true) {
-        console.log(this.temp_event);
-        console.log(event);
-        this.temp_event = event; // probably already === event
-        this.instabetFormVisible = true;        
-        return;
-      }
-
-      this.dialogFormVisible = false;
-      this.betslip_data.push(event);
-      this.$message({
-          title: "Bet was successfully added to bet slip!",
-          message: "Bet added",
-          type: "success",
-          duration: 2000
-        });
     },
     formClose(reload, event) {
       console.log("closing form after dialog was opened");
@@ -363,7 +287,20 @@ export default {
 .el-table th,
 .el-table td {
   padding: 5px 0;
-  font-size: 13px;
+  font-size: 13px; 
+}
+
+.event:hover {
+  cursor: pointer;
+  background:#dbba13 !important;
+  color: #ffffff;
+  text-shadow: none;
+  font-weight: bold;
+  
+  .el-tag {
+    background: #c6c7cb;
+    color: #3e5f33;
+  }
 }
 
 .el-table .cell {
@@ -393,6 +330,6 @@ el-dialog {
 }
 
 .el-pager li.active {
-  color: #f99008;
+  color: #dbba13;
 }
 </style>

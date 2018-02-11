@@ -203,6 +203,6 @@ export default {
   }
 
   .el-dialog__title {
-    color: #f99008 !important;
+    color: #dbba13 !important;
   }
 </style>

@@ -88,7 +88,7 @@
       <div v-else>
         <el-button type="default" @click="submitForm(true)" :disabled="temp_event[selected_event] == '1'">Add this event to bet slip</el-button>
         <el-button v-if="dialogStatus==C.DIALOG_STORE" type="primary"
-           @click="submitForm(true, true)" :disabled="temp_event[selected_event] == '1' || selected === undefined">Store bet</el-button>
+           @click="submitForm(true)" :disabled="temp_event[selected_event] == '1' || selected === undefined">Store bet</el-button>
       </div>
     </el-form-item>
   </el-form>
@@ -96,7 +96,7 @@
 
 <script>
   import { createCustomEvent } from '@/api/events'
-  import Event from '../model/event.js'
+  // import Event from '../model/event.js'
   import C from '../constants.js'
   import ElInput from "../../../../node_modules/element-ui/packages/input/src/input.vue"; // ??
   const moment = require('moment') // Move global if used a lot?
@@ -176,12 +176,10 @@
           cb(response);
         })
       },
-      submitForm(openBetslip, instantBet = false) {
-        // 4 cases: 
+      submitForm(openBetslip) {
+        // 32 cases: 
         // create new event(1), 
-        // add to bet slip event from list(2) or 
         // add to bet slip event which supposed to be created(3) or 
-        // store bet instantly(4)
         const self = this;
         if (openBetslip) {
           if (self.dialogStatus === C.DIALOG_CREATE) {
@@ -195,31 +193,9 @@
             return true
           }
 
-          // (2)
-          // Todo check if time is still okay for prediction or we should store event?
-          let event = new Event(self.temp_event)
-          event.selected_odds = self.temp_event[self.selected_event]
-          event.selected_event = self.selected_event
-
-          // process .ex, as its set in one field, so we need to pass it to one team
-          if (this.ex !== undefined) {
-            // TODO refactoring
-            switch (self.selected_event) {
-              case 'odds_1': {
-                event.team_A.ex = this.ex;
-                break;
-              }
-
-              case 'odds_2': {
-                event.team_B.ex = this.ex;
-                break;
-              }
-            }
-          }
-
           self.selected_event = undefined
           self.selected = undefined
-          self.$emit('toBetSlip', event, instantBet);
+          self.$emit('toBetSlip', event);
           return true
         }
 
