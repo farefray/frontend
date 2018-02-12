@@ -35,7 +35,7 @@
                         :filter-method="filterGameType"
                         filter-placement="bottom-end">
           <template slot-scope="scope">
-            <svg-icon :icon-class="scope.row.game" width="24px" close-transition/>
+            <svg-icon :icon-class="scope.row.game" w="36px" h="36px"/>
             <br/>
             <span @click="handleUpdate(scope.row)">{{scope.row.game_league}}</span>
           </template>
@@ -138,6 +138,7 @@ export default {
   },
   methods: {
     placeBetToBetslip(row, side) {
+      // Todo reject bets which are already in betslip
       console.log(row);
       console.log(side);
       let event = new Event(row);
@@ -163,7 +164,7 @@ export default {
       console.log(this.listQuery);
       this.loadEvents();
     },
-    storeBetslip(data) {
+    storeBetslip(data) {      
       console.log("prediction store");
       console.log('store bets')
       console.log(data)

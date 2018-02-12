@@ -2,14 +2,23 @@
   <div class="betslip widget widget-box widget-collapsible">
     <div class="widget-header clickable" data-toggle="collapse">
         <h4><small>Betslip</small> <el-badge :value="betslipData.length" class="item"/> </h4>
+        
     </div>
     <div class="widget-content in collapse" style="height: auto;" v-if="betslipData.length > 0">
         <div class="widget-body">
           <el-table :data="betslipData">
               <el-table-column width="100" label="Date" prop="date" column-key="date">
                 <template slot-scope="scope">
+                  <div>
                   {{(scope.row.date) | moment("DD.MM kk:mm")}}
-              </template>
+                  </div>
+                  <div>
+                    <el-autocomplete placeholder="Subbet" v-model="scope.row.ex"
+                           autoComplete="on"
+                           :fetch-suggestions="queryEventEx"
+                           @select="scope.row.selected_odds = 1;"></el-autocomplete>
+                  </div>
+                </template>
               </el-table-column>
               <el-table-column width="150" label="Participant">
                 <template slot-scope="scope">
@@ -22,6 +31,12 @@
                   <div v-if="scope.row.live && scope.row.selected_event === 'odds_1'">
                     [Live]
                   </div>
+
+                  <div v-if="scope.row.selected_event === 'odds_1'">
+                    <el-input-number size="mini" controls-position="right"
+                      v-model="scope.row.selected_odds" :min="1.05" :max="10" :step="0.05"></el-input-number>
+                  </div>
+                  
                 </template>
               </el-table-column>
               <el-table-column width="150" label="Participant">
@@ -35,14 +50,19 @@
                   <div v-if="scope.row.live && scope.row.selected_event === 'odds_2'">
                     [Live]
                   </div>
+
+                  <div v-if="scope.row.selected_event === 'odds_2'">
+                    <el-input-number size="mini" controls-position="right"
+                      v-model="scope.row.selected_odds" :min="1.05" :max="10" :step="0.05"></el-input-number>
+                  </div>
+
                 </template>
               </el-table-column>
               <el-table-column>
                 <template slot-scope="scope">
-                  <el-button
-                    size="mini"
-                    type="danger"
-                    @click="handleDelete(scope.$index, scope.row)">Remove</el-button>
+                  <div @click="handleDelete(scope.$index, scope.row)">
+                  <svg-icon icon-class="cross" style='cursor:pointer;' w="12px" close-transition/>
+                  </div>
                 </template>
               </el-table-column>
           </el-table>
@@ -60,7 +80,7 @@
           <br />
         </div>
         <div class="widget-footer box-shadow-in">
-            <a class="btn btn-success" href="javascript:void(0);" @click="storeBetslip">Store»</a> 
+          <a class="btn btn-envato" href="javascript:void(0);" @click="storeBetslip">Store»</a> 
         </div>
     </div>
   </div>
@@ -84,18 +104,24 @@
       };
     },    
     methods: {
+      queryEventEx(queryString, cb) { // TODO
+        console.log(queryString)
+        cb([
+          { "value": "Wins at least 1 map", "data": "plus1" },
+          { "value": "Wins map 1", "data": "map1" },
+          { "value": "Wins map 2", "data": "map2" }
+        ]);
+      },
       handleDelete(index, row) {
+        console.log('delete');
         this.betslipData.splice(index, 1);
 
-        if (!this.betslipData.length) {
-          this.active = false;
+        if(this.betslipData.length) {
+          this.updateBetslip();
         }
-
-        this.updateBetslip();
       },
       storeBetslip() {
         this.$emit('storeBetslip', this.betslipObj.getData())
-        this.active = false;
       },
       updateBetResult(val) {
         console.log('bet result:' + val)
