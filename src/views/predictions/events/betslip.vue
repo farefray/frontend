@@ -6,21 +6,17 @@
     </div>
     <div class="widget-content in collapse" style="height: auto;" v-if="betslipData.length > 0">
         <div class="widget-body">
-          <el-table :data="betslipData">
+          <el-table :data="betslipData" :summary-method="getSummaries">
               <el-table-column width="100" label="Date" prop="date" column-key="date">
                 <template slot-scope="scope">
-                  <div>
-                  {{(scope.row.date) | moment("DD.MM kk:mm")}}
-                  </div>
-                  <div>
-                    <el-autocomplete placeholder="Subbet" v-model="scope.row.ex"
-                           autoComplete="on"
-                           :fetch-suggestions="queryEventEx"
-                           @select="scope.row.selected_odds = 1;"></el-autocomplete>
-                  </div>
+                   <el-autocomplete size="mini"
+                    placeholder="Subbet" v-model="scope.row.ex"
+                    autoComplete="on"
+                    :fetch-suggestions="queryEventEx"
+                    @select="scope.row.selected_odds = 1;"></el-autocomplete>                  
                 </template>
               </el-table-column>
-              <el-table-column width="150" label="Participant">
+              <el-table-column width="150" label="Side A">
                 <template slot-scope="scope">
                   <span v-bind:class="{ bold: scope.row.selected_event === 'odds_1' }">
                     {{scope.row.team_A.name}}
@@ -34,12 +30,12 @@
 
                   <div v-if="scope.row.selected_event === 'odds_1'">
                     <el-input-number size="mini" controls-position="right"
-                      v-model="scope.row.selected_odds" :min="1.05" :max="10" :step="0.05"></el-input-number>
+                      v-model="scope.row.selected_odds" :min="1" :max="10" :step="0.05"></el-input-number>
                   </div>
                   
                 </template>
               </el-table-column>
-              <el-table-column width="150" label="Participant">
+              <el-table-column width="150" label="Side B">
                 <template slot-scope="scope">
                   <span v-bind:class="{ bold: scope.row.selected_event === 'odds_2' }">
                     {{scope.row.team_B.name}}
@@ -53,7 +49,7 @@
 
                   <div v-if="scope.row.selected_event === 'odds_2'">
                     <el-input-number size="mini" controls-position="right"
-                      v-model="scope.row.selected_odds" :min="1.05" :max="10" :step="0.05"></el-input-number>
+                      v-model="scope.row.selected_odds" :min="1" :max="10" :step="0.05"></el-input-number>
                   </div>
 
                 </template>
@@ -116,7 +112,7 @@
         console.log('delete');
         this.betslipData.splice(index, 1);
 
-        if(this.betslipData.length) {
+        if (this.betslipData.length) {
           this.updateBetslip();
         }
       },
@@ -140,6 +136,31 @@
       },
       updateBetslip() {
         this.betslipObj.update();
+      },
+      getSummaries(param) {
+        const { columns, data } = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = 'Total Cost';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = '$ ' + values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+          } else {
+            sums[index] = 'N/A';
+          }
+        });
+
+        return sums;
       }
     },
     watch: {
