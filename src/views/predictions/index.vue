@@ -63,8 +63,24 @@
 
       </el-table>
     </el-col>
-    <el-col :span="8">
+    <el-col :span="8" v-if="token">
       <betslip :betslipData="betslip_data" @storeBetslip="storeBetslip"></betslip>
+    </el-col>
+    <el-col :span="8" v-else>
+      <el-row>
+        <el-col>
+          <div class="betslip widget widget-box widget-collapsible">
+          <div class="widget-header clickable" data-toggle="collapse">
+              <h4><small>Betslip</small></h4>
+              <router-link to="login">
+              <el-button class="btn btn-yellow btn-block">
+              Login
+              </el-button>
+              </router-link>
+          </div>
+          </div>
+        </el-col>
+      </el-row>
     </el-col>
   </el-row>
 
@@ -80,6 +96,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { fetchEventsList } from "@/api/events";
 import { storePrediction } from '@/api/predictions'
 import Event from "./model/event.js";
@@ -120,6 +137,11 @@ export default {
         [C.DIALOG_STORE]: "Store bet"
       }
     };
+  },
+  computed: {
+    ...mapGetters([
+      'token' // maybe we need some better way to check if user is logged in?
+    ])
   },
   filters: {
     oddsFilter(odds) {

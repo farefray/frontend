@@ -9,7 +9,7 @@
 
       <lang-select class="international right-menu-item"></lang-select>
 
-      <el-dropdown class="avatar-container right-menu-item" trigger="click" v-if="name">
+      <el-dropdown class="avatar-container right-menu-item" trigger="click" v-if="token">
         <div class="avatar-wrapper">
           <span class="img-shadow" v-if="avatar">
             <img class="media-object thumb" :src="avatar">
@@ -61,7 +61,7 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'name',
+      'token',
       'avatar'
     ])
   },
