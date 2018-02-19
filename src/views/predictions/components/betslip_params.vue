@@ -18,10 +18,10 @@
             </el-col>
         </el-row>
         <el-row :gutter="10">
-            <el-col>
+            <el-col :span="10">
                 Stake:
             </el-col>
-            <el-col>
+            <el-col :span="10">
                 <el-input-number v-model="bet_amount" :min="0" :step="50" @change="updateBetAmount"></el-input-number>
             </el-col>
         </el-row>
