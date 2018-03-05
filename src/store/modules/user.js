@@ -130,14 +130,6 @@ const user = {
           commit('SET_ID', data.id)
           commit('SET_USERNAME', data.username)
           commit('SET_ROLES', roles);
-
-          this.dispatch('GenerateRoutes', {
-            roles
-          }).then((routers) => {
-            console.log('afgterlogin')
-            console.log(routers)
-          })
-
           return resolve(true)
         }).catch((error) => {
           console.log(error);

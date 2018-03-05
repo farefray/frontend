@@ -171,12 +171,6 @@ export default {
 
       this.dialogFormVisible = false;
       this.betslip_data.push(event);
-      this.$message({
-          title: "Bet was successfully added to bet slip!",
-          message: "Bet added",
-          type: "success",
-          duration: 2000
-        });
     },
     filterData(filters) {
       // this comes with default predictions filters, so need to fill up with events data

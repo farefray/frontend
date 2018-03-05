@@ -106,13 +106,15 @@ export default {
             console.log(response);
             console.log('back from login store to views login')
             _this.loading = false;
-            _this.$message({
+            /* _this.$message({
               message: 'Welcome!',
               type: 'success',
               duration: 5 * 1000
-            });
+            }); */
 
-            _this.$router.push('/')
+            _this.$router.go({
+              path: "/"
+            })
           }).catch((err) => {
               console.log(err);
               _this.loading = false;
