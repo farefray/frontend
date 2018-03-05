@@ -11,7 +11,13 @@ export function fetchEventsList(params) {
       return false
     }
 
-    return response.data
+    return Promise.resolve(response.data)
+  }).catch((error) => {
+      console.log(error)
+      // validation rules failed response.data.data.name == ValidationError
+      // let errorMessage = error;
+
+      return Promise.reject(error);
   })
 }
 
@@ -23,10 +29,10 @@ export function createCustomEvent(event) {
     console.log('created event')
     console.log(response);
     if (!response || response.status !== 200) {
-      return false
+      return Promise.reject('Something went wrong');
     }
 
-    return response.data
+    return Promise.resolve(response.data)
   })
 }
 

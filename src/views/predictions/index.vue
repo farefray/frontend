@@ -7,7 +7,7 @@
       </div>
     </el-col>
     <el-col :span="4">
-      <el-button class="filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit" disabled="disabled">
+      <el-button class="filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit">
         Add my own event
       </el-button>
     </el-col>   
@@ -89,7 +89,7 @@
     </el-pagination>
   </div>
 
-  <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%" top="9vh">
+  <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%" top="9vh" class="modal hide fade in">
     <event_form :temp_event="temp_event" :dialogStatus="dialogStatus" @close="formClose" @toBetSlip="placeBetToBetslip"></event_form>
   </el-dialog>
   </div>
@@ -131,7 +131,6 @@ export default {
       dialogFormVisible: false,
       dialogStatus: "",
       textMap: {
-        [C.DIALOG_PREDICT]: "Do a prediction",
         [C.DIALOG_EDIT]: "Edit",
         [C.DIALOG_CREATE]: "Store custom event",
         [C.DIALOG_STORE]: "Store bet"
@@ -167,8 +166,6 @@ export default {
       event.selected_odds = event[side]
       event.selected_event = side
             
-      // let operation = (moment(event.date).isAfter()) ? C.DIALOG_PREDICT : C.DIALOG_STORE; 
-
       this.dialogFormVisible = false;
       this.betslip_data.push(event);
     },
@@ -245,25 +242,9 @@ export default {
       this.dialogStatus = "update";
       this.dialogFormVisible = true;
     },
-    formClose(reload, event) {
+    formClose(event) {
       console.log("closing form after dialog was opened");
-      if (reload === true) {
-        console.log('reload after formClose');
-        this.loadEvents();
-      }
-
-      if (event !== undefined) {
-        // its newly created event, re-open prediction dialog
-        this.dialogFormVisible = false;
-
-        let self = this;
-        setTimeout(() => {
-          // TODO decide its predict or store
-          self.openDialog(C.DIALOG_STORE, event);
-        }, 150);
-
-        return true;
-      }
+      this.loadEvents();
 
       this.dialogFormVisible = false;
       this.temp_event = new Event();

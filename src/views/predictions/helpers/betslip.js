@@ -33,6 +33,7 @@ export default class BetSlip {
 
     constructor(data = [], user_id = 0) {
         console.log('creating betlip')
+        // (moment(event.date).isAfter()) ? C.DIALOG_PREDICT : C.DIALOG_STORE; 
         console.log(data);
         if (!data.length) {
             data = [];

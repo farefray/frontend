@@ -1,6 +1,6 @@
 <template>
   <el-form class="small-space" :model="temp_event" label-position="top" label-width="120px"
-           size="mini">
+           size="mini" :loading="loading">
 
     <el-form-item label="Event details">
       <el-row :gutter="20">
@@ -60,7 +60,7 @@
       </el-row>
     </el-form-item>
 
-    <el-form-item label="Bet details" v-if="dialogStatus !== C.DIALOG_CREATE">
+    <el-form-item label="Bet details">
       <el-row :gutter="20">
         <el-col>
           <el-autocomplete placeholder="Bet details" v-model="ex"
@@ -71,25 +71,10 @@
       </el-row>
     </el-form-item>
 
-    <el-form-item label="Verified" v-if="dialogStatus == C.DIALOG_PREDICT">
-      <el-switch v-model="temp_event.verified" disabled>
-      </el-switch>
-    </el-form-item>
-
-    <el-form-item label="Live event" v-if="dialogStatus !== C.DIALOG_PREDICT">
-      <el-switch v-model="temp_event.live">
-      </el-switch>
-    </el-form-item>
-
     <el-form-item>
       <el-button @click="cancel()">Cancel</el-button>
       <el-button v-if="dialogStatus==C.DIALOG_CREATE" type="primary" @click="submitForm(false)">List event</el-button>
-      <el-button v-if="dialogStatus==C.DIALOG_UPDATE" @click="update">Update</el-button>
-      <div v-else>
-        <el-button type="default" @click="submitForm(true)" :disabled="temp_event[selected_event] == '1'">Add this event to bet slip</el-button>
-        <el-button v-if="dialogStatus==C.DIALOG_STORE" type="primary"
-           @click="submitForm(true)" :disabled="temp_event[selected_event] == '1' || selected === undefined">Store bet</el-button>
-      </div>
+      <el-button v-else @click="update">Update</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -108,6 +93,7 @@
     props: ['temp_event', 'dialogStatus'],
     data() {
       return {
+        loading: false, // TODO
         event_types: [
           { "value": "Dota 2", "data": "dota_2" },
           { "value": "CS:GO", "data": "cs_go" },
@@ -164,52 +150,35 @@
         this.selected = undefined
         this.$emit('close');
       },
-      createEvent(cb) { // TODO
+      submitForm() {
+        // creating new event which is custom for this person
+        this.loading = true;
+
         let event = _.cloneDeep(this.temp_event)
         event._id = parseInt(Math.random() * 1000) + parseInt(Math.random() * 1000) // TODO
         event.author = 0 // TODO
         event.date = moment(this.temp_event.date).valueOf()
 
-        console.log('create event')
         createCustomEvent(event).then(response => {
-          console.log('create event - then')
-          cb(response);
-        })
-      },
-      submitForm(openBetslip) {
-        // 32 cases: 
-        // create new event(1), 
-        // add to bet slip event which supposed to be created(3) or 
-        const self = this;
-        if (openBetslip) {
-          if (self.dialogStatus === C.DIALOG_CREATE) {
-            // Store prediction and add to bet slip (3)
+          this.loading = false;
+          
+          if (response.message) {
+            // Error message. Todo promist reject
+            this.$message({
+                message: response.message,
+                type: 'error',
+                duration: 5 * 1000
+            })
 
-            self.createEvent(function(event) {
-              console.log('create event callback')
-              self.$emit('close', false, event);
-            });
-
-            return true
+            return;
           }
 
-          self.selected_event = undefined
-          self.selected = undefined
-          self.$emit('toBetSlip', event);
-          return true
-        }
-
-        // (1)
-        this.createEvent(function() {
-          self.$notify({
-            title: 'Success',
-            message: 'Success!',
-            type: 'success',
-            duration: 2000
-          })
-
-          self.$emit('close', true);
+          console.log(response);
+          console.log('create event - then')
+          this.$emit('close', event);
         });
+
+        return true
       }
     },
     watch: {
@@ -217,5 +186,69 @@
   };
 </script>
 
-<style scoped>
+<style>
+  .el-dialog {
+    border-radius: 4px;
+  }
+
+  .el-dialog__header {
+    color: #f1f1f1;
+    padding: 5px 15px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.8);
+    background-color: #3b3e4a;
+    background-image: -moz-linear-gradient(top, #464a56, #2b2d38);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#464a56), to(#2b2d38));
+    background-image: -webkit-linear-gradient(top, #464a56, #2b2d38);
+    background-image: -o-linear-gradient(top, #464a56, #2b2d38);
+    background-image: linear-gradient(to bottom, #464a56, #2b2d38);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff464a56', endColorstr='#ff2b2d38', GradientType=0);
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    border-radius: 4px 4px 0 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .el-dialog__title {
+    font-weight: bold;
+    color: #f5f6f9;
+    padding: 5px 15px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.8);
+    background-color: #3b3e4a;
+    background-image: -moz-linear-gradient(top, #464a56, #2b2d38);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#464a56), to(#2b2d38));
+    background-image: -webkit-linear-gradient(top, #464a56, #2b2d38);
+    background-image: -o-linear-gradient(top, #464a56, #2b2d38);
+    background-image: linear-gradient(to bottom, #464a56, #2b2d38);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff464a56', endColorstr='#ff2b2d38', GradientType=0);
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .el-dialog__headerbtn {
+    color: #ffffff;
+    opacity: 0.6;
+    filter: alpha(opacity=60);
+    text-shadow: 0 -1px 0 #000000;
+    margin-top: -7px;
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    -webkit-appearance: none;
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 20px;
+  }
+
+  .el-dialog__body {
+    padding: 5px 15px;
+  }
+
+  .el-form-item--medium .el-form-item__content, .el-form-item--medium .el-form-item__label {
+    line-height: 16px;
+  }
 </style>
