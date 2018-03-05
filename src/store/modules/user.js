@@ -123,12 +123,21 @@ const user = {
           }
 
           const data = response.data
+          const roles = data.roles;
           setToken(response.data.token)
           commit('SET_TOKEN', data.token)
           commit('SET_EMAIL', data.email)
           commit('SET_ID', data.id)
           commit('SET_USERNAME', data.username)
-          commit('SET_ROLES', data.roles)
+          commit('SET_ROLES', roles);
+
+          this.dispatch('GenerateRoutes', {
+            roles
+          }).then((routers) => {
+            console.log('afgterlogin')
+            console.log(routers)
+          })
+
           return resolve(true)
         }).catch((error) => {
           console.log(error);
