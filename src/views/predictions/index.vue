@@ -20,6 +20,7 @@
 
         <el-table-column align="center" label="DATE (UTC)" prop="date" column-key="date">
           <template slot-scope="scope">
+            <span v-if="scope.row.source[0] == 'manual'"><el-tag type="primary">private</el-tag></span>
             <span><strong>{{(parseInt(+scope.row.date / 1000)) | moment("DD.MM kk:mm")}}</strong></span><br/>
             <span>({{(parseInt(+scope.row.date / 1000)) | moment("from")}})</span>
           </template>
@@ -30,7 +31,8 @@
                             { text: 'Dota 2', value: 'Dota 2' },
                             { text: 'LoL', value: 'LoL' },
                             { text: 'Overwatch', value: 'Overwatch' },
-                            { text: 'Counter-Strike', value: 'Counter-Strike' }
+                            { text: 'Counter-Strike', value: 'Counter-Strike' },
+                            { text: 'PUBG', value: 'PUBG' }
                         ]"
                         :filter-method="filterGameType"
                         filter-placement="bottom-end">
@@ -325,6 +327,16 @@ el-dialog {
 .el-tag--gray {
   background-color: rgba(188, 177, 180, 0.08);
   color: #bcb1b4;
+}
+
+.el-tag--primary {
+  color: #f5f6f9;
+  background-color: #f99008;
+  text-shadow: none;
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  font-weight: bold;
 }
 
 .el-pager li.active {

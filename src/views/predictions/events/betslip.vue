@@ -8,6 +8,7 @@
         <div class="widget-body">
           <template v-for="(prediction, index) in betslipData">
             <div class="statistic-group" v-bind:key="index">
+              <span><el-tag type="game-tag">{{prediction.game}}</el-tag></span>
               <h3 class="statistic-values">
                 <span v-bind:class="{ winner: prediction.selected_event === 'odds_1' }">
                 {{prediction.team_A.name}}
@@ -16,11 +17,9 @@
                 <span v-bind:class="{ winner: prediction.selected_event === 'odds_2' }">
                   {{prediction.team_B.name}}
                 </span>
-                <el-switch v-model="prediction.live"></el-switch>
+                <br/>
+                <el-switch v-model="prediction.live" active-text="[Live bet]" inactive-text="[Default bet]" active-color="#476b3b" inactive-color="#909092"></el-switch>
               </h3>
-              <div v-if="prediction.live">
-                [Live bet]
-              </div>
               <hr class="margin-mm">
                 <el-row>
                   <el-col :span="10" :offset="1">
@@ -29,6 +28,7 @@
                       v-model="prediction.selected_odds" :min="1" :max="10" :step="0.05"></el-input-number>
                   </div>
                   <div v-if="prediction.selected_event === 'odds_2'">
+                    Odds:
                     <el-input-number size="mini" controls-position="right"
                       v-model="prediction.selected_odds" :min="1" :max="10" :step="0.05"></el-input-number>
                   </div>
@@ -52,8 +52,12 @@
                   </div>
                   </el-col>
                 </el-row>
-                <ul class="btn-toolbar toolbar-inline margin-00">
-                  <li><a class="btn btn-small btn-yellow txt-r" @click="handleDelete(index, prediction)"><svg-icon icon-class="cross" style='cursor:pointer;' w="12px" close-transition/></a></li>
+                <ul class="btn-toolbar toolbar-inline margin-00" style="background: #fafafa;">
+                  <li>
+                    <a class="btn btn-small btn-yellow txt-r" @click="handleDelete(index, prediction)">
+                      <svg-icon icon-class="cross" style='cursor:pointer;' w="12px" close-transition/>
+                    </a>
+                  </li>
                 </ul>
               </div>              
             </div>
@@ -180,5 +184,15 @@ export default {
     top: 3px;
     right: 15px;
   }
+}
+
+.el-tag--game-tag {
+  color: #f5f6f9;
+  background-color: #c5c6ca;
+  text-shadow: none;
+  position: absolute;
+  left: 10px;
+  top: 6px;
+  font-weight: bold;
 }
 </style>
