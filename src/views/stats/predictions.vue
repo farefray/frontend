@@ -152,7 +152,7 @@
         dialogVisible: false,
         current_prediction: null,
         editFormVisible: false,
-        showChart: true,
+        showChart: false,
         editForm: {
           temp_event: new Event(),
           dialogStatus: ""

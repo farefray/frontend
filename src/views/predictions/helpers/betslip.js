@@ -9,6 +9,7 @@ export default class BetSlip {
     user_id = 0;
     final_odds = 1;
     profit = 0;
+    date = null; // Computed date of bet. Based on actual date of events in betslip
     game = {
         type: String,
         trim: true,
@@ -60,6 +61,16 @@ export default class BetSlip {
         this.profit = (this.final_odds * this.bet_amount - this.bet_amount).toFixed(2);
         console.log(this.profit);
 
+        let latest_date;
+        this.data.forEach((bet) => {
+            console.log(bet.date);
+            if (!latest_date || bet.date > latest_date) { // is bet finished. TODO check for cheats here
+                latest_date = bet.date;
+            }
+        });
+
+        this.date = latest_date;
+        console.log('latest date: ' + latest_date);
         console.log(this);
         return true;
     }
@@ -68,7 +79,7 @@ export default class BetSlip {
         // TODO: set date of prediction to a date of last event in betslip
 
         let data = {
-            date: Math.round(new Date() / 1000),
+            date: this.date / 1000,
             final_odds: this.final_odds,
             selected_events: this.data,
             stake: this.bet_amount,
