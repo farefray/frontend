@@ -54,7 +54,7 @@
                 </el-row>
                 <ul class="btn-toolbar toolbar-inline margin-00" style="background: #fafafa;">
                   <li>
-                    <a class="btn btn-small btn-yellow txt-r" @click="handleDelete(index, prediction)">
+                    <a class="txt-r" @click="handleDelete(index, prediction)">
                       <svg-icon icon-class="cross" style='cursor:pointer;' w="12px" close-transition/>
                     </a>
                   </li>
@@ -66,7 +66,47 @@
           <div class="well well-nice well-small">
             <div class="well well-nice well-impressed margin-0m">
                 <h5 class="simple-header">Bet info</h5>
-                <betslipParams @updateBetAmount="updateBetAmount" @updateBetResult="updateBetResult" @updateCategories="updateCategories"></betslipParams>
+                <div>
+                  <el-row :gutter="0">
+                      <el-col :span="10">
+                          Stake:
+                      </el-col>
+                      <el-col :span="10">
+                          <el-input-number v-model="bet_amount" :min="0" :step="1" @change="updateBetAmount"></el-input-number>
+                      </el-col>
+                  </el-row>
+                  <br/>
+                  <el-row :gutter="0">
+                      <el-col :span="10">
+                          <el-switch
+                              v-model="betResult"
+                              activeColor="#13ce66"
+                              inactiveColor="#ff4949"
+                              activeText="Won"
+                              activeValue="true"
+                              inactiveText="Lost"
+                              inactiveValue="false"
+                              @change="updateBetResult">
+                          </el-switch>
+                      </el-col>
+                      <el-col :span="12">
+                          <el-select
+                              v-model="categories"
+                              multiple
+                              filterable
+                              allow-create
+                              placeholder="Choose tags for your bet"
+                              @change="updateCategories">
+                              <el-option
+                                  v-for="item in default_tags"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                              </el-option>
+                          </el-select>
+                      </el-col>
+                  </el-row>
+                </div>
             </div>
             <p class="help-block">
               <br />
@@ -99,15 +139,24 @@
 <script>
 // const moment = require('moment')
 import BetSlip from "../helpers/betslip";
-import betslipParams from "../components/betslip_params.vue";
 
 export default {
   name: "betslip",
   props: ["betslipData"],
-  components: { betslipParams },
+  components: {},
   data() {
     return {
-      betslipObj: null
+      betslipObj: null,
+      bet_amount: 0, // actually not used, but v-model is required somehow :)
+      betResult: false, // actually not used, but v-model is required somehow :)
+      categories: [], // actually not used, but v-model is required somehow :)
+      default_tags: [{
+        value: 'Parimatch',
+        label: 'Parimatch'
+      }, {
+        value: 'Pinnacle',
+        label: 'Pinnacle'
+      }] // ToDo
     };
   },
   methods: {
@@ -125,7 +174,7 @@ export default {
       this.betslipData.splice(index, 1);
 
       if (this.betslipData.length) {
-        this.updateBetslip();
+        this.betslipObj.update();
       }
     },
     storeBetslip() {
@@ -134,19 +183,17 @@ export default {
     updateBetResult(val) {
       console.log("bet result:" + val);
       this.betslipObj.result = val;
-      this.updateBetslip();
+      this.betslipObj.update();
     },
     updateCategories(val) {
       console.log(val);
+      console.log(this.categories);
       this.betslipObj.categories = val;
-      this.updateBetslip();
+      this.betslipObj.update();
     },
     updateBetAmount(val) {
       console.log("updateBetAmount:" + val);
       this.betslipObj.bet_amount = val;
-      this.updateBetslip();
-    },
-    updateBetslip() {
       this.betslipObj.update();
     }
   },
@@ -179,9 +226,9 @@ export default {
   color: #909092;
 }
 .btn-toolbar {
-  .btn {
+  .txt-r {
     position: absolute;
-    top: 3px;
+    top: 7px;
     right: 15px;
   }
 }
@@ -194,5 +241,22 @@ export default {
   left: 10px;
   top: 6px;
   font-weight: bold;
+}
+
+.help-block {
+  font-weight: bold;
+}
+
+.el-select {
+  .el-input {
+    input {
+      background-color: #ffffff;
+    }
+  }
+
+  input[type="text"] {
+    border: none; 
+    box-shadow: none;
+  }
 }
 </style>

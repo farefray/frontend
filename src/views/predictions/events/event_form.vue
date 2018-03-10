@@ -72,9 +72,9 @@
     </el-form-item>
 
     <el-form-item>
-      <el-button @click="cancel()">Cancel</el-button>
-      <el-button v-if="dialogStatus==C.DIALOG_CREATE" type="primary" @click="submitForm(false)">List event</el-button>
-      <el-button v-else @click="update">Update</el-button>
+      <el-button class="btn" @click="cancel()">Cancel</el-button>
+      <el-button class="btn btn-success" v-if="dialogStatus==C.DIALOG_CREATE" type="primary" @click="submitForm(false)">List event</el-button>
+      <el-button class="btn btn-success" v-else @click="update">Update</el-button>
     </el-form-item>
   </el-form>
 </template>

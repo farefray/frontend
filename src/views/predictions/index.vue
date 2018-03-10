@@ -7,7 +7,7 @@
       </div>
     </el-col>
     <el-col :span="4">
-      <el-button class="filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit">
+      <el-button class="btn btn-success filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit">
         Add my own event
       </el-button>
     </el-col>   
@@ -107,13 +107,11 @@ import events_filter from "@/views/components/events_filter";
 import betslip from "./events/betslip.vue";
 import event_form from "./events/event_form.vue";
 // import BetSlipHelper from './helpers/betslip.js';
-import betslipParams from "./components/betslip_params.vue";
-
 // const moment = require("moment");
 
 export default {
   name: "events_table",
-  components: { betslip, event_form, events_filter, betslipParams },
+  components: { betslip, event_form, events_filter },
   data() {
     return {
       C: C,
