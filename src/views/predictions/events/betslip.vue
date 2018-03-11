@@ -25,12 +25,12 @@
                   <el-col :span="10" :offset="1">
                   <div v-if="prediction.selected_event === 'odds_1'">
                     <el-input-number size="mini" controls-position="right"
-                      v-model="prediction.selected_odds" :min="1" :max="10" :step="0.05"></el-input-number>
+                      v-model="prediction.selected_odds" :min="1" :max="10" :step="0.05" @change="updateBetSlip"></el-input-number>
                   </div>
                   <div v-if="prediction.selected_event === 'odds_2'">
                     Odds:
                     <el-input-number size="mini" controls-position="right"
-                      v-model="prediction.selected_odds" :min="1" :max="10" :step="0.05"></el-input-number>
+                      v-model="prediction.selected_odds" :min="1" :max="10" :step="0.05" @change="updateBetSlip"></el-input-number>
                   </div>
                   </el-col>
                   <el-col :span="10">
@@ -195,6 +195,9 @@ export default {
       console.log("updateBetAmount:" + val);
       this.betslipObj.bet_amount = val;
       this.betslipObj.update();
+    },
+    updateBetSlip() {
+      this.betslipObj.update();
     }
   },
   watch: {
@@ -204,6 +207,8 @@ export default {
         console.log(val);
 
         this.betslipObj = new BetSlip(val, this.$store.state.user.id);
+        this.betslipObj.bet_amount = this.bet_amount;
+        this.betslipObj.update();
       },
       deep: true
     }

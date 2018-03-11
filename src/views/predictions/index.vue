@@ -97,6 +97,14 @@
   </div>
 </template>
 
+<comment>
+  Todo:
+    for already finished events, display winner in table and count this in betslip
+    double select(add to betslip click) should remove event from betslip
+    single select should highlight event
+    lost/won status mush highlight whole betslip
+</comment>
+
 <script>
 import { mapGetters } from 'vuex'
 import { fetchEventsList } from "@/api/events";

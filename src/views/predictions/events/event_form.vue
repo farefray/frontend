@@ -60,17 +60,6 @@
       </el-row>
     </el-form-item>
 
-    <el-form-item label="Bet details">
-      <el-row :gutter="20">
-        <el-col>
-          <el-autocomplete placeholder="Bet details" v-model="ex"
-                           autoComplete="on"
-                           :fetch-suggestions="queryEventEx"
-                           @select="handleExSelect"></el-autocomplete>
-        </el-col>
-      </el-row>
-    </el-form-item>
-
     <el-form-item>
       <el-button class="btn" @click="cancel()">Cancel</el-button>
       <el-button class="btn btn-success" v-if="dialogStatus==C.DIALOG_CREATE" type="primary" @click="submitForm(false)">List event</el-button>
@@ -101,8 +90,7 @@
         ], // TODO
         C: C,
         selected: undefined,
-        selected_event: undefined,
-        ex: undefined
+        selected_event: undefined
       };
     },
     mounted() {
@@ -128,18 +116,6 @@
         console.log(queryString) // autohelp?
         // call callback function to return suggestions
         cb(this.event_types);
-      },
-      queryEventEx(queryString, cb) { // TODO
-        console.log(queryString)
-        cb([
-          { "value": "Wins at least 1 map", "data": "plus1" },
-          { "value": "Wins map 1", "data": "map1" },
-          { "value": "Wins map 2", "data": "map2" }
-        ]);
-      },
-      handleExSelect(item) {
-        this.temp_event.odds_1 = 1;
-        this.temp_event.odds_2 = 1;
       },
       handleSelect(item) {
         // TODO when even type selected, fill events to autocomplete
