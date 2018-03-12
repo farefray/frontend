@@ -103,6 +103,14 @@
     double select(add to betslip click) should remove event from betslip
     single select should highlight event
     lost/won status mush highlight whole betslip
+    some kind of limit and csrf when adding custom events to avoid overspam
+    autofill for event league based on previous custom events
+    reset stake after betslip store
+    better message about storing betslip
+    after adding custom event, display it in event table with [new] tag
+    Team flags from somewhere
+    betslip: display total win and profit or loss/possible profit 
+    provide way to edit bet date in betslip
 </comment>
 
 <script>
