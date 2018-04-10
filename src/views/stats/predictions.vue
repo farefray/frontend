@@ -1,6 +1,18 @@
 <template>
   <div class="components-container" style='height:100vh'>
-    <events_filter @filter="filterData"></events_filter>
+    <el-row :gutter="8">
+      <el-col>
+        <events_filter @filter="filterData"></events_filter>
+      </el-col>
+      <el-col>
+        <el-button
+            size="mini"
+            type="success"
+            @click="showChart = !showChart">Toggle chart
+          </el-button>
+      </el-col>
+    </el-row>
+
     <br/>
     <div class='chart-container' v-if="showChart">
       <stats-chart height='100%' width='100%' :chartdata="predictions_table"></stats-chart>

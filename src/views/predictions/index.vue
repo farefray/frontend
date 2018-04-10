@@ -111,6 +111,7 @@
     Team flags from somewhere
     betslip: display total win and profit or loss/possible profit 
     provide way to edit bet date in betslip
+    dont drop odds when picking ex
 </comment>
 
 <script>
