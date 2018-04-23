@@ -22,11 +22,14 @@
     computed: {
       balance() {
         return this.chartdata && this.chartdata.balance !== undefined ? this.chartdata.balance : 0
+      },
+      loading() {
+        return this.chart_data.length === 0
       }
     },
     data: () => ({
       opts: {},
-      loading: true
+      chart_data: []
     }),
     updated() {
       console.log('updated')
@@ -34,40 +37,44 @@
     },
     watch: {
       chartdata(val) {
-        console.log(val);
-        this.loading = val === null;
+        console.log('chartdata changed');
       }
     },
     mounted() {
-      if (this.chartdata !== null) {
-        let labels = []
-        let data = []
-        let balance = 0
-
-        for (let i = 0; i <= this.chartdata.length - 1; i++) {
-          let prediction = this.chartdata.reverse()[i]
-          console.log(parseDate(prediction.date))
-          labels.push(parseDate(prediction.date))
-
-          if (prediction.status === 'WON' || prediction.status[0] === 'WON' /* TODO make it string*/) {
-            balance += prediction.stake * prediction.final_odds - prediction.stake
-          } else {
-            balance -= prediction.stake
-          }
-
-          data.push({ value: balance, bet: prediction })
-        }
-
-        settings.series[0].data = data
-        settings.xAxis[0].data = labels
-        this.opts = settings
-      }
+      console.log('chart mounted');
     },
     methods: {
       onReady(instance) {
+        console.log('on ready');
         console.log(instance)
+        this.chart_data = this.chartdata.reverse();
+        if (this.chart_data !== null) {
+          let labels = []
+          let data = []
+          let balance = 0
+
+          for (let i = 0; i <= this.chart_data.length - 1; i++) {
+            let prediction = this.chart_data[i]
+            console.log(prediction);
+            console.log(parseDate(prediction.date))
+            labels.push(parseDate(prediction.date * 1000))
+
+            if (prediction.status === 'WON' || prediction.status[0] === 'WON' /* TODO make it string*/) {
+              balance += prediction.stake * prediction.final_odds - prediction.stake
+            } else {
+              balance -= prediction.stake
+            }
+
+            data.push({ value: balance, bet: prediction })
+          }
+
+          settings.series[0].data = data
+          settings.xAxis[0].data = labels
+          this.opts = settings
+        }
       },
       onClick(event, instance, echarts) {
+        console.log('onClick');
         console.log(arguments)
       }
     }

@@ -19,27 +19,34 @@ const settings = {
     show: true,
     formatter: function(params, ticket, callback) {
       // TODO optimize this?
-      console.log(ticket);
-      console.log(params);
-      let color = params[0].data.bet.status[0] === 'WON' ? 'green' : (params[0].data.bet.status[0] === 'LOST' ? 'red' : 'gray');
-      let profit = (params[0].data.bet.status[0] === 'WON'
-        ? ('+ ' + (params[0].data.bet.stake * params[0].data.bet.final_odds - params[0].data.bet.stake).toFixed(2))
-        : ('- ' + params[0].data.bet.stake.toFixed(2)))
+      let event = params[0].data.bet;
+      let status = event.status[0];
 
-      let participants = '';
-      const selected_events = params[0].data.bet.selected_events;
-      for (let i = 0; i < selected_events.length; i++) {
-        participants += (selected_events[i].selected_event === 'odds_1' ? '<strong>' : '') + selected_events[i].team_A.name + (selected_events[i].selected_event === 'odds_1' ? '</strong>' : '') +
+      let status_color = (status === 'WON' ? 'green' : (status === 'LOST' ? 'red' : 'gray'));
+      let status_circle_block = '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background-color:' + status_color + ';margin-right:5px;"></span>';
+
+      let status_block = '<span style="color: ' + status_color + ';">' + status + '</span>';
+      let final_odds_block = '<span class="el-tag" style="position:absolute; right:5px; top: 3px;">' + event.final_odds + '</span>';
+      
+      let participants_block = '<div style="padding-top:5px;">';
+      for (let i = 0; i < event.selected_events.length; i++) {
+        participants_block += (event.selected_events[i].selected_event === 'odds_1' ? '<strong>' : '') + event.selected_events[i].team_A.name + (event.selected_events[i].selected_event === 'odds_1' ? '</strong>' : '') +
           " vs " +
-          (selected_events[i].selected_event === 'odds_2' ? '<strong>' : '') + selected_events[i].team_B.name + (selected_events[i].selected_event === 'odds_1' ? '<strong>' : '') + '</br>';
+          (event.selected_events[i].selected_event === 'odds_2' ? '<strong>' : '') + event.selected_events[i].team_B.name + (event.selected_events[i].selected_event === 'odds_1' ? '<strong>' : '') + '</br>';
       }
+      participants_block += '</div>';
 
-      return '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background-color:' + color + ';margin-right:5px;"></span>' +
-        params[0].data.bet.status[0] + '<span class="el-tag" style="position:absolute; right:5px; top: 3px;">' + params[0].data.bet.final_odds + '</span>' +
+      let profit_block = '<strong>' + (status === 'WON'
+        ? ('+ ' + (event.stake * event.final_odds - event.stake).toFixed(2))
+        : ('- ' + event.stake.toFixed(2))) + '</strong>';
+
+      return status_circle_block +
+        status_block + 
+        final_odds_block +
         '<br/>' +
-        '<div style="padding-top:5px;">' + participants + '</div>' +
+        participants_block + 
         '<br/>' +
-        '<strong>' + profit + '</strong>';
+        profit_block;
     },
     trigger: 'axis',
     axisPointer: {
