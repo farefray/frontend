@@ -1,6 +1,7 @@
 let graphic = {}
 graphic.LinearGradient = require('zrender/lib/graphic/LinearGradient')
 
+// DEPRECATED. TODO REMOVE
 const settings = {
   backgroundColor: '#EEF6EE',
   title: {

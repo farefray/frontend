@@ -14,8 +14,8 @@
     </el-row>
 
     <br/>
-    <div class='chart-container' v-if="showChart">
-      <stats-chart height='100%' width='100%' :chartdata="predictions_table"></stats-chart>
+    <div class='chart-container' v-if="showChart" style="height:450px;">
+      <stats-chart :chartData="predictions_table"></stats-chart>
     </div>
     <el-table :fit="true" :data="predictions_table"
               v-loading="listLoading" element-loading-text="Loading..." border
