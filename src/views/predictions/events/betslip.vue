@@ -86,8 +86,10 @@
                               activeValue="true"
                               inactiveText="Lost"
                               inactiveValue="false"
-                              @change="updateBetResult">
+                              @change="updateBetResult"
+                              v-if="this.betslipObj.isValid()">                          
                           </el-switch>
+                          <el-tag v-else>Pending</el-tag>
                       </el-col>
                       <el-col :span="12">
                           <el-select
@@ -134,7 +136,7 @@
 </template>
 
 <comment>
- Todo betting details right inside betslip, betting .ex
+ 
 </comment>
 <script>
 // const moment = require('moment')
