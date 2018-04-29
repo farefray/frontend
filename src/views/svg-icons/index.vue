@@ -6,7 +6,7 @@
           <div slot="content">
             {{`&lt;icon-svg :icon-class=&quot;${item}&quot; /&gt;`}}
           </div>
-          <icon-svg :icon-class="item" />
+          <icon-svg :icon-class="item" class-name="disabled" />
         </el-tooltip>
         <span>{{item}}</span>
       </div>
@@ -53,6 +53,9 @@ export default {
     display: block;
     font-size: 24px;
     margin-top: 10px;
+  }
+  .disabled{
+    pointer-events: none;
   }
 }
 </style>

@@ -13,7 +13,7 @@
     merge events.vue with predictions.vue, theres way too much same functionality
 
 
-
+Basd on PanJiaChen
 ## Directory structure [Outdated]
  
 ``` 

@@ -81,6 +81,13 @@
    }
  }
 
+ //dropdown
+ .el-dropdown-menu {
+  a {
+    display: block
+  }
+}
+
  .el-table {
   background-color: transparent;
   tr {

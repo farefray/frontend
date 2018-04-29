@@ -30,7 +30,7 @@
 #app {
   .main-container {
     min-height: 100%;
-    transition: margin-left 0.28s;
+    transition: margin-left .28s;
     margin-left: 200px;
     background: url(../assets/img/background/body-bg-02.jpg) repeat scroll 0 0;
   }
@@ -42,16 +42,18 @@
     box-shadow: inset -5px 0 15px -5px rgba(0, 0, 0, 0.15),
       inset -2px 0 8px -2px rgba(0, 0, 0, 0.2);
     background: url('../assets/img/background/body-bg-02-15.jpg') repeat scroll 0 0 #c5c6ca;
-    transition: width 0.28s;
-    width: 200px !important;
+    transition: width .28s;
+    width: 180px !important;
 
     height: 100%;
     position: fixed;
+    font-size: 0px;
     top: 0;
     bottom: 0;
     left: 0;
     border-right: none;
     z-index: 1001;
+    overflow: hidden;
     a {
       display: inline-block;
       width: 100%;
@@ -60,7 +62,7 @@
       margin-right: 16px;
     }
     .el-menu {
-      width: 100%;
+      width: 100% !important;
       border: none;      
     }
     .menu-icon {
@@ -159,30 +161,8 @@
 
       padding-left: 10px!important;
       position: relative;
-      span {
-        height: 0;
-        width: 0;
-        overflow: hidden;
-        visibility: hidden;
-        transition: opacity .3s cubic-bezier(.55, 0, .1, 1);
-        opacity: 0;
-        display: inline-block;
-      }
-      &:hover {
-        span {
-          display: block;
-          border-radius: 3px;
-          z-index: 1002;
-          width: 140px;
-          height: 56px;
-          visibility: visible;
-          position: absolute;
-          right: -145px;
-          text-align: left;
-          text-indent: 20px;
-          top: 0px;          
-          opacity: 1;
-        }
+      .el-tooltip {
+        padding: 0 10px !important;
       }
     }
     .el-submenu {
@@ -201,18 +181,14 @@
       &>.el-submenu__title {
         padding-left: 0px!important;
         &>span {
-          display: none;
+          height: 0;
+          width: 0;
+          overflow: hidden;
+          visibility: hidden;
+          display: inline-block;
         }
         .el-submenu__icon-arrow {
           display: none;
-        }
-      }
-      .nest-menu {
-        .el-submenu__icon-arrow {
-          display: block!important;
-        }
-        span {
-          display: inline-block!important;
         }
       }
     }    

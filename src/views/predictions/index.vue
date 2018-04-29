@@ -112,6 +112,7 @@
     betslip: display total win and profit or loss/possible profit 
     provide way to edit bet date in betslip
     dont drop odds when picking ex
+    if placing multibet when one+ event is not yet finished, dont show lost/won, it must be a prediction
 </comment>
 
 <script>
