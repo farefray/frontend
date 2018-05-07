@@ -12,11 +12,11 @@
           </el-button>
       </el-col>
     </el-row>
-
     <br/>
     <div class='chart-container' v-if="showChart" style="height:450px;">
       <stats-chart :chartData="predictions_table"></stats-chart>
     </div>
+
     <el-table :fit="true" :data="predictions_table"
               v-loading="listLoading" element-loading-text="Loading..." border
               style="width: 100%">
@@ -126,7 +126,7 @@
     </el-table>
 
     <div class="pagination-container">
-      <el-pagination @current-change="paginateData" :page-size="listQuery.per_page" layout="total, prev, pager, next" :total="total">
+      <el-pagination @current-change="paginateData" current-page.sync="currentPage" :page-size="listQuery.per_page" layout="total, prev, pager, next" :total="total">
       </el-pagination>
     </div>
     
@@ -162,7 +162,8 @@
         predictions: null,
         predictions_table: [],
         dialogVisible: false,
-        current_prediction: null,
+        current_prediction: null, // handling record which is being edited
+        current_row: null, // row position for current_prediction
         editFormVisible: false,
         showChart: false,
         editForm: {
@@ -174,6 +175,7 @@
           per_page: 25,
           title: undefined
         },
+        currentPage: 1,
         total: 0
       }
     },
@@ -207,37 +209,26 @@
           });
       },
       reportStatus(result) {
-        const self = this
-        self.current_prediction.status[0] = result === true ? 'WON' : 'LOST';
-        updatePrediction(self.current_prediction)
+        // updating status inside actual table, cached rows and current_prediction
+        this.predictions[this.current_row].status[0] = this.current_prediction.status[0] = result ? 'WON' : 'LOST';        
+        updatePrediction(this.current_prediction)
           .then(response => {
-            console.log(response);
-            if (response && response.status === 200) {
-              self.$message({
-                message: 'Success! ',
-                type: 'success',
+            this.$message({
+                message: result ? 'Congratulations!' : 'Good luck next time.',
+                type: result ? 'success' : 'error',
                 duration: 5 * 1000
               });
 
-              return true
-            }
+          });
 
-            console.log(response.data);
-            return false
-          })
-          .catch(error => {
-            self.$message({
-              message: 'Error! ' + error.data.message,
-              type: 'error',
-              duration: 5 * 1000
-            })
-          })
-        self.dialogVisible = false;
+        this.paginateData(this.currentPage);
+        this.dialogVisible = false;
       },
       handleReportStatus(index, row) {
-        const self = this;
-        self.dialogVisible = true;
-        self.current_prediction = row;
+        this.dialogVisible = true;
+        this.current_prediction = row;
+        this.current_row = index;
+        console.log(index);
       },
       editFormClose() {
         this.editFormVisible = false;
@@ -247,19 +238,20 @@
       },
       handleDelete(index, row) {
         const self = this;
-        self.$confirm('Are you sure to remove this prediction?')
+        this.$confirm('Are you sure to remove this prediction?')
           .then(_ => {
             removePrediction(row)
               .then(response => {
                 console.log(response);
                 if (response && response.status === 200) {
-                  self.$message({
+                  this.$message({
                     message: 'Success! ',
                     type: 'success',
                     duration: 5 * 1000
                   });
 
-                  self.predictions.splice(index, 1);
+                  this.predictions.splice(index, 1);
+                  this.paginateData(this.currentPage);
                   return true
                 }
 
@@ -280,6 +272,7 @@
         console.log('paginateData ' + val)
         this.predictions_table = [];
         this.listQuery.page = val;
+        this.currentPage = val;
         let pagedData = this.predictions.filter((item, index) => 
               index < this.listQuery.per_page * this.listQuery.page && index >= this.listQuery.per_page * (this.listQuery.page - 1))
 

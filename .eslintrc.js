@@ -138,7 +138,7 @@ module.exports = {
     'no-unneeded-ternary': [2, {
       'defaultAssignment': false
     }],
-    'no-unreachable': 2,
+    'no-unreachable': 1,
     'no-unsafe-finally': 2,
     'no-unused-vars': [2, {
       'vars': 'all',
