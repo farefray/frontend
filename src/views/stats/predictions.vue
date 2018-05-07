@@ -14,7 +14,7 @@
     </el-row>
     <br/>
     <div class='chart-container' v-if="showChart" style="height:450px;">
-      <stats-chart :chartData="predictions_table"></stats-chart>
+      <stats-chart :stats="predictions_table"></stats-chart>
     </div>
 
     <el-table :fit="true" :data="predictions_table"
@@ -218,7 +218,6 @@
                 type: result ? 'success' : 'error',
                 duration: 5 * 1000
               });
-
           });
 
         this.paginateData(this.currentPage);

@@ -6,6 +6,7 @@
 import echarts from "echarts";
 require("echarts/theme/macarons"); // theme
 import { debounce } from "@/utils";
+const _ = require('lodash'); // Move global if used a lot?
 
 function parseDate(timestamp) {
   let date = new Date(timestamp);
@@ -36,28 +37,35 @@ export default {
       type: Boolean,
       default: true
     },
-    chartData: {
+    stats: {
       type: Array
+    }
+  },
+  watch: {
+    stats: {
+      deep: true,
+      handler() {
+        this.processData();
+      }
     }
   },
   computed: {
     balance() {
-      return this.chartData && this.chartData.balance !== undefined
-        ? this.chartData.balance
+      return this.stats && this.stats.balance !== undefined
+        ? this.stats.balance
         : 0;
     },
     loading() {
-      return this.chart_data.length === 0;
+      return this.stats.length === 0;
     }
   },
   data: () => ({
     chart: null,
-    opts: {},
-    chart_data: []
+    opts: {}
   }),
   updated() {
     console.log("updated");
-    console.log(this.chartData);
+    console.log(this.stats);
   },
   mounted() {
     console.log("chart mounted");
@@ -86,13 +94,14 @@ export default {
   methods: {
     processData() {
       let labels = [];
-      let data = [];
+      let dataForChart = []; // ToDo data rewored as dataset - https://ecomfe.github.io/echarts-doc/public/en/tutorial.html#Dataset
       let balance = 0
 
-      console.log(this.chartData);
-      if (this.chartData !== null) {
-          for (let i = 0; i <= this.chartData.length - 1; i++) {
-            let prediction = this.chartData[i]
+      console.log(this.stats);
+      if (this.stats !== null) {
+          let tmp = _.cloneDeep(this.stats).reverse();
+          for (let i = 0; i <= tmp.length - 1; i++) {
+            let prediction = tmp[i];
             console.log(prediction);
             console.log(parseDate(prediction.date))
             labels.push(parseDate(prediction.date * 1000))
@@ -103,19 +112,19 @@ export default {
               balance -= prediction.stake
             }
 
-            data.push(balance);
+            dataForChart.push(balance);
             // data.push({ value: balance, bet: prediction })
           }
       }
 
       console.log(labels);
-      console.log(data)
+      console.log(dataForChart)
       this.setOptions(
         labels,
-        data
+        dataForChart
       );
     },
-    setOptions(labels, data) {
+    setOptions(labels, dataForChart) {
       this.chart.setOption({
         xAxis: {
           data: labels,
@@ -136,7 +145,43 @@ export default {
           axisPointer: {
             type: "cross"
           },
-          padding: [5, 10]
+          padding: [5, 10],
+          enterable: true,
+          formatter: function(params, ticket, callback) {
+            console.log(params);
+            console.log(ticket);
+            // TODO optimize this?
+            /*
+            let event = params[0].data.bet;
+            let status = event.status[0];
+
+            let status_color = (status === 'WON' ? 'green' : (status === 'LOST' ? 'red' : 'gray'));
+            let status_circle_block = '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background-color:' + status_color + ';margin-right:5px;"></span>';
+
+            let status_block = '<span style="color: ' + status_color + ';">' + status + '</span>';
+            let final_odds_block = '<span class="el-tag" style="position:absolute; right:5px; top: 3px;">' + event.final_odds + '</span>';
+            
+            let participants_block = '<div style="padding-top:5px;">';
+            for (let i = 0; i < event.selected_events.length; i++) {
+              participants_block += (event.selected_events[i].selected_event === 'odds_1' ? '<strong>' : '') + event.selected_events[i].team_A.name + (event.selected_events[i].selected_event === 'odds_1' ? '</strong>' : '') +
+                " vs " +
+                (event.selected_events[i].selected_event === 'odds_2' ? '<strong>' : '') + event.selected_events[i].team_B.name + (event.selected_events[i].selected_event === 'odds_1' ? '<strong>' : '') + '</br>';
+            }
+            participants_block += '</div>';
+
+            let profit_block = '<strong>' + (status === 'WON'
+              ? ('+ ' + (event.stake * event.final_odds - event.stake).toFixed(2))
+              : ('- ' + event.stake.toFixed(2))) + '</strong>';
+
+            return status_circle_block +
+              status_block + 
+              final_odds_block +
+              '<br/>' +
+              participants_block + 
+              '<br/>' +
+              profit_block;
+              */
+          }
         },
         yAxis: {
           axisTick: {
@@ -163,7 +208,7 @@ export default {
                 }
               }
             },
-            data: data,
+            data: dataForChart,
             animationDuration: 2800,
             animationEasing: "quadraticOut"
           }
