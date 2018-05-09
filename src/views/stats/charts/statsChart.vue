@@ -93,18 +93,15 @@ export default {
   },
   methods: {
     processData() {
-      let labels = [];
-      let dataForChart = []; // ToDo data rewored as dataset - https://ecomfe.github.io/echarts-doc/public/en/tutorial.html#Dataset
+       let dataForChart = [];
       let balance = 0
 
       console.log(this.stats);
       if (this.stats !== null) {
           let tmp = _.cloneDeep(this.stats).reverse();
+          
           for (let i = 0; i <= tmp.length - 1; i++) {
             let prediction = tmp[i];
-            console.log(prediction);
-            console.log(parseDate(prediction.date))
-            labels.push(parseDate(prediction.date * 1000))
 
             if (prediction.status === 'WON' || prediction.status[0] === 'WON') {
               balance += prediction.stake * prediction.final_odds - prediction.stake
@@ -112,27 +109,54 @@ export default {
               balance -= prediction.stake
             }
 
-            dataForChart.push(balance);
-            // data.push({ value: balance, bet: prediction })
+            let date = new Date(prediction.date * 1000);
+            dataForChart.push({
+                name: date.toString(),
+                value: [
+                    [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('/'),
+                    Math.round(balance)
+                ],
+                prediction: prediction
+            });
           }
       }
 
-      console.log(labels);
       console.log(dataForChart)
       this.setOptions(
-        labels,
         dataForChart
       );
     },
-    setOptions(labels, dataForChart) {
+    setOptions(dataForChart) {
       this.chart.setOption({
         xAxis: {
-          data: labels,
-          boundaryGap: false,
+          boundaryGap: false, // отступ от краев
+          type: 'time',
           axisTick: {
+            show: false
+          },
+          splitLine: {
             show: false
           }
         },
+        yAxis: {
+          type: 'value',
+          axisTick: {
+            show: false
+          },
+          boundaryGap: true,
+          splitLine: {
+              show: false
+          }
+        },
+        dataZoom: [
+            {
+                type: 'slider',
+                show: true,
+                start: 100,
+                end: 0,
+                handleSize: 8
+            }
+        ],
         grid: {
           left: 10,
           right: 10,
@@ -143,58 +167,53 @@ export default {
         tooltip: {
           trigger: "axis",
           axisPointer: {
-            type: "cross"
+            type: "shadow"
           },
-          padding: [5, 10],
+          triggerOn: 'click',
           enterable: true,
           formatter: function(params, ticket, callback) {
-            console.log(params);
-            console.log(ticket);
             // TODO optimize this?
-            /*
-            let event = params[0].data.bet;
+            console.log(params);
+            let event = params[0].data.prediction;
             let status = event.status[0];
 
-            let status_color = (status === 'WON' ? 'green' : (status === 'LOST' ? 'red' : 'gray'));
+            let status_color = (status === 'WON' ? '#3e5f33' : (status === 'LOST' ? '#f99008' : '#cacbcf'));
             let status_circle_block = '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background-color:' + status_color + ';margin-right:5px;"></span>';
 
-            let status_block = '<span style="color: ' + status_color + ';">' + status + '</span>';
-            let final_odds_block = '<span class="el-tag" style="position:absolute; right:5px; top: 3px;">' + event.final_odds + '</span>';
+            let event_date = parseDate(event.date * 1000);
+            let event_date_block = '<span>' + event_date + '</span>';
+
+            let status_block = '<span style="color: ' + status_color + ';"></span>';
+            let final_odds_block = '<span style="position:absolute; right:5px; top: 3px;">' + event.final_odds + '</span>';
             
             let participants_block = '<div style="padding-top:5px;">';
             for (let i = 0; i < event.selected_events.length; i++) {
-              participants_block += (event.selected_events[i].selected_event === 'odds_1' ? '<strong>' : '') + event.selected_events[i].team_A.name + (event.selected_events[i].selected_event === 'odds_1' ? '</strong>' : '') +
+              participants_block += (event.selected_events[i].selected_event === 'odds_1' ? '<strong style="color: ' + status_color + ';">' : '') + event.selected_events[i].team_A.name + (event.selected_events[i].selected_event === 'odds_1' ? '</strong>' : '') +
                 " vs " +
-                (event.selected_events[i].selected_event === 'odds_2' ? '<strong>' : '') + event.selected_events[i].team_B.name + (event.selected_events[i].selected_event === 'odds_1' ? '<strong>' : '') + '</br>';
+                (event.selected_events[i].selected_event === 'odds_2' ? '<strong style="color: ' + status_color + ';">' : '') + event.selected_events[i].team_B.name + (event.selected_events[i].selected_event === 'odds_1' ? '</strong>' : '') + '</br>';
             }
             participants_block += '</div>';
 
-            let profit_block = '<strong>' + (status === 'WON'
-              ? ('+ ' + (event.stake * event.final_odds - event.stake).toFixed(2))
-              : ('- ' + event.stake.toFixed(2))) + '</strong>';
+            let profit_block = '<strong style="color:' + status_color + '; position:absolute; right:5px; bottom: 3px;">' + (status === 'WON'
+              ? ('+' + (event.stake * event.final_odds - event.stake).toFixed(2))
+              : ('-' + event.stake.toFixed(2))) + '</strong>';
 
             return status_circle_block +
+              event_date_block +
               status_block + 
               final_odds_block +
               '<br/>' +
               participants_block + 
               '<br/>' +
               profit_block;
-              */
           }
-        },
-        yAxis: {
-          axisTick: {
-            show: false
-          }
-        },
-        legend: {
-          data: ["actual"]
-        },
+        },        
         series: [
           {
-            name: "actual",
-            smooth: true,
+            name: "balance",
+            smooth: false,
+            showSymbol: false,
+            hoverAnimation: false,
             type: "line",
             itemStyle: {
               normal: {
