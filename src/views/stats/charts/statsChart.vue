@@ -17,6 +17,14 @@ function parseDate(timestamp) {
   ].join("/");
 }
 
+var globalChartData = {
+  minValue: 0,
+  avgValue: 0,
+  maxValue: 0,
+  absoluteMaxChange: 0,
+  absoluteAvgValue: 0
+}
+
 export default {
   name: "stats-chart",
   components: {},
@@ -45,7 +53,7 @@ export default {
     stats: {
       deep: true,
       handler() {
-        this.processData();
+        this.prepareData();
       }
     }
   },
@@ -92,45 +100,66 @@ export default {
     this.chart = null;
   },
   methods: {
-    processData() {
-       let dataForChart = [];
-      let balance = 0
-
-      console.log(this.stats);
-      if (this.stats !== null) {
-          let tmp = _.cloneDeep(this.stats).reverse();
-          
-          for (let i = 0; i <= tmp.length - 1; i++) {
-            let prediction = tmp[i];
-
-            if (prediction.status === 'WON' || prediction.status[0] === 'WON') {
-              balance += prediction.stake * prediction.final_odds - prediction.stake
-            } else {
-              balance -= prediction.stake
-            }
-
-            let date = new Date(prediction.date * 1000);
-            dataForChart.push({
-                name: date.toString(),
-                value: [
-                    [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('/'),
-                    Math.round(balance)
-                ],
-                prediction: prediction
-            });
-          }
+    prepareData() {
+      if (this.stats === null || this.stats.length === 0) {
+        return;
       }
 
-      console.log(dataForChart)
+      let dataForChart = [];
+      let balance = 0
+
+      let tmp = _.cloneDeep(this.stats).reverse();
+      let absoluteChange = 0;
+      for (let i = 0; i <= tmp.length - 1; i++) {
+        let prediction = tmp[i];
+
+        // TODO status shouldn't be array?
+        let balanceChange = (prediction.status[0] === 'WON') 
+          ? prediction.stake * prediction.final_odds - prediction.stake
+          : -prediction.stake;
+
+        if (globalChartData.maxValue < balanceChange) {
+          globalChartData.maxValue = balanceChange;
+
+          if (balanceChange > globalChartData.absoluteMaxChange) {
+            globalChartData.absoluteMaxChange = balanceChange;
+          }
+        } else if (globalChartData.minValue > balanceChange) {
+          globalChartData.minValue = balanceChange;
+
+          if (Math.abs(globalChartData.minValue) > globalChartData.absoluteMaxChange) {
+            globalChartData.absoluteMaxChange = Math.abs(globalChartData.minValue);
+          }
+        }
+
+        absoluteChange += Math.abs(balanceChange);
+        balance += balanceChange;
+        let date = new Date(prediction.date * 1000);
+        dataForChart.push({
+            name: date.toString(),
+            value: [
+                [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('/') + " " + date.getHours() + ":" + date.getMinutes() + ":0" + i,
+                // + i in this case made to avoid stacking events on the same y value
+                Math.round(balance),
+                balanceChange
+            ],
+            prediction: prediction
+        });
+      }
+
+      globalChartData.avgValue = Math.floor(balance / tmp.length - 1);
+      globalChartData.absoluteChange = Math.floor(absoluteChange / tmp.length - 1);
+
       this.setOptions(
         dataForChart
       );
     },
     setOptions(dataForChart) {
+      console.log(dataForChart);
       this.chart.setOption({
         xAxis: {
-          boundaryGap: false, // отступ от краев
-          type: 'time',
+          boundaryGap: true,
+          type: 'category',
           axisTick: {
             show: false
           },
@@ -146,17 +175,25 @@ export default {
           boundaryGap: true,
           splitLine: {
               show: false
-          }
+          },
+          axisLine: {
+              show: true,
+              lineStyle: {
+                  color: '#e5e5e5'
+              }
+          },
         },
-        dataZoom: [
-            {
-                type: 'slider',
-                show: true,
-                start: 100,
-                end: 0,
-                handleSize: 8
-            }
-        ],
+        /* dataZoom: [{
+          handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+          handleSize: '80%',
+          handleStyle: {
+              color: '#fff',
+              shadowBlur: 3,
+              shadowColor: 'rgba(0, 0, 0, 0.6)',
+              shadowOffsetX: 2,
+              shadowOffsetY: 2
+          }
+        }], */
         grid: {
           left: 10,
           right: 10,
@@ -173,7 +210,7 @@ export default {
           enterable: true,
           formatter: function(params, ticket, callback) {
             // TODO optimize this?
-            console.log(params);
+            // console.log(params);
             let event = params[0].data.prediction;
             let status = event.status[0];
 
@@ -207,25 +244,44 @@ export default {
               '<br/>' +
               profit_block;
           }
-        },        
+        },
+        visualMap: {
+            show: false,
+            pieces: [{
+                color: '#4CAF50',
+                gt:0
+            }, {
+                color: '#e5e5e5',
+                value:0,
+            }, {
+                color: '#F7412D',
+                lt:0
+            }]
+        },
         series: [
           {
             name: "balance",
             smooth: false,
-            showSymbol: false,
-            hoverAnimation: false,
+            showSymbol: true,
+            hoverAnimation: true,
             type: "line",
             itemStyle: {
               normal: {
-                color: "#3888fa",
-                lineStyle: {
-                  color: "#3888fa",
-                  width: 2
+                color: (params) => {
+                  return params.data.value[2] > 0 ? '#3e5f33' : '#ce2a2a';
                 },
                 areaStyle: {
                   color: "#f3f8ff"
                 }
               }
+            },
+            lineStyle: {
+                normal: { width: 3 }
+            },
+            symbol: 'circle',
+            symbolSize: (value, params) => {
+              // return value from 5 to 25, based on how much value close to max/min value
+              return Math.max(5, Math.floor(25 / 100 * (Math.floor(Math.abs(value[2]) / globalChartData.absoluteMaxChange * 100))));
             },
             data: dataForChart,
             animationDuration: 2800,
@@ -236,7 +292,7 @@ export default {
     },
     initChart() {
       this.chart = echarts.init(this.$el, "macarons");
-      this.processData();
+      this.prepareData();
     }
   }
 };
