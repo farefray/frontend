@@ -1,6 +1,6 @@
 module.exports = {
     NODE_ENV: '"development"',
+    BASE_API: '"http://statmybets.com:3000"',
     ENV_CONFIG: '"dev"',
-    BASE_API: '"http://localhost:3000"',
     APP_ORIGIN: '"http://localhost:3000"'
 }
