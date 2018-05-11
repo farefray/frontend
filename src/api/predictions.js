@@ -3,7 +3,7 @@ import { getToken } from '@/utils/auth'
 
 export function fetchPredictions(params) {
   params.sort = '-date,createdAt'
-  params.limit = 250
+  params.limit = params.limit ? params.limit : 250
   // todo user validation
   return service.get('/api/v1/predictions', {
     headers: {

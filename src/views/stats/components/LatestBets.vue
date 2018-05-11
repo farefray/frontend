@@ -1,22 +1,22 @@
 <template>
   <div class="widget well well-black">
     <div class="widget-header">
-      <h4><i class="fontello-icon-popup-2"></i>Latest bets</h4>
+      <h3 class="heading-icon" data-icon="" aria-hidden="true">Latest bets</small></h3>
     </div>
-    <el-table :data="list" style="width: 100%;padding-top: 15px;">
-      <el-table-column label="Order_No" show-overflow-tooltip>
+    <el-table :data="list" style="width: 100%;padding-top: 15px;" class="table table-condensed">
+      <el-table-column label="Date" show-overflow-tooltip>
         <template slot-scope="scope">
-          {{scope.row.order_no}}
+          {{scope.row.date}}
         </template>
       </el-table-column>
-      <el-table-column label="Price" width="195" align="center">
+      <el-table-column label="Bet info" width="195" align="center">
         <template slot-scope="scope">
-          ¥{{scope.row.price | toThousandslsFilter}}
+          {{scope.row.odds}}
         </template>
       </el-table-column>
       <el-table-column label="Status" width="100" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter"> {{scope.row.status}}</el-tag>
+          <el-tag :type="scope.row.status[0]"> {{scope.row.status[0]}}</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -25,11 +25,23 @@
 
 <script>
 
+import { fetchPredictions } from '@/api/predictions';
+
 export default {
   data() {
     return {
       list: null
     }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      fetchPredictions({
+          limit: 10
+        })
+        .then(response => {
+          this.list = response
+        });
+    })
   },
   filters: {
     statusFilter(status) {
