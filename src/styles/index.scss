@@ -7,7 +7,6 @@
 @import './boo.scss';
 /* @import './boo-coloring.css'; */
 @import './boo-utility.css';
-@import './booico.css';
 
 body {
   height: 100%;
@@ -194,4 +193,9 @@ code {
 
 .multiselect--active {
   z-index: 1000 !important;
+}
+
+
+.el-table .cell {
+  line-height: 14px;
 }

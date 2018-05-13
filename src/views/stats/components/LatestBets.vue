@@ -1,7 +1,7 @@
 <template>
   <div class="widget well well-black">
     <div class="widget-header">
-      <h3 class="heading-icon" data-icon="" aria-hidden="true">Latest bets</small></h3>
+      <h3 class="heading-icon" aria-hidden="true">Latest bets</h3>
     </div>
     <el-table :data="list" style="width: 100%;padding-top: 15px;" class="table table-condensed">
       <el-table-column label="Date" show-overflow-tooltip>
