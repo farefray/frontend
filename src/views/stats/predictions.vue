@@ -284,21 +284,6 @@
 </script>
 
 <style scoped>
-  .el-tag--LOST {
-    background-color: rgba(240, 91, 61, 0.08);
-    color: #f81329;
-  }
-
-  .el-tag--WON {
-    background-color: rgba(84, 126, 69, 0.08);
-    color: #3ea74c;
-  }
-
-  .el-tag--PENDING {
-    background-color: rgba(188, 177, 180, 0.08);
-    color: #bcb1b4;
-  }
-
   .bold {
     font-weight: bold;
   }

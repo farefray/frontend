@@ -1,26 +1,41 @@
 <template>
-  <div class="widget well well-black">
-    <div class="widget-header">
-      <h3 class="heading-icon" aria-hidden="true">Latest bets</h3>
-    </div>
-    <el-table :data="list" style="width: 100%;padding-top: 15px;" class="table table-condensed">
-      <el-table-column label="Date" show-overflow-tooltip>
-        <template slot-scope="scope">
-          {{scope.row.date}}
-        </template>
-      </el-table-column>
-      <el-table-column label="Bet info" width="195" align="center">
-        <template slot-scope="scope">
-          {{scope.row.odds}}
-        </template>
-      </el-table-column>
-      <el-table-column label="Status" width="100" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status[0]"> {{scope.row.status[0]}}</el-tag>
-        </template>
-      </el-table-column>
-    </el-table>
+<div class="widget widget-simple">
+  <div class="widget-header no-border">
+      <h4><i class="fontello-icon-window"></i> Latest bets</h4>
+      <div class="widget-tool">
+          <div class="btn-toolbar">
+              <div class="btn-group">
+                  <button class="btn btn-primary btn-small">day</button>
+                  <button class="btn btn-primary btn-small">month</button>
+                  <button class="btn btn-primary btn-small">year</button>
+              </div>
+          </div>
+      </div>
   </div>
+  <div class="widget-content">
+      <div class="widget-body">
+          <p>
+              <el-table :data="list" style="width: 100%;padding-top: 15px;" class="table table-condensed">
+                <el-table-column label="Date" show-overflow-tooltip>
+                  <template slot-scope="scope">
+                    {{(scope.row.date) | moment("DD.MM.YY kk:mm")}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="Bet info" width="195" align="center">
+                  <template slot-scope="scope">
+                      {{scope.row.team_A.name}}
+                  </template>
+                </el-table-column>
+                <el-table-column label="Status" width="100" align="center">
+                  <template slot-scope="scope">
+                    <el-tag :type="scope.row.status[0]"> {{scope.row.status[0]}}</el-tag>
+                  </template>
+                </el-table-column>
+              </el-table>
+          </p>
+      </div>
+  </div>
+</div>
 </template>
 
 <script>
