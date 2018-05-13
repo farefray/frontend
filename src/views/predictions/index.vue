@@ -114,6 +114,8 @@
     dont drop odds when picking ex
     if placing multibet when one+ event is not yet finished, dont show lost/won, it must be a prediction
     maybe split odds select into two selects, with X and .XX part
+    some custom field like 'ex' but stored inside bet [to store bet id, in order to realize which bets we have already stored]
+    betslip position fixed
 </comment>
 
 <script>

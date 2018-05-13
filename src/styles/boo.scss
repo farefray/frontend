@@ -922,10 +922,15 @@ label.label-left,
 .table caption span {
   color: #6bd2db;
 }
-.table th,
-.table td {
-  border-top-color: #d3d5d9;
-  border-bottom-color: #d3d5d9;
+.table tr {
+  border-top-color: #cbccd0;
+  border-bottom-color: #cbccd0;
+  &:last-of-type {
+    > td {
+      border-bottom: 0px;
+      border-top: 0px;
+    }
+  }
 }
 .table th h2,
 .table td h2,
