@@ -119,7 +119,7 @@
           <el-button
             size="mini"
             type="warning"
-            @click="editPrediction(scope.$index, scope.row)" disabled="disabled">Edit
+            @click="handleEdit(scope.$index, scope.row)">Edit
           </el-button>
         </template>
       </el-table-column>
@@ -140,21 +140,20 @@
       <el-button type="success" @click="reportStatus(true)">Yes</el-button>
     </el-dialog>
     <el-dialog title="Edit prediction" :visible.sync="editFormVisible" width="40%" top="9vh">
-      <event_form :temp_event="editForm.temp_event" :dialogStatus="editForm.dialogStatus" @close="editFormClose"></event_form>
+      <editForm :temp_event="current_prediction" @close="editFormClose" @update="editFormSubmit"></editForm>
     </el-dialog>
   </div>
 </template>
 
 <script>
   import { fetchPredictions, removePrediction, updatePrediction } from '@/api/predictions'
-  import Event from "../predictions/model/event.js";
   import events_filter from '@/views/components/events_filter'
-  import event_form from "../predictions/events/event_form.vue"; // Todo multiple bet edit somehow?
+  import editForm from "./partials/editForm.vue";
   import statsChart from './charts/statsChart'
   // TODO make prediction status string instead of array
   export default {
     components: {
-      events_filter, event_form, statsChart
+      events_filter, editForm, statsChart
     },
     data() {
       return {
@@ -166,10 +165,6 @@
         current_row: null, // row position for current_prediction
         editFormVisible: false,
         showChart: false,
-        editForm: {
-          temp_event: new Event(),
-          dialogStatus: ""
-        },
         listQuery: {
           page: 1,
           per_page: 25,
@@ -223,6 +218,21 @@
         this.paginateData(this.currentPage);
         this.dialogVisible = false;
       },
+      editFormSubmit(result) {
+        this.predictions[this.current_row] = result; // todo better way and validation?
+        this.current_prediction = result; // todo better way and validation?
+        updatePrediction(this.current_prediction)
+          .then(response => {
+            this.$message({
+                message: 'Done.',
+                type: 'success',
+                duration: 2 * 1000
+              });
+          });
+
+        this.paginateData(this.currentPage);
+        this.editFormVisible = false;
+      },
       handleReportStatus(index, row) {
         this.dialogVisible = true;
         this.current_prediction = row;
@@ -232,7 +242,9 @@
       editFormClose() {
         this.editFormVisible = false;
       },
-      editPrediction(index, row) {
+      handleEdit(index, row) {
+        this.current_prediction = row;
+        this.current_row = index;
         this.editFormVisible = true;
       },
       handleDelete(index, row) {

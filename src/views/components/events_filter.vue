@@ -21,7 +21,9 @@
       </el-col>
 
       <el-col :span="6">
-      <el-button class="btn btn-success filter-item" type="primary" v-waves icon="search" @click="handleFilter">Update</el-button>
+      <el-button class="btn filter-item" v-waves @click="handleFilter" type="success" icon="search">
+        Update
+      </el-button>
       </el-col>
     </el-row>
   </div>

@@ -7,7 +7,7 @@
       </div>
     </el-col>
     <el-col :span="4">
-      <el-button class="btn btn-success filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit">
+      <el-button class="btn filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="success" icon="edit">
         Add my own event
       </el-button>
     </el-col>   
