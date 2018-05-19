@@ -221,6 +221,8 @@
       editFormSubmit(result) {
         this.predictions[this.current_row] = result; // todo better way and validation?
         this.current_prediction = result; // todo better way and validation?
+        console.log('edit form retunr');
+        console.log(result);
         updatePrediction(this.current_prediction)
           .then(response => {
             this.$message({
@@ -229,7 +231,6 @@
                 duration: 2 * 1000
               });
           });
-
         this.paginateData(this.currentPage);
         this.editFormVisible = false;
       },

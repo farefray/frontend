@@ -2,24 +2,21 @@
   <el-form class="small-space" :model="temp_event" label-position="top" label-width="120px"
            size="mini">
 
-    <el-form-item label="Event details">
-      <el-row :gutter="20">
-        <el-col :span="8">
-          <el-autocomplete placeholder="Event type" v-model="temp_event.game"
-                    autoComplete="on"
-                    :fetch-suggestions="queryEventTypes"
-                    @select="handleSelect"></el-autocomplete>
-        </el-col>
-        <el-col :span="14">
-          <el-autocomplete placeholder="Event league" v-model="temp_event.game_league" :disabled="temp_event.game == ''"
-                    :fetch-suggestions="queryEventLeagues"></el-autocomplete>
-        </el-col>
-      </el-row>
-    </el-form-item>
-
     <el-form-item label="Date">
       <el-date-picker v-model="temp_event.date" type="datetime" placeholder="Select date">
       </el-date-picker>
+    </el-form-item>
+
+    <el-form-item label="Odds">
+      <el-row justify="center">
+        <el-input-number v-model="temp_event.final_odds" :min="1" :max="10" :step="0.05"></el-input-number>
+      </el-row>
+    </el-form-item>
+
+    <el-form-item label="Stake">
+      <el-row justify="center">
+        <el-input-number v-model="temp_event.stake"></el-input-number>
+      </el-row>
     </el-form-item>
 
     <el-form-item label="Result">
@@ -53,7 +50,7 @@ todo make this share functionality with betslip.vue/betslip.js
 <script>
   export default {
     components: {},
-    name: 'eventForm',
+    name: 'editForm',
     props: ['temp_event', 'dialogStatus'],
     data() {
       return {
@@ -72,7 +69,9 @@ todo make this share functionality with betslip.vue/betslip.js
     },
     methods: {
       updateBetResult(val) {
-        this.temp_event.status = (val === 'true' ? 'WON' : 'LOST');
+        console.log(this.temp_event);
+        this.temp_event.status = [(val === 'true' ? 'WON' : 'LOST')]; // todo maybe status shouldnt be array
+        console.log(this.temp_event);
       },
       queryEventLeagues(queryString, cb) {
         console.log(queryString)
@@ -88,6 +87,7 @@ todo make this share functionality with betslip.vue/betslip.js
         console.log(item);
       },
       update() {
+          console.log('update');
           console.log(this.temp_event);
           this.$emit('update', this.temp_event);
       },
