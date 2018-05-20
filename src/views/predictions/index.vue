@@ -65,10 +65,10 @@
 
       </el-table>
     </el-col>
-    <el-col :span="8" v-if="token">
-      <betslip :betslipData="betslip_data" @storeBetslip="storeBetslip"></betslip>
+    <el-col :span="8" v-if="token && betslip_data.length">
+      <betslip class='betslip-container' :betslipData="betslip_data" @storeBetslip="storeBetslip"></betslip>
     </el-col>
-    <el-col :span="8" v-else>
+    <el-col :span="8" v-if="!token">
       <el-row>
         <el-col>
           <div class="betslip widget widget-box widget-collapsible">
@@ -293,6 +293,12 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
+.betslip-container {
+  position: fixed;
+  top: 172px;
+  // Make me sticky
+}
+
 .selected input {
   border: 1px solid green !important;
   color: darkgreen !important;

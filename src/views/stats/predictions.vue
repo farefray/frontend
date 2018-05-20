@@ -37,64 +37,44 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="Event" prop="game" column-key="game">
+      <el-table-column max-width="380" label="Event" prop="game" column-key="game">
         <template slot-scope="scope">
-          <el-table :data="scope.row.selected_events" :fit="true" style="width:100%;">
-            <el-table-column width="120" label="Date">
-              <template slot-scope="row_scope">
-                {{(row_scope.row.date) | moment("DD.MM kk:mm")}}              
-              </template>
-            </el-table-column>
-            <el-table-column width="120" label="Game">
-              <template slot-scope="row_scope">
-                {{(row_scope.row.game)}} <br/>
-                {{row_scope.row.game_league}}
-              </template>
-            </el-table-column>
-            <el-table-column label="Participant">
-              <template slot-scope="row_scope">
-                <span v-bind:class="{ bold: row_scope.row.selected_event === 'odds_1' }">
-                  {{row_scope.row.team_A.name}}
-                </span>
-                <div v-if="row_scope.row.team_A.ex">
-                  ({{row_scope.row.team_A.ex}})
-                </div>
-                <div v-if="row_scope.row.live && row_scope.row.selected_event === 'odds_1'">
-                  [Live]
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column label="Participant">
-              <template slot-scope="row_scope">
-                <span v-bind:class="{ bold: row_scope.row.selected_event === 'odds_2' }">
-                  {{row_scope.row.team_B.name}}
-                </span>
-                <div v-if="row_scope.row.team_B.ex">
-                  ({{row_scope.row.team_B.ex}})
-                </div>
-                <div v-if="row_scope.row.live && row_scope.row.selected_event === 'odds_2'">
-                  [Live]
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column label="Odds">
-              <template slot-scope="row_scope">
-                <span>
-                  {{row_scope.row.selected_odds}}
-                </span>
-              </template>
-            </el-table-column>
-          </el-table>
+          <div v-for="(event, index) in scope.row.selected_events" v-bind:class="{ won: scope.row.status[0] === 'WON' }">
+              <span class="small">
+              {{(event.game)}} {{event.game_league}} 
+              </span>
+              <el-tag v-if="event.live" class="right">
+               Live
+              </el-tag>
+              <br/>
+              <span class="bold" v-bind:class="{ selected: event.selected_event === 'odds_1' }">
+                {{event.team_A.name}}
+              </span>
+              -
+              <span class="bold" v-bind:class="{ selected: event.selected_event === 'odds_2' }">
+                {{event.team_B.name}}
+              </span>
+              <el-tag size="mini">
+              {{event.selected_odds}}
+              </el-tag>
+              <br/>
+              <span v-if="event.team_A.ex">
+                ({{event.team_A.ex}})
+              </span>
+              <span v-if="event.team_B.ex">
+                ({{event.team_B.ex}})
+              </span>
+          </div>
         </template>
       </el-table-column>
 
-      <el-table-column width="80" align="center" label="Stake">
+      <el-table-column width="120" align="center" label="Stake">
         <template slot-scope="scope">
           {{scope.row.stake}}
         </template>
       </el-table-column>
 
-      <el-table-column width="80" align="center" label="Odds">
+      <el-table-column width="120" align="center" label="Final odds">
         <template slot-scope="scope">
           {{scope.row.final_odds}}
         </template>
@@ -146,159 +126,179 @@
 </template>
 
 <script>
-  import { fetchPredictions, removePrediction, updatePrediction } from '@/api/predictions'
-  import events_filter from '@/views/components/events_filter'
-  import editForm from "./partials/editForm.vue";
-  import statsChart from './charts/statsChart'
-  // TODO make prediction status string instead of array
-  export default {
-    components: {
-      events_filter, editForm, statsChart
-    },
-    data() {
-      return {
-        listLoading: true,
-        predictions: null,
-        predictions_table: [],
-        dialogVisible: false,
-        current_prediction: null, // handling record which is being edited
-        current_row: null, // row position for current_prediction
-        editFormVisible: false,
-        showChart: false,
-        listQuery: {
-          page: 1,
-          per_page: 25,
-          title: undefined
-        },
-        currentPage: 1,
-        total: 0
-      }
-    },
-    mounted() {
-      this.$nextTick(() => {
-        this.loadPredictions()
-      })
-    },
-    methods: {
-      filterData(filters) {
-        // this comes with default predictions filters, so need to fill up with events data
-        Object.assign(this.listQuery, filters);
-        this.loadPredictions();
+import {
+  fetchPredictions,
+  removePrediction,
+  updatePrediction
+} from "@/api/predictions";
+import events_filter from "@/views/components/events_filter";
+import editForm from "./partials/editForm.vue";
+import statsChart from "./charts/statsChart";
+// TODO make prediction status string instead of array
+export default {
+  components: {
+    events_filter,
+    editForm,
+    statsChart
+  },
+  data() {
+    return {
+      listLoading: true,
+      predictions: null,
+      predictions_table: [],
+      dialogVisible: false,
+      current_prediction: null, // handling record which is being edited
+      current_row: null, // row position for current_prediction
+      editFormVisible: false,
+      showChart: false,
+      listQuery: {
+        page: 1,
+        per_page: 25,
+        title: undefined
       },
-      removeCategory(row, tag) {
-        console.log(row)
-        console.log(tag);
-        return true;
-      },
-      loadPredictions() {
-        this.listLoading = true;
-        this.predictions_table = [];
-        fetchPredictions(this.listQuery)
-          .then(response => {
-            this.predictions = response
-            console.log(response)
-            this.listLoading = false
-            this.paginateData(1);
-            this.total = response.length;
-            this.listLoading = false;
-          });
-      },
-      reportStatus(result) {
-        // updating status inside actual table, cached rows and current_prediction
-        this.predictions[this.current_row].status[0] = this.current_prediction.status[0] = result ? 'WON' : 'LOST';        
-        updatePrediction(this.current_prediction)
-          .then(response => {
-            this.$message({
-                message: result ? 'Congratulations!' : 'Good luck next time.',
-                type: result ? 'success' : 'error',
+      currentPage: 1,
+      total: 0
+    };
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.loadPredictions();
+    });
+  },
+  methods: {
+    filterData(filters) {
+      // this comes with default predictions filters, so need to fill up with events data
+      Object.assign(this.listQuery, filters);
+      this.loadPredictions();
+    },
+    removeCategory(row, tag) {
+      console.log(row);
+      console.log(tag);
+      return true;
+    },
+    loadPredictions() {
+      this.listLoading = true;
+      this.predictions_table = [];
+      fetchPredictions(this.listQuery).then(response => {
+        this.predictions = response;
+        console.log(response);
+        this.listLoading = false;
+        this.paginateData(1);
+        this.total = response.length;
+        this.listLoading = false;
+      });
+    },
+    reportStatus(result) {
+      // updating status inside actual table, cached rows and current_prediction
+      this.predictions[
+        this.current_row
+      ].status[0] = this.current_prediction.status[0] = result ? "WON" : "LOST";
+      updatePrediction(this.current_prediction).then(response => {
+        this.$message({
+          message: result ? "Congratulations!" : "Good luck next time.",
+          type: result ? "success" : "error",
+          duration: 5 * 1000
+        });
+      });
+
+      this.paginateData(this.currentPage);
+      this.dialogVisible = false;
+    },
+    editFormSubmit(result) {
+      this.predictions[this.current_row] = result; // todo better way and validation?
+      this.current_prediction = result; // todo better way and validation?
+      console.log("edit form retunr");
+      console.log(result);
+      updatePrediction(this.current_prediction).then(response => {
+        this.$message({
+          message: "Done.",
+          type: "success",
+          duration: 2 * 1000
+        });
+      });
+      this.paginateData(this.currentPage);
+      this.editFormVisible = false;
+    },
+    handleReportStatus(index, row) {
+      this.dialogVisible = true;
+      this.current_prediction = row;
+      this.current_row = index;
+      console.log(index);
+    },
+    editFormClose() {
+      this.editFormVisible = false;
+    },
+    handleEdit(index, row) {
+      this.current_prediction = row;
+      this.current_row = index;
+      this.editFormVisible = true;
+    },
+    handleDelete(index, row) {
+      const self = this;
+      this.$confirm("Are you sure to remove this prediction?")
+        .then(_ => {
+          removePrediction(row)
+            .then(response => {
+              console.log(response);
+              if (response && response.status === 200) {
+                this.$message({
+                  message: "Success! ",
+                  type: "success",
+                  duration: 5 * 1000
+                });
+
+                this.predictions.splice(index, 1);
+                this.paginateData(this.currentPage);
+                return true;
+              }
+
+              console.log(response.data);
+              return false;
+            })
+            .catch(error => {
+              self.$message({
+                message: "Error! " + error.data.message,
+                type: "error",
                 duration: 5 * 1000
               });
-          });
+            });
+        })
+        .catch(_ => {});
+    },
+    paginateData(val) {
+      console.log("paginateData " + val);
+      this.predictions_table = [];
+      this.listQuery.page = val;
+      this.currentPage = val;
+      let pagedData = this.predictions.filter(
+        (item, index) =>
+          index < this.listQuery.per_page * this.listQuery.page &&
+          index >= this.listQuery.per_page * (this.listQuery.page - 1)
+      );
 
-        this.paginateData(this.currentPage);
-        this.dialogVisible = false;
-      },
-      editFormSubmit(result) {
-        this.predictions[this.current_row] = result; // todo better way and validation?
-        this.current_prediction = result; // todo better way and validation?
-        console.log('edit form retunr');
-        console.log(result);
-        updatePrediction(this.current_prediction)
-          .then(response => {
-            this.$message({
-                message: 'Done.',
-                type: 'success',
-                duration: 2 * 1000
-              });
-          });
-        this.paginateData(this.currentPage);
-        this.editFormVisible = false;
-      },
-      handleReportStatus(index, row) {
-        this.dialogVisible = true;
-        this.current_prediction = row;
-        this.current_row = index;
-        console.log(index);
-      },
-      editFormClose() {
-        this.editFormVisible = false;
-      },
-      handleEdit(index, row) {
-        this.current_prediction = row;
-        this.current_row = index;
-        this.editFormVisible = true;
-      },
-      handleDelete(index, row) {
-        const self = this;
-        this.$confirm('Are you sure to remove this prediction?')
-          .then(_ => {
-            removePrediction(row)
-              .then(response => {
-                console.log(response);
-                if (response && response.status === 200) {
-                  this.$message({
-                    message: 'Success! ',
-                    type: 'success',
-                    duration: 5 * 1000
-                  });
-
-                  this.predictions.splice(index, 1);
-                  this.paginateData(this.currentPage);
-                  return true
-                }
-
-                console.log(response.data);
-                return false
-              })
-              .catch(error => {
-                self.$message({
-                  message: 'Error! ' + error.data.message,
-                  type: 'error',
-                  duration: 5 * 1000
-                })
-              })
-          })
-          .catch(_ => {});
-      },
-      paginateData(val) {
-        console.log('paginateData ' + val)
-        this.predictions_table = [];
-        this.listQuery.page = val;
-        this.currentPage = val;
-        let pagedData = this.predictions.filter((item, index) => 
-              index < this.listQuery.per_page * this.listQuery.page && index >= this.listQuery.per_page * (this.listQuery.page - 1))
-
-        pagedData.forEach(item => {
-          this.predictions_table.push(item); // TODO shall we create events for every row? also DRY
-        });
-      }
+      pagedData.forEach(item => {
+        this.predictions_table.push(item); // TODO shall we create events for every row? also DRY
+      });
     }
   }
+};
 </script>
 
-<style scoped>
-  .bold {
-    font-weight: bold;
+<style  lang="scss" scoped>
+.right {
+  float: right;
+}
+.bold {
+  font-weight: bold;
+}
+
+.selected {
+  color: red;
+}
+.won {
+  .selected {
+    color: green;
   }
+}
 </style>
 
