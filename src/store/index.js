@@ -7,7 +7,6 @@ import permission from './modules/permission'
 import tagsView from './modules/tagsView'
 import getters from './getters'
 import createPersistedState from 'vuex-persistedstate'
-// import * as Cookies from 'js-cookie'
 
 Vue.use(Vuex)
 
@@ -20,14 +19,11 @@ const store = new Vuex.Store({
     permission
   },
   plugins: [
-    createPersistedState()
-    /* createPersistedState({
-      storage: {
-        getItem: key => Cookies.get(key),
-        setItem: (key, value) => Cookies.set(key, value, { expires: 3, secure: true }),
-        removeItem: key => Cookies.remove(key)
-      }
-    })*/
+    createPersistedState({
+      paths: [
+        'app', 'permission', 'user'
+      ]
+    })
   ],
   getters
 })
