@@ -1,10 +1,10 @@
 <template>
-  <div class="betslip widget widget-box widget-collapsible">
+  <div class="betslip widget widget-box widget-collapsible" v-if="betslipData.length">
     <div class="widget-header clickable" data-toggle="collapse">
         <h4><small>Betslip</small> <el-badge :value="betslipData.length" class="item"/> </h4>
         
     </div>
-    <div class="widget-content in collapse" style="height: auto;" v-if="betslipData.length > 0">
+    <div class="widget-content in collapse" style="height: auto;">
         <div class="widget-body">
           <template v-for="(prediction, index) in betslipData">
             <div class="statistic-group" v-bind:key="index">
@@ -148,7 +148,7 @@ export default {
   components: {},
   data() {
     return {
-      betslipObj: null,
+      betslipObj: new BetSlip(),
       bet_amount: 0, // actually not used, but v-model is required somehow :)
       betResult: false, // actually not used, but v-model is required somehow :)
       categories: [], // actually not used, but v-model is required somehow :)
@@ -208,9 +208,10 @@ export default {
         console.log("bets added");
         console.log(val);
 
-        this.betslipObj = new BetSlip(val, this.$store.state.user.id);
         this.betslipObj.bet_amount = this.bet_amount;
-        this.betslipObj.update();
+        this.betslipObj.user_id = this.$store.state.user.id;
+        this.betslipObj.selectEvents(val);
+        console.log('watcher for data has finished');
       },
       deep: true
     }

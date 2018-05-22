@@ -12,7 +12,7 @@
       </el-button>
     </el-col>   
   </el-row>
-  <el-row>
+  <el-row class="events-container">
     <el-col :span="16" class="widget widget-simple widget-table">
       <el-table :data="events_table" @filter-change="onFilterChange"
         v-loading="listLoading" element-loading-text="Loading..." border fit
@@ -65,10 +65,10 @@
 
       </el-table>
     </el-col>
-    <el-col :span="8" v-if="token && betslip_data.length">
-      <betslip class='betslip-container' :betslipData="betslip_data" @storeBetslip="storeBetslip"></betslip>
+    <el-col class='betslip-container' :span="8">
+      <betslip :betslipData="betslipData" @storeBetslip="storeBetslip"></betslip>
     </el-col>
-    <el-col :span="8" v-if="!token">
+    <el-col :span="8" v-if="!loggedIn">
       <el-row>
         <el-col>
           <div class="betslip widget widget-box widget-collapsible">
@@ -85,14 +85,13 @@
       </el-row>
     </el-col>
   </el-row>
-
   <div class="pagination-container">
     <el-pagination @current-change="paginateData" :page-size="listQuery.per_page" layout="total, prev, pager, next" :total="total">
     </el-pagination>
   </div>
 
   <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%" top="9vh" class="modal hide fade in">
-    <event_form :temp_event="temp_event" :dialogStatus="dialogStatus" @close="formClose" @toBetSlip="placeBetToBetslip"></event_form>
+    <eventForm :temp_event="temp_event" :dialogStatus="dialogStatus" @close="formClose" @toBetSlip="placeBetToBetslip"></eventForm>
   </el-dialog>
   </div>
 </template>
@@ -123,20 +122,20 @@ import { mapGetters } from 'vuex'
 import { fetchEventsList } from "@/api/events";
 import { storePrediction } from '@/api/predictions'
 import Event from "./model/event.js";
-import C from "./constants.js";
+import C from "./helpers/constants";
 import events_filter from "@/views/components/events_filter";
-import betslip from "./events/betslip.vue";
-import event_form from "./events/event_form.vue";
+import betslip from "./components/betslip.vue";
+import eventForm from "./components/eventForm.vue";
 // import BetSlipHelper from './helpers/betslip.js';
 // const moment = require("moment");
 
 export default {
   name: "events_table",
-  components: { betslip, event_form, events_filter },
+  components: { betslip, eventForm, events_filter },
   data() {
     return {
       C: C,
-      betslip_data: [],
+      betslipData: [],
       events_data: null,
       events_table: [],
       temp_event: new Event(),
@@ -144,7 +143,7 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        per_page: 25,
+        per_page: 15,
         title: undefined,
         discipline: undefined,
         game: []
@@ -159,6 +158,9 @@ export default {
     };
   },
   computed: {
+    loggedIn() {
+      return this.token !== '';
+    },
     ...mapGetters([
       'token' // maybe we need some better way to check if user is logged in?
     ])
@@ -188,7 +190,8 @@ export default {
       event.selected_event = side
             
       this.dialogFormVisible = false;
-      this.betslip_data.push(event);
+      this.betslipData.push(event);
+      console.log('pushed to betslip');
     },
     filterData(filters) {
       // this comes with default predictions filters, so need to fill up with events data
@@ -218,7 +221,7 @@ export default {
         console.log(error)
       })
 
-      this.betslip_data = [];
+      this.betslipData = [];
     },
     getFlagUrl(link) {
       // todo better way
@@ -293,12 +296,6 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-.betslip-container {
-  position: fixed;
-  top: 172px;
-  // Make me sticky
-}
-
 .selected input {
   border: 1px solid green !important;
   color: darkgreen !important;

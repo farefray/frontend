@@ -1,30 +1,15 @@
 // if requiring in every file actually overincluding package and making size bigger? Maybe need to import once at global level?
 const moment = require('moment')
+import Prediction from '../model/prediction';
 
-export default class BetSlip {
-    data = [];
-    bet_amount = 0;
-    result = false;
-    valid = true; // Todo??
-    user_id = 0;
-    final_odds = 1;
-    profit = 0;
-    date = null; // Computed date of bet. Based on actual date of events in betslip
-    game = {
-        type: String,
-        trim: true,
-        default: ""
-    };
-    categories = [];
-
-    // ???
+// Wrapper for prediction in order to use on frontend
+export default class BetSlip extends Prediction {
     isValid() {
         // update valid here 
         // Check if all bets in betslip are finished already and reporter can set a result
         let store_result = true;
-        this.data.forEach((bet) => {
-          console.log(bet)
-          if (moment(bet.date).isAfter()) { // is bet finished. TODO check for cheats here
+        this.selected_events.forEach((event) => {
+          if (moment(event.date).isAfter()) { // is bet finished. TODO check for cheats here
             store_result = false;
           }
         });
@@ -32,38 +17,32 @@ export default class BetSlip {
         return store_result;
     }
 
-    constructor(data = [], user_id = 0) {
-        console.log('creating betlip')
-        // (moment(event.date).isAfter()) ? C.DIALOG_PREDICT : C.DIALOG_STORE; 
-        console.log(data);
-        if (!data.length) {
-            data = [];
+    constructor(prediction = []) {
+        super(prediction);
+
+        for (let field in prediction) {
+            if (prediction.hasOwnProperty(field)) {
+                this[field] = prediction[field];
+            }
         }
-        
-        this.data = data;
-        this.user_id = user_id;
+    }
+
+    selectEvents(selected_events) {
+        this.selected_events = selected_events;
         this.update();
     }
 
     update() {
         // update betslip, recount everything
-        
         this.final_odds = 1;
-        console.log('update');
-        console.log(this.data);
-        this.data.forEach(bet => {
+        this.selected_events.forEach(bet => {
             this.final_odds *= bet.selected_odds
         });
-        console.log(this.final_odds);
-        console.log(this.final_odds * this.bet_amount);
-        console.log((this.final_odds * this.bet_amount - this.bet_amount));
         this.final_odds = this.final_odds.toFixed(2);
         this.profit = (this.final_odds * this.bet_amount - this.bet_amount).toFixed(2);
-        console.log(this.profit);
 
         let latest_date;
-        this.data.forEach((bet) => {
-            console.log(bet.date);
+        this.selected_events.forEach((bet) => {
             if (!latest_date || bet.date > latest_date) { // is bet finished. TODO check for cheats here
                 latest_date = bet.date;
             }
@@ -71,17 +50,14 @@ export default class BetSlip {
 
         this.date = latest_date;
         console.log('latest date: ' + latest_date);
-        console.log(this);
-        return true;
     }
    
     getData() {
         // TODO: set date of prediction to a date of last event in betslip
-
         let data = {
             date: this.date / 1000,
             final_odds: this.final_odds,
-            selected_events: this.data,
+            selected_events: this.selected_events,
             stake: this.bet_amount,
             status: this.isValid() ? (this.result === 'true' ? 'WON' : 'LOST') : 'PENDING',
             user_id: this.user_id,
@@ -89,8 +65,6 @@ export default class BetSlip {
         }
 
         console.log('getData from betslip');
-        console.log(this);
-        console.log(data);
         return data;
     }
 }

@@ -3,7 +3,7 @@
            size="mini">
 
     <el-form-item label="Date">
-      <el-date-picker v-model="temp_event.date" type="datetime" placeholder="Select date">
+      <el-date-picker v-model="betDateTime" type="datetime" placeholder="Select date">
       </el-date-picker>
     </el-form-item>
 
@@ -23,14 +23,12 @@
       <el-row :gutter="20">
         <el-col :span="11">
           <el-switch
-            v-model="betResult"
+            v-model="predictionResult"
             activeColor="#13ce66"
             inactiveColor="#ff4949"
             activeText="Won"
-            activeValue="true"
             inactiveText="Lost"
-            inactiveValue="false"
-            @change="updateBetResult">                          
+            @change="betResultChange">                          
             </el-switch>
         </el-col>
       </el-row>
@@ -44,17 +42,19 @@
 </template>
 
 <comments> 
-todo make this share functionality with betslip.vue/betslip.js
+todo switches with 3 states(won/lost/pending)
 </comments>
 
 <script>
+  const moment = require('moment');
   export default {
     components: {},
     name: 'editForm',
     props: ['temp_event', 'dialogStatus'],
     data() {
       return {
-        betResult: false,
+        predictionResult: false,
+        betDateTime: new Date().getTime(),
         event_types: [
           { "value": "Dota 2", "data": "dota_2" },
           { "value": "CS:GO", "data": "cs_go" },
@@ -62,16 +62,24 @@ todo make this share functionality with betslip.vue/betslip.js
         ] // TODO
       };
     },
-    mounted() {
-      console.log('mounted')
-      console.log(this.temp_event);
-      this.betResult = this.temp_event.status === 'WON'; // TODO better way
+    watch: {
+      temp_event: {
+        handler(event) {
+          // should be actually made by computed value
+          console.log(event.date)
+          console.log('watch');
+          // TODO .date
+          console.log(moment(event.date).valueOf());
+          this.predictionResult = event.result;
+          this.betDateTime = moment(event.date * 1000).valueOf() // todo get rid of * 1000
+        },
+        deep: true
+      }
     },
     methods: {
-      updateBetResult(val) {
-        console.log(this.temp_event);
-        this.temp_event.status = [(val === 'true' ? 'WON' : 'LOST')]; // todo maybe status shouldnt be array
-        console.log(this.temp_event);
+      betResultChange(newValue) {
+        this.predictionResult = newValue;
+        this.temp_event.result = newValue;
       },
       queryEventLeagues(queryString, cb) {
         console.log(queryString)
@@ -89,6 +97,7 @@ todo make this share functionality with betslip.vue/betslip.js
       update() {
           console.log('update');
           console.log(this.temp_event);
+          this.temp_event.date = parseInt(this.betDateTime / 1000);
           this.$emit('update', this.temp_event);
       },
       cancel() {

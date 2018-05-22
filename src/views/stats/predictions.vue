@@ -17,7 +17,7 @@
       <stats-chart :stats="predictions_table"></stats-chart>
     </div>
 
-    <el-table :fit="true" :data="predictions_table"
+    <el-table stripe :fit="true" :data="predictions_table"
               v-loading="listLoading" element-loading-text="Loading..." border
               style="width: 100%">
 
@@ -39,7 +39,7 @@
 
       <el-table-column max-width="380" label="Event" prop="game" column-key="game">
         <template slot-scope="scope">
-          <div v-for="(event, index) in scope.row.selected_events" v-bind:class="{ won: scope.row.status[0] === 'WON' }">
+          <div v-for="(event, index) in scope.row.selected_events" class="sub-event" v-bind:class="{ won: scope.row.status[0] === 'WON' }">
               <span class="small">
               {{(event.game)}} {{event.game_league}} 
               </span>
@@ -54,9 +54,9 @@
               <span class="bold" v-bind:class="{ selected: event.selected_event === 'odds_2' }">
                 {{event.team_B.name}}
               </span>
-              <el-tag size="mini">
-              {{event.selected_odds}}
-              </el-tag>
+              <span size="mini">
+              [{{event.selected_odds}}]
+              </span>
               <br/>
               <span v-if="event.team_A.ex">
                 ({{event.team_A.ex}})
@@ -134,6 +134,7 @@ import {
 import events_filter from "@/views/components/events_filter";
 import editForm from "./partials/editForm.vue";
 import statsChart from "./charts/statsChart";
+import BetSlip from '../predictions/helpers/betslip';
 // TODO make prediction status string instead of array
 export default {
   components: {
@@ -147,7 +148,7 @@ export default {
       predictions: null,
       predictions_table: [],
       dialogVisible: false,
-      current_prediction: null, // handling record which is being edited
+      current_prediction: new BetSlip(), // handling record which is being edited
       current_row: null, // row position for current_prediction
       editFormVisible: false,
       showChart: false,
@@ -228,8 +229,9 @@ export default {
     editFormClose() {
       this.editFormVisible = false;
     },
-    handleEdit(index, row) {
-      this.current_prediction = row;
+    handleEdit(index, predictionRow) {
+      this.current_prediction = new BetSlip(predictionRow);
+      console.log(this.current_prediction);
       this.current_row = index;
       this.editFormVisible = true;
     },
@@ -284,14 +286,16 @@ export default {
 };
 </script>
 
-<style  lang="scss" scoped>
+<style lang="scss" scoped>
 .right {
   float: right;
 }
 .bold {
   font-weight: bold;
 }
-
+.sub-event {
+  text-align: left;
+}
 .selected {
   color: red;
 }
