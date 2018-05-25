@@ -88,14 +88,14 @@ export const asyncRouterMap = [
     noCache: true,
     children: [
       { path: 'dashboard', component: _import('stats/dashboard'), meta: { title: 'Dashboard', roles: ['user'], noCache: true, icon: 'component' }},
-      { path: 'table', component: _import('stats/predictions'), meta: { title: 'Predictions', roles: ['user'], noCache: true, icon: 'component' }}
+      { path: 'predictions', component: _import('stats/predictions'), meta: { title: 'Predictions', roles: ['user'], noCache: true, icon: 'component' }}
     ]
   },
   {
-    path: '/predictions',
+    path: '/events',
     component: Layout,
     redirect: 'noredirect',
-    children: [{ path: 'index', component: _import('predictions/index'), name: 'Events', meta: { title: 'Events', icon: 'table' }}]
+    children: [{ path: 'index', component: _import('events/index'), name: 'Events', meta: { title: 'Events', icon: 'table' }}]
   },
   {
     path: '/error',

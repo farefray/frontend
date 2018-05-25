@@ -134,7 +134,7 @@ import {
 import events_filter from "@/views/components/events_filter";
 import editForm from "./partials/editForm.vue";
 import statsChart from "./charts/statsChart";
-import BetSlip from '../predictions/helpers/betslip';
+import BetSlip from '../events/helpers/betslip';
 // TODO make prediction status string instead of array
 export default {
   components: {

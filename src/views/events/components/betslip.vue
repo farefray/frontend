@@ -211,8 +211,7 @@ export default {
     betslipData: {
       handler(val) {
         console.log("bets added");
-        console.log((this.betslipObj.result == true));
-        this.betslipResult = (this.betslipObj.result == true ? 'true' : 'false'); // TODO URGENTLY remove those hacks with switches for bet results
+        this.betslipResult = (this.betslipObj.result === true ? 'true' : 'false'); // TODO URGENTLY remove those hacks with switches for bet results
         this.betslipObj.bet_amount = this.bet_amount;
         this.betslipObj.user_id = this.$store.state.user.id;
         this.betslipObj.selectEvents(val);
