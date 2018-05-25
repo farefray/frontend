@@ -14,7 +14,7 @@
     </el-row>
     <br/>
     <div class='chart-container' v-if="showChart" style="height:450px;">
-      <stats-chart :stats="predictions_table"></stats-chart>
+      <stats-chart :stats="predictions"></stats-chart>
     </div>
 
     <el-table stripe :fit="true" :data="predictions_table"
@@ -236,7 +236,6 @@ export default {
       this.editFormVisible = true;
     },
     handleDelete(index, row) {
-      const self = this;
       this.$confirm("Are you sure to remove this prediction?")
         .then(_ => {
           removePrediction(row)
@@ -249,7 +248,7 @@ export default {
                   duration: 5 * 1000
                 });
 
-                this.predictions.splice(index, 1);
+                this.predictions.splice(index + (this.listQuery.per_page * this.listQuery.page - this.listQuery.per_page), 1);
                 this.paginateData(this.currentPage);
                 return true;
               }
@@ -258,7 +257,7 @@ export default {
               return false;
             })
             .catch(error => {
-              self.$message({
+              this.$message({
                 message: "Error! " + error.data.message,
                 type: "error",
                 duration: 5 * 1000
