@@ -1,5 +1,6 @@
 // if requiring in every file actually overincluding package and making size bigger? Maybe need to import once at global level?
 const moment = require('moment')
+import { storePrediction } from '@/api/predictions';
 import Prediction from '../model/prediction';
 
 // Wrapper for prediction in order to use on frontend
@@ -59,12 +60,29 @@ export default class BetSlip extends Prediction {
             final_odds: this.final_odds,
             selected_events: this.selected_events,
             stake: this.bet_amount,
-            status: this.isValid() ? (this.result === 'true' ? 'WON' : 'LOST') : 'PENDING',
+            status: this.isValid() ? (this.result === true ? 'WON' : 'LOST') : 'PENDING',
             user_id: this.user_id,
             categories: this.categories
         }
 
         console.log('getData from betslip');
+        console.log(data);
+        console.log(this.result);
         return data;
+    }
+
+    storeInDB() {
+        return storePrediction(this.getData())
+          .then(response => {
+            console.log(response);
+            console.log('stored');
+
+            return Promise.resolve(response);
+          })
+          .catch(error => {
+            console.log('error');
+            console.log(error);
+            return Promise.reject(error);
+          });
     }
 }

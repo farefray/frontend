@@ -21,6 +21,7 @@ export default class Prediction {
   }
 
   set result(result) {
-    this.status[0] = result === true ? 'WON' : (result === false ? 'LOST' : 'PENDING')
+    this.status = [];
+    this.status[0] = result === 'true' ? 'WON' : (result === 'false' ? 'LOST' : 'PENDING')
   }
 }

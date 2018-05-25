@@ -79,7 +79,7 @@
                   <el-row :gutter="0">
                       <el-col :span="10">
                           <el-switch
-                              v-model="betResult"
+                              v-model="betslipResult"
                               activeColor="#13ce66"
                               inactiveColor="#ff4949"
                               activeText="Won"
@@ -87,7 +87,7 @@
                               inactiveText="Lost"
                               inactiveValue="false"
                               @change="updateBetResult"
-                              v-if="this.betslipObj.isValid()">                          
+                              v-if="betslipObj.isValid()">                          
                           </el-switch>
                           <el-tag v-else>Pending</el-tag>
                       </el-col>
@@ -149,8 +149,8 @@ export default {
   data() {
     return {
       betslipObj: new BetSlip(),
+      betslipResult: false,
       bet_amount: 0, // actually not used, but v-model is required somehow :)
-      betResult: false, // actually not used, but v-model is required somehow :)
       categories: [], // actually not used, but v-model is required somehow :)
       default_tags: [{
         value: 'Parimatch',
@@ -180,10 +180,15 @@ export default {
       }
     },
     storeBetslip() {
-      this.$emit("storeBetslip", this.betslipObj.getData());
+      this.betslipObj.storeInDB().then(result => {
+        console.log('storeBetSlip inside promise');
+        console.log(result);
+        this.$emit("stored");
+      })
     },
     updateBetResult(val) {
       console.log("bet result:" + val);
+      this.betslipResult = val;
       this.betslipObj.result = val;
       this.betslipObj.update();
     },
@@ -206,8 +211,8 @@ export default {
     betslipData: {
       handler(val) {
         console.log("bets added");
-        console.log(val);
-
+        console.log((this.betslipObj.result == true));
+        this.betslipResult = (this.betslipObj.result == true ? 'true' : 'false'); // TODO URGENTLY remove those hacks with switches for bet results
         this.betslipObj.bet_amount = this.bet_amount;
         this.betslipObj.user_id = this.$store.state.user.id;
         this.betslipObj.selectEvents(val);

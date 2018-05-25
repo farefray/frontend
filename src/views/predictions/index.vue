@@ -66,7 +66,7 @@
       </el-table>
     </el-col>
     <el-col class='betslip-container' :span="8">
-      <betslip :betslipData="betslipData" @storeBetslip="storeBetslip"></betslip>
+      <betslip :betslipData="betslipData" @stored="betslipStored"></betslip>
     </el-col>
     <el-col :span="8" v-if="!loggedIn">
       <el-row>
@@ -120,7 +120,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import { fetchEventsList } from "@/api/events";
-import { storePrediction } from '@/api/predictions'
 import Event from "./model/event.js";
 import C from "./helpers/constants";
 import events_filter from "@/views/components/events_filter";
@@ -201,24 +200,12 @@ export default {
       console.log(this.listQuery);
       this.loadEvents();
     },
-    storeBetslip(data) {      
-      console.log("prediction store");
-      console.log('store bets')
-      console.log(data)
-      storePrediction(data).then(response => {
-        console.log(response)
-        console.log('stored')
-        
-        // ToDo response processed
-        this.$notify({
-          title: 'Success!',
-          message: 'You have successfully stored your betslip',
-          type: 'success',
-          duration: 2000
-        })
-      }).catch(error => {
-        console.log('error')
-        console.log(error)
+    betslipStored() {      
+      this.$notify({
+        title: 'Success!',
+        message: 'You have successfully stored your betslip',
+        type: 'success',
+        duration: 2000
       })
 
       this.betslipData = [];
