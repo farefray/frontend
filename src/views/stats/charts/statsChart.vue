@@ -6,7 +6,7 @@
 import echarts from "echarts";
 require("echarts/theme/macarons"); // theme
 import { debounce } from "@/utils";
-const _ = require('lodash'); // Move global if used a lot?
+const _ = require("lodash"); // Move global if used a lot?
 
 function parseDate(timestamp) {
   let date = new Date(timestamp);
@@ -23,7 +23,7 @@ var globalChartData = {
   maxValue: 0,
   absoluteMaxChange: 0,
   absoluteAvgValue: 0
-}
+};
 
 export default {
   name: "stats-chart",
@@ -106,7 +106,7 @@ export default {
       }
 
       let dataForChart = [];
-      let balance = 0
+      let balance = 0;
 
       let tmp = _.cloneDeep(this.stats).reverse();
       let absoluteChange = 0;
@@ -114,9 +114,10 @@ export default {
         let prediction = tmp[i];
 
         // TODO status shouldn't be array?
-        let balanceChange = (prediction.status[0] === 'WON') 
-          ? prediction.stake * prediction.final_odds - prediction.stake
-          : -prediction.stake;
+        let balanceChange =
+          prediction.status[0] === "WON"
+            ? prediction.stake * prediction.final_odds - prediction.stake
+            : -prediction.stake;
 
         if (globalChartData.maxValue < balanceChange) {
           globalChartData.maxValue = balanceChange;
@@ -127,8 +128,13 @@ export default {
         } else if (globalChartData.minValue > balanceChange) {
           globalChartData.minValue = balanceChange;
 
-          if (Math.abs(globalChartData.minValue) > globalChartData.absoluteMaxChange) {
-            globalChartData.absoluteMaxChange = Math.abs(globalChartData.minValue);
+          if (
+            Math.abs(globalChartData.minValue) >
+            globalChartData.absoluteMaxChange
+          ) {
+            globalChartData.absoluteMaxChange = Math.abs(
+              globalChartData.minValue
+            );
           }
         }
 
@@ -136,30 +142,38 @@ export default {
         balance += balanceChange;
         let date = new Date(prediction.date * 1000);
         dataForChart.push({
-            name: date.toString(),
-            value: [
-                [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('/') + " " + date.getHours() + ":" + date.getMinutes() + ":0" + i,
-                // + i in this case made to avoid stacking events on the same y value
-                Math.round(balance),
-                balanceChange
-            ],
-            prediction: prediction
+          name: date.toString(),
+          value: [
+            [date.getFullYear(), date.getMonth() + 1, date.getDate()].join(
+              "/"
+            ) +
+              " " +
+              date.getHours() +
+              ":" +
+              date.getMinutes() +
+              ":0" +
+              i,
+            // + i in this case made to avoid stacking events on the same y value
+            Math.round(balance),
+            balanceChange
+          ],
+          prediction: prediction
         });
       }
 
       globalChartData.avgValue = Math.floor(balance / tmp.length - 1);
-      globalChartData.absoluteChange = Math.floor(absoluteChange / tmp.length - 1);
-
-      this.setOptions(
-        dataForChart
+      globalChartData.absoluteChange = Math.floor(
+        absoluteChange / tmp.length - 1
       );
+
+      this.setOptions(dataForChart);
     },
     setOptions(dataForChart) {
       console.log(dataForChart);
       this.chart.setOption({
         xAxis: {
           boundaryGap: true,
-          type: 'category',
+          type: "category",
           axisTick: {
             show: false
           },
@@ -168,20 +182,18 @@ export default {
           }
         },
         yAxis: {
-          type: 'value',
+          type: "value",
           axisTick: {
+            inside: true
+          },
+          splitLine: {
             show: false
           },
-          boundaryGap: true,
-          splitLine: {
-              show: false
+          axisLabel: {
+            inside: true,
+            formatter: "{value}\n"
           },
-          axisLine: {
-              show: true,
-              lineStyle: {
-                  color: '#e5e5e5'
-              }
-          }
+          z: 10
         },
         /* dataZoom: [{
           handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
@@ -206,7 +218,7 @@ export default {
           axisPointer: {
             type: "shadow"
           },
-          triggerOn: 'click',
+          triggerOn: "click",
           enterable: true,
           formatter: function(params, ticket, callback) {
             // TODO optimize this?
@@ -214,35 +226,67 @@ export default {
             let event = params[0].data.prediction;
             let status = event.status[0];
 
-            let status_color = (status === 'WON' ? '#3e5f33' : (status === 'LOST' ? '#f99008' : '#cacbcf'));
-            let status_circle_block = '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background-color:' + status_color + ';margin-right:5px;"></span>';
+            let status_color =
+              status === "WON"
+                ? "#3e5f33"
+                : status === "LOST" ? "#f99008" : "#cacbcf";
+            let status_circle_block =
+              '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background-color:' +
+              status_color +
+              ';margin-right:5px;"></span>';
 
             let event_date = parseDate(event.date * 1000);
-            let event_date_block = '<span>' + event_date + '</span>';
+            let event_date_block = "<span>" + event_date + "</span>";
 
-            let status_block = '<span style="color: ' + status_color + ';"></span>';
-            let final_odds_block = '<span style="position:absolute; right:5px; top: 3px;">' + event.final_odds + '</span>';
-            
+            let status_block =
+              '<span style="color: ' + status_color + ';"></span>';
+            let final_odds_block =
+              '<span style="position:absolute; right:5px; top: 3px;">' +
+              event.final_odds +
+              "</span>";
+
             let participants_block = '<div style="padding-top:5px;">';
             for (let i = 0; i < event.selected_events.length; i++) {
-              participants_block += (event.selected_events[i].selected_event === 'odds_1' ? '<strong style="color: ' + status_color + ';">' : '') + event.selected_events[i].team_A.name + (event.selected_events[i].selected_event === 'odds_1' ? '</strong>' : '') +
+              participants_block +=
+                (event.selected_events[i].selected_event === "odds_1"
+                  ? '<strong style="color: ' + status_color + ';">'
+                  : "") +
+                event.selected_events[i].team_A.name +
+                (event.selected_events[i].selected_event === "odds_1"
+                  ? "</strong>"
+                  : "") +
                 " vs " +
-                (event.selected_events[i].selected_event === 'odds_2' ? '<strong style="color: ' + status_color + ';">' : '') + event.selected_events[i].team_B.name + (event.selected_events[i].selected_event === 'odds_1' ? '</strong>' : '') + '</br>';
+                (event.selected_events[i].selected_event === "odds_2"
+                  ? '<strong style="color: ' + status_color + ';">'
+                  : "") +
+                event.selected_events[i].team_B.name +
+                (event.selected_events[i].selected_event === "odds_1"
+                  ? "</strong>"
+                  : "") +
+                "</br>";
             }
-            participants_block += '</div>';
+            participants_block += "</div>";
 
-            let profit_block = '<strong style="color:' + status_color + '; position:absolute; right:5px; bottom: 3px;">' + (status === 'WON'
-              ? ('+' + (event.stake * event.final_odds - event.stake).toFixed(2))
-              : ('-' + event.stake.toFixed(2))) + '</strong>';
+            let profit_block =
+              '<strong style="color:' +
+              status_color +
+              '; position:absolute; right:5px; bottom: 3px;">' +
+              (status === "WON"
+                ? "+" +
+                  (event.stake * event.final_odds - event.stake).toFixed(2)
+                : "-" + event.stake.toFixed(2)) +
+              "</strong>";
 
-            return status_circle_block +
+            return (
+              status_circle_block +
               event_date_block +
-              status_block + 
+              status_block +
               final_odds_block +
-              '<br/>' +
-              participants_block + 
-              '<br/>' +
-              profit_block;
+              "<br/>" +
+              participants_block +
+              "<br/>" +
+              profit_block
+            );
           }
         },
         /* visualMap: {
@@ -267,8 +311,8 @@ export default {
             type: "line",
             itemStyle: {
               normal: {
-                color: (params) => {
-                  return params.data.value[2] > 0 ? '#3e5f33' : '#ce2a2a';
+                color: params => {
+                  return params.data.value[2] > 0 ? "#3e5f33" : "#ce2a2a";
                 },
                 areaStyle: {
                   color: "#f3f8ff"
@@ -276,12 +320,23 @@ export default {
               }
             },
             lineStyle: {
-                normal: { width: 3 }
+              normal: { width: 3 }
             },
-            symbol: 'circle',
+            symbol: "circle",
             symbolSize: (value, params) => {
               // return value from 5 to 25, based on how much value close to max/min value
-              return Math.max(5, Math.floor(25 / 100 * (Math.floor(Math.abs(value[2]) / globalChartData.absoluteMaxChange * 100))));
+              return Math.max(
+                5,
+                Math.floor(
+                  25 /
+                    100 *
+                    Math.floor(
+                      Math.abs(value[2]) /
+                        globalChartData.absoluteMaxChange *
+                        100
+                    )
+                )
+              );
             },
             data: dataForChart,
             animationDuration: 2800,
@@ -299,5 +354,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

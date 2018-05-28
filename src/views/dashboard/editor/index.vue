@@ -1,26 +1,20 @@
 <template>
   <div class="dashboard-editor-container">
 
-    Hello
+    Nothing here yet, but you can use your own dashboard and predictions.
 
   </div>
 </template>
 
 <script>
-
 export default {
-  name: 'dashboard-admin',
-  components: {
- 
-  },
+  name: "dashboard-admin",
+  components: {},
   data() {
-    return {
-    }
+    return {};
   },
-  methods: {
-
-  }
-}
+  methods: {}
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

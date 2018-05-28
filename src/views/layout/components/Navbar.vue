@@ -18,16 +18,11 @@
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
+          <router-link to="/stats/dashboard">
             <el-dropdown-item>
               {{$t('navbar.dashboard')}}
             </el-dropdown-item>
           </router-link>
-          <a target='_blank' href="https://github.com/farefray/frontend">
-            <el-dropdown-item>
-              {{$t('navbar.github')}}
-            </el-dropdown-item>
-          </a>
           <el-dropdown-item divided>
             <span @click="logout" style="display:block;">{{$t('navbar.logOut')}}</span>
           </el-dropdown-item>
@@ -45,11 +40,11 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-import ErrorLog from '@/components/ErrorLog'
-import LangSelect from '@/components/LangSelect'
+import { mapGetters } from "vuex";
+import Breadcrumb from "@/components/Breadcrumb";
+import Hamburger from "@/components/Hamburger";
+import ErrorLog from "@/components/ErrorLog";
+import LangSelect from "@/components/LangSelect";
 
 export default {
   components: {
@@ -59,35 +54,50 @@ export default {
     LangSelect
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'token',
-      'avatar'
-    ])
+    ...mapGetters(["sidebar", "token", "avatar"])
   },
   data() {
     return {
       avatar_dropdown: [
-        { title: '基础篇', href: 'https://segmentfault.com/a/1190000009275424' },
-        { title: '登录权限篇', href: 'https://segmentfault.com/a/1190000009506097' },
-        { title: '实战篇', href: 'https://segmentfault.com/a/1190000009762198' },
-        { title: 'vueAdmin-template 篇', href: 'https://segmentfault.com/a/1190000010043013' },
-        { title: '自行封装 component', href: 'https://segmentfault.com/a/1190000009090836' },
-        { title: '优雅的使用 icon', href: 'https://segmentfault.com/a/https://segmentfault.com/a/1190000012213278' }
+        {
+          title: "基础篇",
+          href: "https://segmentfault.com/a/1190000009275424"
+        },
+        {
+          title: "登录权限篇",
+          href: "https://segmentfault.com/a/1190000009506097"
+        },
+        {
+          title: "实战篇",
+          href: "https://segmentfault.com/a/1190000009762198"
+        },
+        {
+          title: "vueAdmin-template 篇",
+          href: "https://segmentfault.com/a/1190000010043013"
+        },
+        {
+          title: "自行封装 component",
+          href: "https://segmentfault.com/a/1190000009090836"
+        },
+        {
+          title: "优雅的使用 icon",
+          href:
+            "https://segmentfault.com/a/https://segmentfault.com/a/1190000012213278"
+        }
       ]
-    }
+    };
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch('toggleSideBar')
+      this.$store.dispatch("toggleSideBar");
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload()// In order to re-instantiate the vue-router object to avoid bugs
-      })
+      this.$store.dispatch("LogOut").then(() => {
+        location.reload(); // In order to re-instantiate the vue-router object to avoid bugs
+      });
     }
   }
-}
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
@@ -101,7 +111,7 @@ export default {
     float: left;
     padding: 0 10px;
   }
-  .breadcrumb-container{
+  .breadcrumb-container {
     float: left;
   }
   .errLog-container {
@@ -111,14 +121,14 @@ export default {
   .right-menu {
     float: right;
     height: 100%;
-    &:focus{
-     outline: none;
+    &:focus {
+      outline: none;
     }
     .right-menu-item {
       display: inline-block;
       margin: 0 8px;
     }
-    .international{
+    .international {
       vertical-align: top;
     }
     .theme-switch {
