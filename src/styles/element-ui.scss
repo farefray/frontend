@@ -99,7 +99,6 @@
 }
 
 .el-input__inner {
-  background-color: #ffffff;
   border: 1px solid;
   border-color: #a8abba #b5b7c5 #c5c7d2;
   -webkit-border-radius: 3px;
@@ -112,4 +111,21 @@
 
 .el-switch__label.is-active {
   color: #476b3b;
+}
+
+.el-card {
+  background-color: #f6f7fe;
+  color: #333;
+  min-height: 20px;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+}
+
+.el-card.is-always-shadow, .el-card.is-hover-shadow:focus, .el-card.is-hover-shadow:hover {
+  box-shadow: 0 1px 2px rgba(0,0,0,.3);
+  border-color: #fff;
+}
+
+.el-card__header {
+  padding: 0 20px;
 }

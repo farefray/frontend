@@ -2,7 +2,7 @@
   <div class="login-container">
     <el-form class="card-box login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
       <div class="title"><img :src="logo" alt="Logo" width="225px"></div>
-      <div class="well well-nice form-dark">
+      <el-card>
         <div class="tab-content overflow">
           <div class="tab-pane fade in active">
           <h3 class="no-margin-top"><svg-icon icon-class="peoples" class-name="card-panel-icon" /> Authorization</h3>
@@ -13,8 +13,8 @@
           </el-form-item>
 
           <el-row :gutter="10">
-            <el-col :span="14" :offset="5">
-              <el-button type="submit" class="btn btn-envato btn-block btn-large" :loading="loading" @click.native.prevent="handleLogin">SIGN IN</el-button>
+            <el-col style="text-align: center">
+              <el-button type="primary" size="medium" :loading="loading" @click.native.prevent="handleLogin">SIGN IN</el-button>
             </el-col>
           </el-row>
           <hr class="margin-xm">
@@ -25,14 +25,13 @@
           </el-row>
           </div>
         </div>
-      </div>
+      </el-card>
       
       <br/>
-      <a href="#register" class="btn btn-block btn-yellow btn-large f12" @click='showRegistrationForm=true'>No account yet? Register now for free!</a>
       
       <el-row :gutter="25">
-        <el-col :span="6" :offset="18">
-          
+        <el-col style="text-align: center">
+            <a href="#register" @click='showRegistrationForm=true'>No account yet? Register now for free!</a>
         </el-col>
       </el-row>
       <el-row>
@@ -147,6 +146,8 @@ export default {
 
   .login-container {
     @include relative;
+
+    margin: 30px 0;
     height: 100vh;
     input:-webkit-autofill {
       box-shadow: inset 0 0 0 5px #1e314d;
@@ -201,6 +202,7 @@ export default {
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 5px;
       color: #454545;
+      margin-bottom: 30px;
     }
   }
 

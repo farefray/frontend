@@ -7,7 +7,7 @@
       </div>
     </el-col>
     <el-col :span="4">
-      <el-button class="btn filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="success" icon="edit">
+      <el-button class="filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit">
         Add my own event
       </el-button>
     </el-col>   
@@ -15,8 +15,7 @@
   <el-row class="events-container">
     <el-col :span="16" class="widget widget-simple widget-table">
       <el-table :data="events_table" @filter-change="onFilterChange"
-        v-loading="listLoading" element-loading-text="Loading..." border fit
-        class="table boo-table table-striped table-content table-hover dataTable">
+        v-loading="listLoading" element-loading-text="Loading..." border fit>
 
         <el-table-column align="center" label="DATE (UTC)" prop="date" column-key="date">
           <template slot-scope="scope">
@@ -75,7 +74,7 @@
           <div class="widget-header clickable" data-toggle="collapse">
               <h4><small>Betslip</small></h4>
               <router-link to="login">
-              <el-button class="btn btn-yellow btn-block">
+              <el-button type="warning">
               Login
               </el-button>
               </router-link>
@@ -299,9 +298,9 @@ export default {
   font-size: 13px; 
 }
 
-.event:hover {
+tbody .event:hover {
   cursor: pointer;
-  background:#dbba13 !important;
+  background:#cbccd0 !important;
   color: #ffffff;
   text-shadow: none;
   font-weight: bold;

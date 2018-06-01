@@ -21,7 +21,7 @@
 
       <el-row :gutter="10">
         <el-col :span="10" :offset="7">
-          <el-button type="btn btn-green" style="width:100%;" :loading="loading" @click.native.prevent="handleRegister">Register</el-button>
+          <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleRegister">Register</el-button>
         </el-col>
       </el-row>
     </el-form>

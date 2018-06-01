@@ -30,7 +30,7 @@
       </el-dropdown>
       <div class="right-menu-item" v-else>
         <router-link to="login">
-          <el-button class="btn btn-yellow btn-block" style="margin-right: 15px;">
+          <el-button type="warning" style="margin-right: 15px;">
           Login
           </el-button>
         </router-link>

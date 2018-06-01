@@ -42,7 +42,7 @@ export default {
     }
   }
   #logoholder {
-    background: url('../../../../assets/img/background/body-bg-02-50.jpg') repeat scroll 0 0 #373b3e;
+    background: url('../../../../assets/img/background/body-bg-02.jpg') repeat scroll 0 0 #373b3e; // OMG
     width: 100%;
     text-align: center;
     border-bottom: 2px solid white;

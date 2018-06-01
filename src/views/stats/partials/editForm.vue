@@ -35,8 +35,8 @@
     </el-form-item>
 
     <el-form-item>
-      <el-button class="btn" @click="cancel()">Cancel</el-button>
-      <el-button class="btn btn-success" @click="update()">Update</el-button>
+      <el-button type="warning" @click="cancel()">Cancel</el-button>
+      <el-button type="success" @click="update()">Update</el-button>
     </el-form-item>
   </el-form>
 </template>

@@ -1,8 +1,7 @@
 <template>
-  <div class="betslip widget widget-box widget-collapsible" v-if="betslipData.length">
-    <div class="widget-header clickable" data-toggle="collapse">
-        <h4><small>Betslip</small> <el-badge :value="betslipData.length" class="item"/> </h4>
-        
+  <el-card class="box-card betslip" v-if="betslipData.length">
+    <div slot="header" class="clearfix">
+        <h3>Betslip <el-badge :value="betslipData.length" class="item"/> </h3>
     </div>
     <div class="widget-content in collapse" style="height: auto;">
         <div class="widget-body">
@@ -52,13 +51,11 @@
                   </div>
                   </el-col>
                 </el-row>
-                <ul class="btn-toolbar toolbar-inline margin-00" style="background: #fafafa;">
-                  <li>
-                    <a class="txt-r" @click="handleDelete(index, prediction)">
+                <div>
+                    <a @click="handleDelete(index, prediction)">
                       <svg-icon icon-class="cross" style='cursor:pointer;' w="12px" close-transition/>
                     </a>
-                  </li>
-                </ul>
+                </div>
               </div>              
             </div>
           </template>
@@ -124,7 +121,7 @@
         </div>
         <el-row :gutter="12">
           <el-col :offset="18">
-            <a class="btn btn-envato btn-large" href="javascript:void(0);" @click="storeBetslip">Store»</a>
+            <el-button type="primary" size="medium" @click="storeBetslip">Store»</el-button>
           </el-col>
         </el-row>
         <br/>
@@ -132,7 +129,7 @@
         <div class="widget-footer box-shadow-in">
         </div>
     </div>
-  </div>
+  </el-card>
 </template>
 
 <comment>
