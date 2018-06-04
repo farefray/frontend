@@ -7,7 +7,7 @@
         <div class="widget-body">
           <template v-for="(prediction, index) in betslipData">
             <div class="statistic-group" v-bind:key="index">
-              <span><el-tag type="game-tag">{{prediction.game}}</el-tag></span>
+              <el-tag type="game-tag">{{prediction.game}}</el-tag>
               <h3 class="statistic-values">
                 <span v-bind:class="{ winner: prediction.selected_event === 'odds_1' }">
                 {{prediction.team_A.name}}
@@ -19,8 +19,11 @@
                 <br/>
                 <el-switch v-model="prediction.live" active-text="[Live bet]" inactive-text="[Default bet]" active-color="#476b3b" inactive-color="#909092"></el-switch>
               </h3>
+              <a @click="handleDelete(index, prediction)" class='icon-remove'>
+                <svg-icon icon-class="cross" style='cursor:pointer;' w="12px" close-transition/>
+              </a>
               <hr class="margin-mm">
-                <el-row>
+                <el-row style="padding: 5px 0;">
                   <el-col :span="10" :offset="1">
                   <div v-if="prediction.selected_event === 'odds_1'">
                     <el-input-number size="mini" controls-position="right"
@@ -48,21 +51,36 @@
                     </div>
                     <div v-if="prediction.team_B.ex">
                       ({{prediction.team_B.ex}})
-                  </div>
+                  </div>                 
                   </el-col>
                 </el-row>
-                <div>
-                    <a @click="handleDelete(index, prediction)">
-                      <svg-icon icon-class="cross" style='cursor:pointer;' w="12px" close-transition/>
-                    </a>
-                </div>
+                
               </div>              
             </div>
           </template>
           <br />
           <div class="well well-nice well-small">
             <div class="well well-nice well-impressed margin-0m">
-                <h5 class="simple-header">Bet info</h5>
+                <el-row>
+                  <el-col :span="12">
+                    <h5 class="simple-header">Bet info:</h5>
+                  </el-col>
+                  <el-col :span="12">
+                    <el-switch
+                        v-model="betslipResult"
+                        activeColor="#13ce66"
+                        inactiveColor="#ff4949"
+                        activeText="Won"
+                        activeValue="true"
+                        inactiveText="Lost"
+                        inactiveValue="false"
+                        @change="updateBetResult"
+                        v-if="betslipObj.isValid()"
+                        style="float:right;">                          
+                    </el-switch>
+                    <el-tag style="float:right;" v-else>Pending</el-tag>
+                  </el-col>
+                </el-row>
                 <div>
                   <el-row :gutter="0">
                       <el-col :span="10">
@@ -73,21 +91,8 @@
                       </el-col>
                   </el-row>
                   <br/>
-                  <el-row :gutter="0">
-                      <el-col :span="10">
-                          <el-switch
-                              v-model="betslipResult"
-                              activeColor="#13ce66"
-                              inactiveColor="#ff4949"
-                              activeText="Won"
-                              activeValue="true"
-                              inactiveText="Lost"
-                              inactiveValue="false"
-                              @change="updateBetResult"
-                              v-if="betslipObj.isValid()">                          
-                          </el-switch>
-                          <el-tag v-else>Pending</el-tag>
-                      </el-col>
+                  <el-row>
+                    <el-col>
                       <el-col :span="12">
                           <el-select
                               v-model="categories"
@@ -104,6 +109,7 @@
                               </el-option>
                           </el-select>
                       </el-col>
+                    </el-col>
                   </el-row>
                 </div>
             </div>
@@ -229,6 +235,7 @@ export default {
 }
 .statistic-group {
   border: 1px solid #c4c5c9;
+  position: relative;
 }
 .statistic-values {
   text-align: center;
@@ -240,6 +247,12 @@ export default {
     top: 7px;
     right: 15px;
   }
+}
+
+.icon-remove {
+  position: absolute;
+  right: 10px;
+  top: 6px;
 }
 
 .el-tag--game-tag {

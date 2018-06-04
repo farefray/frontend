@@ -1,0 +1,222 @@
+
+.well {
+    border-color: #d3d5d9;
+    background-color: #f6f7fe;
+    color: #333;
+    min-height: 20px;
+    padding: 19px;
+    margin-bottom: 20px;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px
+}
+
+.well-nice {
+    border-color: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,.3)
+}
+
+.well-black {
+    color: #eee;
+    background: #373b3e;
+    border-color: #303336
+}
+
+.well-black .page-header {
+    border-bottom-color: #222;
+    box-shadow: 0 1px 0 hsla(0,0%,100%,.2)
+}
+
+.well-black hr {
+    border-top-color: #222;
+    border-bottom-color: #494d51
+}
+
+.well-black code {
+    background-color: #303335;
+    border: 1px solid #2a2c2e;
+    color: #f66
+}
+
+.well-black h1,.well-black h2,.well-black h3,.well-black h4,.well-black h5,.well-black h6,h1.well-black,h2.well-black,h3.well-black,h4.well-black,h5.well-black,h6.well-black {
+    color: #eee;
+    text-shadow: 0 -1px 0 rgba(0,0,0,.8)
+}
+
+.well-impressed {
+    border-color: #d3d5d9;
+    box-shadow: inset 0 1px 8px rgba(0,0,0,.05),inset 0 1px 1px rgba(0,0,0,.05),inset 1px 0 2px rgba(0,0,0,.1),0 1px 0 #fff
+}
+
+.well-wrap {
+    padding: 0;
+    background-color: transparent;
+    border-color: #d3d5d9;
+    box-shadow: 0 1px 3px rgba(0,0,0,.133)
+}
+
+.well-wrap.inverse {
+    border-color: #fff;
+    border-color: hsla(0,0%,100%,.5)
+}
+
+.well-content {
+    margin: 0 -19px;
+    border-top: 1px solid #fff
+}
+
+.well-box {
+    padding: 0
+}
+
+.well-box .btn-toolbar {
+    margin: 0
+}
+
+.well-box .section-content {
+    padding: 16px;
+    border-top: 1px solid #fff
+}
+
+.well-box .section-content.item {
+    border-bottom: 1px solid #d3d5d9
+}
+
+.well-box .section-content.footer {
+    padding: 6px 16px;
+    min-height: 20px
+}
+
+.well-box .section-content-table {
+    padding: 0;
+    border-top: 1px solid #fff
+}
+
+.well-box .navbar {
+    margin-bottom: 0
+}
+
+.well-box .navbar .navbar-inner {
+    padding-right: 15px;
+    padding-left: 15px;
+    border: none;
+    border-bottom: 1px solid #d3d5d9;
+    border-radius: 3px 3px 0 0;
+    box-shadow: 0 1px 0 #fff
+}
+
+.well-box .navbar .navbar-inner .title {
+    color: #333
+}
+
+.well-box .navbar .nav>li>a {
+    padding: 10px
+}
+
+.well-box .navbar .divider-vertical {
+    margin: 0 6px;
+    border-left-color: #d3d5d9;
+    border-right-color: #fff
+}
+
+.well-box .navbar-inverse .divider-vertical {
+    border-left-color: #222;
+    border-right-color: #44484b
+}
+
+.well-box .navbar-inverse .navbar-inner .title {
+    color: #e6e8eb
+}
+
+.well-box.well-black .navbar-inner {
+    border-bottom: 1px solid #222;
+    box-shadow: 0 1px 0 hsla(0,0%,100%,.15)
+}
+
+.well-box.well-black .navbar-inner .title {
+    color: #e6e8eb
+}
+
+.well .well {
+    *zoom:1}
+
+.well .well:after,.well .well:before {
+    display: table;
+    content: "";
+    line-height: 0
+}
+
+.well .well:after {
+    clear: both
+}
+
+.well .well-nice {
+    border-color: #f5f6f9
+}
+
+.well-nice .well-nice {
+    border-color: #e3e5f3;
+    background-color: #edeff7;
+    box-shadow: none
+}
+
+.well-nice .well-nice.well-impressed {
+    border-color: #fff;
+    background-color: #edeef5;
+    box-shadow: inset 0 1px 6px rgba(0,0,0,.1),inset 0 1px 1px rgba(0,0,0,.1),inset 1px 0 2px rgba(0,0,0,.15),0 1px 0 #fff
+}
+
+.well-black .well-black {
+    border-color: #2d3133;
+    background-color: #303336;
+    box-shadow: none
+}
+
+.well-black .well-black.well-impressed {
+    border: none;
+    box-shadow: inset 0 1px 6px rgba(0,0,0,.4),inset 0 1px 1px rgba(0,0,0,.15),inset 1px 0 2px rgba(0,0,0,.05),0 1px 0 hsla(0,0%,100%,.15)
+}
+
+.well-black .well-nice {
+    border: none
+}
+
+.well-black .well-nice h1,.well-black .well-nice h2,.well-black .well-nice h3,.well-black .well-nice h4,.well-black .well-nice h5,.well-black .well-nice h6 {
+    color: #333;
+    text-shadow: 0 1px 0 #fff
+}
+
+.well-black.well-impressed {
+    border: none;
+    box-shadow: inset 0 1px 6px rgba(0,0,0,.7),inset 0 1px 1px rgba(0,0,0,.5),inset 1px 0 2px rgba(0,0,0,.3),0 1px 0 #fff
+}
+
+.well-mini {
+    padding: 5px;
+    min-height: 10px
+}
+
+.well-mini.well-impressed {
+    border-color: #c0c3c9;
+    box-shadow: inset 0 1px 4px rgba(0,0,0,.05),inset 0 1px 1px rgba(0,0,0,.05),inset 1px 0 2px rgba(0,0,0,.15),0 1px 0 #fff
+}
+
+.well .simple-header:first-child {
+    margin-top: -10px
+}
+
+.well-small .simple-header:first-child {
+    margin-top: 0
+}
+
+.well-box .simple-header:first-child {
+    margin-top: 10px
+}
+
+.well-black .simple-header {
+    border-bottom-color: #222;
+    box-shadow: 0 1px 0 hsla(0,0%,100%,.15)
+}
+
+ol li a.well,ul li a.well {
+    display: block
+}
