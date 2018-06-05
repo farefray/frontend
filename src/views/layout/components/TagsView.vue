@@ -70,14 +70,16 @@ export default {
     },
     moveToCurrentTag() {
       const tags = this.$refs.tag
-      this.$nextTick(() => {
-        for (const tag of tags) {
-          if (tag.to === this.$route.path) {
-            this.$refs.scrollPane.moveToTarget(tag.$el)
-            break
+      if (tags) {
+        this.$nextTick(() => {
+          for (const tag of tags) {
+            if (tag.to === this.$route.path) {
+              this.$refs.scrollPane.moveToTarget(tag.$el)
+              break
+            }
           }
-        }
-      })
+        })
+      }
     },
     closeSelectedTag(view) {
       this.$store.dispatch('delVisitedViews', view).then((views) => {
@@ -182,7 +184,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 //reset element css of el-icon-close
 .tags-view-wrapper {
-  .tags-view-item {    
+  .tags-view-item {
     .el-icon-close {
       width: 16px;
       height: 16px;

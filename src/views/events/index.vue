@@ -3,14 +3,14 @@
   <el-row>
     <el-col :span="12">
       <div class="filter-container">
-        <events_filter @filter="filterData"></events_filter>          
+        <eventsFilter @filter="filterData"></eventsFilter>
       </div>
     </el-col>
     <el-col :span="4">
       <el-button class="filter-item" style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit">
         Add my own event
       </el-button>
-    </el-col>   
+    </el-col>
   </el-row>
   <el-row class="events-container">
     <el-col :span="16" class="widget widget-simple widget-table">
@@ -107,7 +107,7 @@
     better message about storing betslip
     after adding custom event, display it in event table with [new] tag
     Team flags from somewhere
-    betslip: display total win and profit or loss/possible profit 
+    betslip: display total win and profit or loss/possible profit
     provide way to edit bet date in betslip
     dont drop odds when picking ex
     if placing multibet when one+ event is not yet finished, dont show lost/won, it must be a prediction
@@ -121,7 +121,7 @@ import { mapGetters } from 'vuex'
 import { fetchEventsList } from "@/api/events";
 import Event from "./model/event.js";
 import C from "./helpers/constants";
-import events_filter from "@/views/components/events_filter";
+import eventsFilter from "@/views/components/eventsFilter";
 import betslip from "./components/betslip.vue";
 import eventForm from "./components/eventForm.vue";
 // import BetSlipHelper from './helpers/betslip.js';
@@ -129,7 +129,7 @@ import eventForm from "./components/eventForm.vue";
 
 export default {
   name: "events_table",
-  components: { betslip, eventForm, events_filter },
+  components: { betslip, eventForm, eventsFilter },
   data() {
     return {
       C: C,
@@ -186,7 +186,7 @@ export default {
       let event = new Event(row);
       event.selected_odds = event[side]
       event.selected_event = side
-            
+
       this.dialogFormVisible = false;
       this.betslipData.push(event);
       console.log('pushed to betslip');
@@ -199,7 +199,7 @@ export default {
       console.log(this.listQuery);
       this.loadEvents();
     },
-    betslipStored() {      
+    betslipStored() {
       this.$notify({
         title: 'Success!',
         message: 'You have successfully stored your betslip',
@@ -239,7 +239,7 @@ export default {
         if (response && response.length) {
           this.events_data = response;
           this.paginateData(1); // first page by default
-        } 
+        }
 
         this.total = response.length;
         this.listLoading = false;
@@ -263,7 +263,7 @@ export default {
       console.log('paginateData ' + val)
       this.events_table = [];
       this.listQuery.page = val;
-      let pagedData = this.events_data.filter((item, index) => 
+      let pagedData = this.events_data.filter((item, index) =>
             index < this.listQuery.per_page * this.listQuery.page && index >= this.listQuery.per_page * (this.listQuery.page - 1))
 
       pagedData.forEach(item => {
@@ -295,7 +295,7 @@ export default {
 .el-table th,
 .el-table td {
   padding: 5px 0;
-  font-size: 13px; 
+  font-size: 13px;
 }
 
 tbody .event:hover {
@@ -304,7 +304,7 @@ tbody .event:hover {
   color: #ffffff;
   text-shadow: none;
   font-weight: bold;
-  
+
   .el-tag {
     background: #c6c7cb;
     color: #3e5f33;

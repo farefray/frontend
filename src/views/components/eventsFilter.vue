@@ -21,7 +21,7 @@
       </el-col>
 
       <el-col :span="6">
-      <el-button v-waves @click="handleFilter" type="primary" icon="search">
+      <el-button v-waves @click="handleFilter" type="success" icon="search">
         Update
       </el-button>
       </el-col>
@@ -33,7 +33,7 @@
     import waves from '@/directive/waves/index.js'
 
     export default {
-      name: "events_filter",
+      name: "eventsFilter",
       directives: {
         waves
       },

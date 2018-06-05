@@ -2,7 +2,7 @@
   <div class="components-container" style='height:100vh'>
     <el-row :gutter="8">
       <el-col>
-        <events_filter @filter="filterData"></events_filter>
+        <eventsFilter @filter="filterData"></eventsFilter>
       </el-col>
       <el-col>
         <el-button
@@ -41,7 +41,7 @@
         <template slot-scope="scope">
           <div v-for="(event, index) in scope.row.selected_events" class="sub-event" v-bind:class="{ won: scope.row.status[0] === 'WON' }">
               <span class="small">
-              {{(event.game)}} {{event.game_league}} 
+              {{(event.game)}} {{event.game_league}}
               </span>
               <el-tag v-if="event.live" class="right">
                Live
@@ -87,7 +87,7 @@
       </el-table-column>
 
       <el-table-column>
-        <template slot-scope="scope">          
+        <template slot-scope="scope">
           <el-button size="mini" tyle="success" @click="handleReportStatus(scope.$index, scope.row)" v-if="scope.row.status[0] ==='PENDING'">
             Report status
           </el-button>
@@ -109,7 +109,7 @@
       <el-pagination @current-change="paginateData" current-page.sync="currentPage" :page-size="listQuery.per_page" layout="total, prev, pager, next" :total="total">
       </el-pagination>
     </div>
-    
+
     <el-dialog
       title="Report bet status"
       :visible.sync="dialogVisible"
@@ -131,14 +131,14 @@ import {
   removePrediction,
   updatePrediction
 } from "@/api/predictions";
-import events_filter from "@/views/components/events_filter";
+import eventsFilter from "@/views/components/eventsFilter";
 import editForm from "./partials/editForm.vue";
 import statsChart from "./charts/statsChart";
 import BetSlip from '../events/helpers/betslip';
 // TODO make prediction status string instead of array
 export default {
   components: {
-    events_filter,
+    eventsFilter,
     editForm,
     statsChart
   },
