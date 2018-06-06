@@ -141,7 +141,7 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        per_page: 15,
+        per_page: 25,
         title: undefined,
         discipline: undefined,
         game: []

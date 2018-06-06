@@ -25,6 +25,18 @@ var globalChartData = {
   absoluteAvgValue: 0
 };
 
+// TODO: use this function in order to group values and later split into points sizes
+function groupBy(ary, keyFunc) {
+  var r = {};
+  ary.forEach(function(x) {
+    var y = keyFunc(x);
+    r[y] = (r[y] || []).concat(x);
+  });
+  return Object.keys(r).map(function(y) {
+    return r[y];
+  });
+}
+
 export default {
   name: "stats-chart",
   components: {},
@@ -195,22 +207,20 @@ export default {
           },
           z: 10
         },
-        /* dataZoom: [{
-          handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-          handleSize: '80%',
-          handleStyle: {
-              color: '#fff',
-              shadowBlur: 3,
-              shadowColor: 'rgba(0, 0, 0, 0.6)',
-              shadowOffsetX: 2,
-              shadowOffsetY: 2
+        dataZoom: [
+          {
+            type: "slider",
+            show: true
+          },
+          {
+            type: "inside"
           }
-        }], */
+        ],
         grid: {
-          left: 10,
+          left: 75,
           right: 10,
-          bottom: 20,
-          top: 30,
+          bottom: 25,
+          top: 15,
           containLabel: true
         },
         tooltip: {
@@ -289,19 +299,15 @@ export default {
             );
           }
         },
-        /* visualMap: {
-            show: false,
-            pieces: [{
-                color: '#4CAF50',
-                gt:0
-            }, {
-                color: '#e5e5e5',
-                value:0,
-            }, {
-                color: '#F7412D',
-                lt:0
-            }]
-        }, */
+        visualMap: {
+          show: true,
+          type: "continuous",
+          min: globalChartData.minValue,
+          max: globalChartData.maxValue,
+          text: ["Best", "Worst"],
+          realtime: true,
+          color: ["green", "gray", "red"]
+        },
         series: [
           {
             name: "balance",
@@ -311,9 +317,6 @@ export default {
             type: "line",
             itemStyle: {
               normal: {
-                color: params => {
-                  return params.data.value[2] > 0 ? "#3e5f33" : "#ce2a2a";
-                },
                 areaStyle: {
                   color: "#f3f8ff"
                 }
@@ -325,11 +328,11 @@ export default {
             symbol: "circle",
             symbolSize: (value, params) => {
               // return value from 5 to 25, based on how much value close to max/min value
-              return Math.max(
+              let val = Math.max(
                 5,
                 Math.floor(
-                  25 /
-                    100 *
+                  30 /
+                    250 *
                     Math.floor(
                       Math.abs(value[2]) /
                         globalChartData.absoluteMaxChange *
@@ -337,6 +340,8 @@ export default {
                     )
                 )
               );
+              console.log(val);
+              return val;
             },
             data: dataForChart,
             animationDuration: 2800,

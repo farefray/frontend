@@ -28,7 +28,7 @@ const settings = {
 
       let status_block = '<span style="color: ' + status_color + ';">' + status + '</span>';
       let final_odds_block = '<span class="el-tag" style="position:absolute; right:5px; top: 3px;">' + event.final_odds + '</span>';
-      
+
       let participants_block = '<div style="padding-top:5px;">';
       for (let i = 0; i < event.selected_events.length; i++) {
         participants_block += (event.selected_events[i].selected_event === 'odds_1' ? '<strong>' : '') + event.selected_events[i].team_A.name + (event.selected_events[i].selected_event === 'odds_1' ? '</strong>' : '') +
@@ -42,10 +42,10 @@ const settings = {
         : ('- ' + event.stake.toFixed(2))) + '</strong>';
 
       return status_circle_block +
-        status_block + 
+        status_block +
         final_odds_block +
         '<br/>' +
-        participants_block + 
+        participants_block +
         '<br/>' +
         profit_block;
     },

@@ -38,8 +38,6 @@ export default {
   mounted() {
     this.height = this.$el.getBoundingClientRect().height
     window.addEventListener('scroll', this.handleScroll)
-  },
-  activated() {
     this.handleScroll()
   },
   destroyed() {

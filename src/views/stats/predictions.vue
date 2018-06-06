@@ -13,7 +13,7 @@
       </el-col>
     </el-row>
     <br/>
-    <div class='chart-container' v-if="showChart" style="height:450px;">
+    <div class='chart-container' v-if="showChart" style="height:500px;">
       <stats-chart :stats="predictions"></stats-chart>
     </div>
 
