@@ -1,154 +1,158 @@
 <template>
-  <el-card class="box-card betslip" v-if="betslipData.length">
-    <div slot="header" class="clearfix">
-        <h3>Betslip <el-badge :value="betslipData.length" class="item"/> </h3>
-    </div>
-    <div class="widget-content in collapse" style="height: auto;">
-        <div class="widget-body">
-          <template v-for="(prediction, index) in betslipData">
-            <div class="statistic-group" v-bind:key="index">
-              <el-tag type="game-tag">{{prediction.game}}</el-tag>
-              <h3 class="statistic-values">
-                <span v-bind:class="{ winner: prediction.selected_event === 'odds_1' }">
-                {{prediction.team_A.name}}
-                </span>
-                vs
-                <span v-bind:class="{ winner: prediction.selected_event === 'odds_2' }">
-                  {{prediction.team_B.name}}
-                </span>
-                <br/>
-                <el-switch v-model="prediction.live" active-text="[Live bet]" inactive-text="[Default bet]" active-color="#476b3b" inactive-color="#909092"></el-switch>
-              </h3>
-              <a @click="handleDelete(index, prediction)" class='icon-remove'>
-                <svg-icon icon-class="cross" style='cursor:pointer;' w="12px" close-transition/>
-              </a>
-              <hr class="margin-mm">
-                <el-row style="padding: 5px 0;">
-                  <el-col :span="10" :offset="1">
-                  <div v-if="prediction.selected_event === 'odds_1'">
-                    <el-input-number size="mini" controls-position="right"
-                      v-model="prediction.selected_odds" :min="1" :max="10" :step="0.05" @change="updateBetSlip"></el-input-number>
-                  </div>
-                  <div v-if="prediction.selected_event === 'odds_2'">
-                    Odds:
-                    <el-input-number size="mini" controls-position="right"
-                      v-model="prediction.selected_odds" :min="1" :max="10" :step="0.05" @change="updateBetSlip"></el-input-number>
-                  </div>
-                  </el-col>
-                  <el-col :span="10">
-                     <el-autocomplete size="medium"
-                        placeholder="Subbet" v-model="prediction.ex"
-                        autoComplete="on"
-                        :fetch-suggestions="queryEventEx"
-                        @select="prediction.selected_odds = 1;"></el-autocomplete>  
-                  </el-col>
-                </el-row>
-              <div class="info-block">
-                <el-row :gutter="10">
-                  <el-col>
-                    <div v-if="prediction.team_A.ex">
-                      ({{prediction.team_A.ex}})
-                    </div>
-                    <div v-if="prediction.team_B.ex">
-                      ({{prediction.team_B.ex}})
-                  </div>                 
-                  </el-col>
-                </el-row>
-                
-              </div>              
-            </div>
-          </template>
-          <br />
-          <div class="well well-nice well-small">
-            <div class="well well-nice well-impressed margin-0m">
-                <el-row>
-                  <el-col :span="12">
-                    <h5 class="simple-header">Bet info:</h5>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-switch
-                        v-model="betslipResult"
-                        activeColor="#13ce66"
-                        inactiveColor="#ff4949"
-                        activeText="Won"
-                        activeValue="true"
-                        inactiveText="Lost"
-                        inactiveValue="false"
-                        @change="updateBetResult"
-                        v-if="betslipObj.isValid()"
-                        style="float:right;">                          
-                    </el-switch>
-                    <el-tag style="float:right;" v-else>Pending</el-tag>
-                  </el-col>
-                </el-row>
-                <div>
-                  <el-row :gutter="0">
-                      <el-col :span="10">
-                          Stake:
-                      </el-col>
-                      <el-col :span="10">
-                          <el-input-number v-model="bet_amount" :min="0" :step="1" @change="updateBetAmount"></el-input-number>
-                      </el-col>
-                  </el-row>
+  <sticky v-if="betslipData.length">
+    <el-card class="box-card betslip">
+      <div slot="header" class="clearfix">
+          <h3>Betslip <el-badge :value="betslipData.length" class="item"/> </h3>
+      </div>
+      <div class="widget-content in collapse" style="height: auto;">
+          <div class="widget-body">
+            <template v-for="(prediction, index) in betslipData">
+              <div class="statistic-group" v-bind:key="index">
+                <el-tag type="game-tag">{{prediction.game}}</el-tag>
+                <h3 class="statistic-values">
+                  <span v-bind:class="{ winner: prediction.selected_event === 'odds_1' }">
+                  {{prediction.team_A.name}}
+                  </span>
+                  vs
+                  <span v-bind:class="{ winner: prediction.selected_event === 'odds_2' }">
+                    {{prediction.team_B.name}}
+                  </span>
                   <br/>
-                  <el-row>
-                    <el-col>
-                      <el-col :span="12">
-                          <el-select
-                              v-model="categories"
-                              multiple
-                              filterable
-                              allow-create
-                              placeholder="Choose tags for your bet"
-                              @change="updateCategories">
-                              <el-option
-                                  v-for="item in default_tags"
-                                  :key="item.value"
-                                  :label="item.label"
-                                  :value="item.value">
-                              </el-option>
-                          </el-select>
-                      </el-col>
+                  <el-switch v-model="prediction.live" active-text="[Live bet]" inactive-text="[Default bet]" active-color="#476b3b" inactive-color="#909092"></el-switch>
+                </h3>
+                <a @click="handleDelete(index, prediction)" class='icon-remove'>
+                  <svg-icon icon-class="cross" style='cursor:pointer;' w="12px" close-transition/>
+                </a>
+                <hr class="margin-mm">
+                  <el-row style="padding: 5px 0;">
+                    <el-col :span="10" :offset="1">
+                    <div v-if="prediction.selected_event === 'odds_1'">
+                      <el-input-number size="mini" controls-position="right"
+                        v-model="prediction.selected_odds" :min="1" :max="10" :step="0.05" @change="updateBetSlip"></el-input-number>
+                    </div>
+                    <div v-if="prediction.selected_event === 'odds_2'">
+                      Odds:
+                      <el-input-number size="mini" controls-position="right"
+                        v-model="prediction.selected_odds" :min="1" :max="10" :step="0.05" @change="updateBetSlip"></el-input-number>
+                    </div>
+                    </el-col>
+                    <el-col :span="10">
+                      <el-autocomplete size="medium"
+                          placeholder="Subbet" v-model="prediction.ex"
+                          autoComplete="on"
+                          :fetch-suggestions="queryEventEx"
+                          @select="prediction.selected_odds = 1;"></el-autocomplete>
                     </el-col>
                   </el-row>
+                <div class="info-block">
+                  <el-row :gutter="10">
+                    <el-col>
+                      <div v-if="prediction.team_A.ex">
+                        ({{prediction.team_A.ex}})
+                      </div>
+                      <div v-if="prediction.team_B.ex">
+                        ({{prediction.team_B.ex}})
+                    </div>
+                    </el-col>
+                  </el-row>
+
                 </div>
-            </div>
-            <p class="help-block">
-              <br />
-              <el-row :gutter="10" v-if="this.betslipObj">
-                <el-col :span="10">
-                  Final odds: {{this.betslipObj.final_odds}}
-                </el-col>
-                <el-col :span="10">
-                  Profit: {{this.betslipObj.profit}}
-                </el-col>
-              </el-row> 
-            </p>
-        </div>
-        <el-row :gutter="12">
-          <el-col :offset="18">
-            <el-button type="primary" size="medium" @click="storeBetslip">Store»</el-button>
-          </el-col>
-        </el-row>
-        <br/>
-        </div>
-        <div class="widget-footer box-shadow-in">
-        </div>
-    </div>
-  </el-card>
+              </div>
+            </template>
+            <br />
+            <div class="well well-nice well-small">
+              <div class="well well-nice well-impressed margin-0m">
+                  <el-row>
+                    <el-col :span="12">
+                      <h5 class="simple-header">Bet info:</h5>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-switch
+                          v-model="betslipResult"
+                          activeColor="#13ce66"
+                          inactiveColor="#ff4949"
+                          activeText="Won"
+                          activeValue="true"
+                          inactiveText="Lost"
+                          inactiveValue="false"
+                          @change="updateBetResult"
+                          v-if="betslipObj.isValid()"
+                          style="float:right;">
+                      </el-switch>
+                      <el-tag style="float:right;" v-else>Pending</el-tag>
+                    </el-col>
+                  </el-row>
+                  <div>
+                    <el-row :gutter="0">
+                        <el-col :span="10">
+                            Stake:
+                        </el-col>
+                        <el-col :span="10">
+                            <el-input-number v-model="bet_amount" :min="0" :step="1" @change="updateBetAmount"></el-input-number>
+                        </el-col>
+                    </el-row>
+                    <br/>
+                    <el-row>
+                      <el-col>
+                        <el-col :span="12">
+                            <el-select
+                                v-model="categories"
+                                multiple
+                                filterable
+                                allow-create
+                                placeholder="Choose tags for your bet"
+                                @change="updateCategories">
+                                <el-option
+                                    v-for="item in default_tags"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-col>
+                      </el-col>
+                    </el-row>
+                  </div>
+              </div>
+              <p class="help-block">
+                <br />
+                <el-row :gutter="10" v-if="this.betslipObj">
+                  <el-col :span="10">
+                    Final odds: {{this.betslipObj.final_odds}}
+                  </el-col>
+                  <el-col :span="10">
+                    Profit: {{this.betslipObj.profit}}
+                  </el-col>
+                </el-row>
+              </p>
+          </div>
+          <el-row :gutter="12">
+            <el-col :offset="18">
+              <el-button type="primary" size="medium" @click="storeBetslip">Store»</el-button>
+            </el-col>
+          </el-row>
+          <br/>
+          </div>
+          <div class="widget-footer box-shadow-in">
+          </div>
+      </div>
+    </el-card>
+  </sticky>
 </template>
 
 <comment>
- 
+
 </comment>
 <script>
-// const moment = require('moment')
+import Sticky from '@/components/Sticky'
 import BetSlip from "../helpers/betslip";
 
 export default {
   name: "betslip",
   props: ["betslipData"],
-  components: {},
+  components: {
+    Sticky
+  },
   data() {
     return {
       betslipObj: new BetSlip(),
@@ -277,7 +281,7 @@ export default {
   }
 
   input[type="text"] {
-    border: none; 
+    border: none;
     box-shadow: none;
   }
 }

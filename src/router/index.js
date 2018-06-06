@@ -70,7 +70,6 @@ export const asyncRouterMap = [
       { path: 'splitpane', component: _import('components/splitpane'), name: 'splitpane-demo', meta: { title: 'splitPane' }},
       { path: 'avatar-upload', component: _import('components/avatarUpload'), name: 'avatarUpload-demo', meta: { title: 'avatarUpload' }},
       { path: 'dropzone', component: _import('components/dropzone'), name: 'dropzone-demo', meta: { title: 'dropzone' }},
-      { path: 'sticky', component: _import('components/sticky'), name: 'sticky-demo', meta: { title: 'sticky' }},
       { path: 'count-to', component: _import('components/countTo'), name: 'countTo-demo', meta: { title: 'countTo' }},
       { path: 'back-to-top', component: _import('components/backToTop'), name: 'backToTop-demo', meta: { title: 'backToTop' }}
     ]
