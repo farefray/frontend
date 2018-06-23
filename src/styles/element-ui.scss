@@ -129,3 +129,17 @@
 .el-card__header {
   padding: 0 20px;
 }
+
+.el-checkbox__input.is-checked+.el-checkbox__label, .el-checkbox.is-bordered.is-checked, .el-checkbox__inner:hover {
+  color: #476b3b;
+
+}
+
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  background-color: #476b3b;
+  border-color: #476b3b;
+}
+
+.el-checkbox.is-bordered.is-checked {
+  border-color: #476b3b;
+}

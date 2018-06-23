@@ -26,7 +26,7 @@ var globalChartData = {
 };
 
 // TODO: use this function in order to group values and later split into points sizes
-function groupBy(ary, keyFunc) {
+/*function groupBy(ary, keyFunc) {
   var r = {};
   ary.forEach(function(x) {
     var y = keyFunc(x);
@@ -35,7 +35,7 @@ function groupBy(ary, keyFunc) {
   return Object.keys(r).map(function(y) {
     return r[y];
   });
-}
+}*/
 
 export default {
   name: "stats-chart",

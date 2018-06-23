@@ -1,13 +1,13 @@
 <template>
   <div class="filter-container">
-    <el-row :gutter="20">
+    <el-row>
       <el-col :span="6">
         <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="Team name"
                   v-model="listQuery.title">
         </el-input>
       </el-col>
 
-      <el-col :span="12">
+      <el-col :span="8">
       <el-date-picker
         v-model="listQuery.daterange"
         type="daterange"
@@ -20,10 +20,14 @@
       </el-date-picker>
       </el-col>
 
-      <el-col :span="6">
+      <el-col :span="4">
       <el-button v-waves @click="handleFilter" type="primary" icon="search">
         Update
       </el-button>
+      </el-col>
+
+      <el-col :span="4">
+         <el-checkbox v-model="listQuery.customOnly" label="Display custom only" border></el-checkbox>
       </el-col>
     </el-row>
   </div>
@@ -41,7 +45,8 @@
         return {
           listQuery: {
             title: "",
-            daterange: ''
+            daterange: '',
+            customOnly: false
           },
           pickerOptions: {
             shortcuts: [{

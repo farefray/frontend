@@ -1,16 +1,16 @@
 <template>
   <div>
   <el-row>
-    <el-col :span="12">
+    <el-col :span="16">
       <div class="filter-container">
         <eventsFilter @filter="filterData"></eventsFilter>
       </div>
     </el-col>
-    <el-col :span="4">
+    <el-col :span="2">
       <el-button style="margin-left: 10px;" @click="openDialog(C.DIALOG_CREATE)" type="primary" icon="edit">
         Add my own event
       </el-button>
-    </el-col>
+    </el-col>   
   </el-row>
   <el-row class="events-container">
     <el-col :span="16" class="widget widget-simple widget-table">
